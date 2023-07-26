@@ -1,0 +1,134 @@
+.wrapper {
+  width: 100%;
+  height: 64px;
+  background-color: var(--background-header-inner);
+
+  .inner {
+    margin: 0 120px;
+    height: 100%;
+    background-color: var(--background-header-inner);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      text-transform: uppercase;
+      font-size: 2.2rem;
+      font-weight: 600;
+
+      &:hover {
+        cursor: pointer;
+        color: red;
+      }
+    }
+    .center {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 520px;
+      height: 44px;
+      padding-left: 16px;
+      border: 1.5px solid transparent;
+      border-radius: 92px;
+      background-color: rgba(22, 24, 35, 0.06);
+
+      input {
+        flex: 1;
+        color: var(--text-color);
+        font-size: 1.5rem;
+        height: 100%;
+        background-color: transparent;
+        padding-right: 10px;
+      }
+
+      .btn-search {
+        width: 52px;
+        height: 100%;
+        border-top-right-radius: 92px;
+        border-bottom-right-radius: 92px;
+        background-color: transparent;
+
+        svg {
+          // display: flex;
+          // position: relative;
+          font-size: 21px;
+        }
+
+        &:hover {
+          background-color: var(--background);
+          cursor: pointer;
+        }
+
+        // css khi click vào sẽ có màu
+        &:active {
+          background-color: var(--background-click);
+        }
+      }
+
+      // css phần gạch dọc bên cạnh ô tìm kiếm
+      &::after {
+        content: "";
+        position: absolute;
+        right: 52px;
+        width: 1px;
+        height: 26px;
+        background-color: rgb(159, 159, 159);
+      }
+
+      // css border khi focus vào thẻ input
+      &:focus-within {
+        border-color: rgba(22, 24, 35, 0.2);
+      }
+    }
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+
+      svg {
+        font-size: 22px;
+
+        &:hover {
+          cursor: pointer;
+          color: var(--primary);
+        }
+      }
+
+      .text-account {
+        &:hover {
+          cursor: pointer;
+          color: var(--primary);
+        }
+      }
+
+      .cart-icon {
+        position: relative;
+        display: flex;
+        font-size: 18px;
+        cursor: pointer;
+
+        svg {
+          font-size: 23px;
+        }
+
+        span {
+          position: absolute;
+          text-align: center;
+          background-color: var(--primary);
+          color: var(--white);
+          font-size: 13px;
+          padding: 2px;
+          top: -8px;
+          right: -6px;
+          line-height: 1;
+          border-radius: 6px;
+        }
+      }
+
+      .btn-more {
+        position: relative;
+        display: flex;
+      }
+    }
+  }
+}

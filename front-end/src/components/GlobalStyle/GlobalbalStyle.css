@@ -6,6 +6,10 @@
   --text-color: #333;
 
   --font-family: "ProximaNova", sans-serif;
+
+  --background: #cbcaca;
+  --background-header-inner: #e7e7e7;
+  --background-click: #c0c0c0;
 }
 
 * {
@@ -20,7 +24,7 @@ html {
 
 body {
   font-family: var(--font-family);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   line-height: 1.5;
   text-rendering: optimizespeed;
   overflow-y: overlay;
