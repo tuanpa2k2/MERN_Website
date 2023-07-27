@@ -37,14 +37,15 @@
 
       button {
         padding: 10px 50px;
+        border: 1px solid var(--blue);
         border-radius: 10px;
         font-size: 1.8rem;
         font-weight: 600;
-        background-color: var(--blue);
-        color: var(--white);
+        background-color: var(--white);
+        color: var(--blue);
 
         &:hover {
-          background-color: var(--red);
+          background-color: var(--blue);
           color: var(--white);
         }
       }

@@ -1,0 +1,21 @@
+.wrapper-containerTypeProPage {
+  padding: 0 120px;
+  display: flex;
+
+  .column-left {
+    width: 20%;
+    border: 1px solid var(--text-color);
+  }
+
+  .column-right {
+    background-color: var(--background-header-inner);
+    width: 80%;
+    padding-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 17px;
+    border: 1px solid var(--text-color);
+  }
+}
