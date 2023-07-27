@@ -22,7 +22,7 @@ const HeaderComponent = () => {
             </button>
           </div>
           <div className="right">
-            <span className="text-account">
+            <span className="text-account" onClick={() => navigate("/sign-in")}>
               <VscAccount />
               account
             </span>
