@@ -1,6 +1,7 @@
 import React from "react";
 import TypeProductComponent from "../../components/TypeProductComp/TypeProductComponent";
 import SliderComponent from "../../components/SliderComp/SliderComponent";
+import CardComponent from "../../components/CardComp/CardComponent";
 
 import slider1 from "../../assets/images/slider/slider1.jpg";
 import slider2 from "../../assets/images/slider/slider2.jpg";
@@ -35,7 +36,20 @@ const HomePage = () => {
           arrImages={[slider1, slider2, slider3, slider4, slider5]}
         />
       </div>
-      <div className="wrapper-homePage">Home Page</div>
+      <div className="wrapper-homePage">
+        <div className="wrapper-cardPage">
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+        </div>
+        <div className="btn-more">
+          <button>Xem thêm</button>
+        </div>
+      </div>
     </div>
   );
 };
