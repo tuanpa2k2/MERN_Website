@@ -1,4 +1,4 @@
-.wrapper {
+.wrapper-header {
   width: 100%;
   height: 64px;
   background-color: var(--background-header-inner);
@@ -83,21 +83,22 @@
     .right {
       display: flex;
       align-items: center;
-      gap: 25px;
-
-      svg {
-        font-size: 22px;
-
-        &:hover {
-          cursor: pointer;
-          color: var(--primary);
-        }
-      }
+      gap: 20px;
 
       .text-account {
+        display: flex;
+        justify-content: center;
+        padding: 5px 10px;
+        border-radius: 5px;
+
+        svg {
+          font-size: 23px;
+          margin-right: 5px;
+        }
+
         &:hover {
           cursor: pointer;
-          color: var(--primary);
+          background-color: var(--background-hover);
         }
       }
 
@@ -109,6 +110,11 @@
 
         svg {
           font-size: 23px;
+
+          &:hover {
+            cursor: pointer;
+            color: var(--primary);
+          }
         }
 
         span {
@@ -128,6 +134,16 @@
       .btn-more {
         position: relative;
         display: flex;
+
+        svg {
+          font-size: 23px;
+          margin-right: -7px;
+
+          &:hover {
+            cursor: pointer;
+            color: var(--primary);
+          }
+        }
       }
     }
   }

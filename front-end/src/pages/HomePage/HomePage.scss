@@ -1,0 +1,18 @@
+.wrapper-containerHomePage {
+  margin: 0 120px;
+
+  .wrapper-typeProductComp {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 30px;
+    width: 100%;
+    border-bottom: 1px solid red;
+  }
+
+  .wrapper-homePage {
+    margin: 5px 0;
+    background-color: aqua;
+    height: 1500px;
+  }
+}
