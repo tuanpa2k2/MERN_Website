@@ -1,6 +1,12 @@
 import React from "react";
 import TypeProductComponent from "../../components/TypeProductComp/TypeProductComponent";
+import SliderComponent from "../../components/SliderComp/SliderComponent";
 
+import slider1 from "../../assets/images/slider/slider1.jpg";
+import slider2 from "../../assets/images/slider/slider2.jpg";
+import slider3 from "../../assets/images/slider/slider3.jpg";
+import slider4 from "../../assets/images/slider/slider4.jpg";
+import slider5 from "../../assets/images/slider/slider5.jpg";
 import "./HomePage.scss";
 
 const HomePage = () => {
@@ -23,6 +29,11 @@ const HomePage = () => {
         {arrTypeProduct.map((item) => {
           return <TypeProductComponent key={item} name={item} />;
         })}
+      </div>
+      <div className="wrapper-sliderPage">
+        <SliderComponent
+          arrImages={[slider1, slider2, slider3, slider4, slider5]}
+        />
       </div>
       <div className="wrapper-homePage">Home Page</div>
     </div>
