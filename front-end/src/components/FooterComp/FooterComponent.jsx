@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import AOS from "aos";
 import { FaLocationArrow } from "react-icons/fa";
 import { BsTelephoneForward, BsEnvelopeCheck } from "react-icons/bs";
 import payment from "../../assets/images/product/payments.png";
@@ -6,10 +7,19 @@ import payment from "../../assets/images/product/payments.png";
 import "./FooterComponent.scss";
 
 const FooterComponent = () => {
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
   return (
     <div className="wrapper-footerComp">
       <div className="footer-content">
-        <div className="col">
+        <div
+          className="col"
+          data-aos="fade-up"
+          data-aos-anchor-placement="bottom-bottom"
+          data-aos-duration="1000"
+        >
           <div className="title">About</div>
           <div className="text">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
@@ -18,7 +28,12 @@ const FooterComponent = () => {
             in iusto eligendi expedita.
           </div>
         </div>
-        <div className="col">
+        <div
+          className="col"
+          data-aos="fade-up"
+          data-aos-anchor-placement="bottom-bottom"
+          data-aos-duration="1000"
+        >
           <div className="title">Contact</div>
           <div className="c-item">
             <FaLocationArrow />
@@ -33,7 +48,12 @@ const FooterComponent = () => {
             <div className="text">Email: tuanpa2k2@gmail.com</div>
           </div>
         </div>
-        <div className="col">
+        <div
+          className="col"
+          data-aos="fade-up"
+          data-aos-anchor-placement="bottom-bottom"
+          data-aos-duration="1000"
+        >
           <div className="title">Categories</div>
           <span className="text">Books English</span>
           <span className="text">Máy tính</span>
@@ -42,7 +62,12 @@ const FooterComponent = () => {
           <span className="text">Giày dép</span>
           <span className="text">Quần áo</span>
         </div>
-        <div className="col">
+        <div
+          className="col"
+          data-aos="fade-up"
+          data-aos-anchor-placement="bottom-bottom"
+          data-aos-duration="1000"
+        >
           <div className="title">Page</div>
           <span className="text">home</span>
           <span className="text">about</span>
