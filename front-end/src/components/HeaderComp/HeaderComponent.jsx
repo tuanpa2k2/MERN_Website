@@ -26,7 +26,10 @@ const HeaderComponent = () => {
               <VscAccount />
               account
             </span>
-            <div className="cart-icon">
+            <div
+              className="cart-icon"
+              onClick={() => navigate("/productDetails")}
+            >
               <AiOutlineShoppingCart />
               <span>5</span>
             </div>

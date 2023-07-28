@@ -28,13 +28,13 @@
 
       .c-item {
         display: flex;
+        align-items: center;
         margin-bottom: 10px;
 
         svg {
           flex-shrink: 0;
           font-size: 18px;
           margin-right: 10px;
-          margin-top: 4px;
           color: var(--text-color);
         }
       }

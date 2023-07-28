@@ -1,3 +1,47 @@
-.image-slider {
-  object-fit: contain;
+.wrapper-sliderComp {
+  & .slick-arrow.slick-prev {
+    left: 12px;
+    top: 50%;
+    z-index: 10;
+
+    &::before {
+      font-size: 40px;
+      color: var(--white);
+    }
+  }
+
+  & .slick-arrow.slick-next {
+    right: 28px;
+    top: 50%;
+    z-index: 10;
+
+    &::before {
+      font-size: 40px;
+      color: var(--white);
+    }
+  }
+
+  & .slick-dots {
+    z-index: 10;
+
+    li {
+      button {
+        &::before {
+          color: var(--red);
+        }
+      }
+    }
+
+    li.active {
+      button {
+        &::before {
+          color: var(--white);
+        }
+      }
+    }
+  }
+
+  .image-slider {
+    object-fit: cover;
+  }
 }

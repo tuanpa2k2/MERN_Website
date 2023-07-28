@@ -22,11 +22,7 @@ const FooterComponent = () => {
           <div className="title">Contact</div>
           <div className="c-item">
             <FaLocationArrow />
-            <div className="text">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem
-              quas magnam animi impedit ducimus magni fuga molestias unde
-              repellat!
-            </div>
+            <div className="text">Thái Thụy - Thái Bình</div>
           </div>
           <div className="c-item">
             <BsTelephoneForward />

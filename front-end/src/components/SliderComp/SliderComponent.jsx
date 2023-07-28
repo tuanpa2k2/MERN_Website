@@ -15,7 +15,8 @@ const SliderComponent = ({ arrImages }) => {
   };
 
   return (
-    <Slider {...settings}>
+    // <div className="wrapper-sliderComp">
+    <Slider {...settings} className="wrapper-sliderComp">
       {arrImages.map((img) => {
         return (
           <Image
@@ -30,6 +31,7 @@ const SliderComponent = ({ arrImages }) => {
         );
       })}
     </Slider>
+    // </div>
   );
 };
 

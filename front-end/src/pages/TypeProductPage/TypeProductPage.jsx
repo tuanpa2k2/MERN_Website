@@ -1,6 +1,7 @@
 import React from "react";
 import NavbarLeftComponent from "../../components/NavbarLeftComp/NavbarLeftComponent";
 import CardComponent from "../../components/CardComp/CardComponent";
+import { Pagination } from "antd";
 
 import "./TypeProductPage.scss";
 
@@ -11,12 +12,17 @@ const TypeProductPage = () => {
         <NavbarLeftComponent />
       </div>
       <div className="column-right">
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
+        <div className="card-Comp">
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+        </div>
+        <div className="pagination">
+          <Pagination total={500} />
+        </div>
       </div>
     </div>
   );
