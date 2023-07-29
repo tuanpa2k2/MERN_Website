@@ -1,19 +1,18 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const routes = require("./routes");
+const bodyParser = require("body-parser");
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.get("/", (req, res) => {
-  res.send("hello world...");
-});
+app.use(bodyParser.json());
+routes(app);
 
 mongoose
-  .connect(
-    `mongodb+srv://tuanpa2k2:${process.env.MONGOO_DB}@mern-website.hnxnyqc.mongodb.net/?retryWrites=true&w=majority`
-  )
+  .connect(`${process.env.MONGOO_DB}`)
   .then(() => {
     console.log("Connect mongoo db success...");
   })
