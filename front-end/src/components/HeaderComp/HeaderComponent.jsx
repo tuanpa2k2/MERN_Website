@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Tippy from "@tippyjs/react/headless";
 import { useNavigate } from "react-router-dom";
 
@@ -10,12 +10,33 @@ import "./HeaderComponent.scss";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleScroll = () => {
+    const offset = window.scrollY;
+
+    if (offset > 100) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
   return (
     <div>
-      <header className="wrapper-header">
+      <header className={`wrapper-header ${scrolled ? "sticky-header" : ""}`}>
         <div className="inner">
           <div className="left" onClick={() => navigate("/")}>
-            anhtuan shop
+            <div className="fires-image">
+              <div className="fire" id="fire1"></div>
+              <div className="fire" id="fire2"></div>
+              <div className="fire" id="fire3"></div>
+            </div>
+            <div className="logo">anhtuan shop</div>
           </div>
           <div className="center">
             <input placeholder="Tìm kiếm sản phẩm..." spellCheck={false} />

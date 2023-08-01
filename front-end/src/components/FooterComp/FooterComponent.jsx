@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import AOS from "aos";
 import { FaLocationArrow } from "react-icons/fa";
 import { BsTelephoneForward, BsEnvelopeCheck } from "react-icons/bs";
-import payment from "../../assets/images/product/payments.png";
+import { BsFacebook, BsInstagram, BsTwitter, BsTiktok } from "react-icons/bs";
 
 import "./FooterComponent.scss";
 
@@ -77,11 +77,23 @@ const FooterComponent = () => {
         </div>
       </div>
       <div className="bottom-bar">
+        <div className="waves-image">
+          <div className="wave" id="wave1"></div>
+          <div className="wave" id="wave2"></div>
+          <div className="wave" id="wave3"></div>
+          <div className="wave" id="wave4"></div>
+        </div>
         <div className="bottom-bar-content">
           <div className="text">
             created by TuanPA - Latest Design Template.
           </div>
-          <img src={payment} alt="" />
+          <div className="group-icon">
+            <div className="text-icon">Following - Will be any more</div>
+            <BsFacebook />
+            <BsInstagram />
+            <BsTwitter />
+            <BsTiktok />
+          </div>
         </div>
       </div>
     </div>

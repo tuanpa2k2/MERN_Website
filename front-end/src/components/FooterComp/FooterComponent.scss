@@ -23,7 +23,6 @@
 
       .text {
         color: var(--text-color);
-        // font-size: 14px;
       }
 
       .c-item {
@@ -55,8 +54,48 @@
   }
 
   .bottom-bar {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: var(--text-color);
+    position: relative;
+    background-color: #3586ff;
+    margin-top: 45px;
+
+    .waves-image {
+      .wave {
+        position: absolute;
+        top: -60px;
+        height: 60px;
+        width: 100%;
+        background: url("../../assets/images/product/wave.png");
+        background-size: 1000px 87px;
+      }
+
+      .wave#wave1 {
+        z-index: 100;
+        opacity: 1;
+        bottom: 0;
+        animation: animationWave1 5s linear infinite;
+      }
+
+      .wave#wave2 {
+        z-index: 99;
+        opacity: 0.5;
+        bottom: 10px;
+        animation: animationWave2 5s linear infinite;
+      }
+
+      .wave#wave3 {
+        z-index: 100;
+        opacity: 0.2;
+        bottom: 15px;
+        animation: animationWave1 4s linear infinite;
+      }
+
+      .wave#wave4 {
+        z-index: 99;
+        opacity: 0.7;
+        bottom: 20px;
+        animation: animationWave2 4s linear infinite;
+      }
+    }
 
     .bottom-bar-content {
       padding: 20px;
@@ -71,6 +110,44 @@
         text-transform: capitalize;
         color: var(--white);
       }
+
+      .group-icon {
+        .text-icon {
+          margin-bottom: 15px;
+          color: var(--white);
+        }
+        svg {
+          font-size: 25px;
+          color: var(--white);
+          margin: 0 10px;
+          display: inline-block; // phụ trợ cho css hiệu ứng hover icons
+          transition: 0.5s;
+
+          &:hover {
+            cursor: pointer;
+            color: red;
+            transform: translateY(-10px);
+          }
+        }
+      }
     }
+  }
+}
+
+@keyframes animationWave1 {
+  0% {
+    background-position-x: 950px;
+  }
+  100% {
+    background-position-x: 0px;
+  }
+}
+
+@keyframes animationWave2 {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: 950px;
   }
 }

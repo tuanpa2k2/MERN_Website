@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import AOS from "aos";
 import TypeProductComponent from "../../components/TypeProductComp/TypeProductComponent";
 import SliderComponent from "../../components/SliderComp/SliderComponent";
 import CardComponent from "../../components/CardComp/CardComponent";
@@ -24,6 +25,10 @@ const HomePage = () => {
     "kính thời trang",
   ];
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
   return (
     <div className="wrapper-containerHomePage">
       <div className="wrapper-typeProductComp">
@@ -46,7 +51,12 @@ const HomePage = () => {
           <CardComponent />
           <CardComponent />
         </div>
-        <div className="btn-more">
+        <div
+          className="btn-more"
+          data-aos="fade-up"
+          data-aos-anchor-placement="bottom-bottom"
+          data-aos-duration="2000"
+        >
           <button>Xem thêm</button>
         </div>
       </div>
