@@ -114,8 +114,78 @@ const updateUser = (id, data) => {
   });
 };
 
+const deleteUser = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUserId = await User.findOne({
+        _id: id, //tìm email đã tông tại trong db chưa?
+      });
+
+      if (checkUserId === null) {
+        resolve({
+          status: "ERR",
+          message: "Email (User) này không tồn tại!",
+        });
+      }
+
+      await User.findByIdAndDelete(id);
+
+      resolve({
+        status: "OK",
+        message: "Delete user success",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const getAllUser = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allUser = await User.find();
+
+      resolve({
+        status: "OK",
+        message: "All user success",
+        data: allUser,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const getDetailUser = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findOne({
+        _id: id, //tìm email đã tông tại trong db chưa?
+      });
+
+      if (user === null) {
+        resolve({
+          status: "ERR",
+          message: "Email (User) này không tồn tại!",
+        });
+      }
+
+      resolve({
+        status: "OK",
+        message: "Get detail success",
+        data: user,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
   updateUser,
+  deleteUser,
+  getAllUser,
+  getDetailUser,
 };
