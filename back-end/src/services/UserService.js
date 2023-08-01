@@ -87,7 +87,35 @@ const loginUser = (userLogin) => {
   });
 };
 
+const updateUser = (id, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUserId = await User.findOne({
+        _id: id, //tìm email đã tông tại trong db chưa?
+      });
+
+      if (checkUserId === null) {
+        resolve({
+          status: "ERR",
+          message: "Email (User) này không tồn tại!",
+        });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
+
+      resolve({
+        status: "OK",
+        message: "Update user success",
+        data: updatedUser,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
+  updateUser,
 };
