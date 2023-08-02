@@ -92,20 +92,59 @@ const getDetailProduct = (id) => {
   });
 };
 
-const getAllProduct = (limit = 5, page = 0) => {
+const getAllProduct = (limit, page, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const allProduct = await Product.find()
-        .limit(limit) // .limit(4) : lấy ra 4 sản phẩm đầu tiên của 1 trang
-        .skip(page * limit); // .skip(3) : nó sẽ bỏ qua 3 sản phẩm đầu tiên và lấy tiếp sản phẩm tiếp đó của page khác
       const totalProduct = await Product.count();
+
+      if (filter) {
+        const label = filter[0];
+
+        const allProductFilter = await Product.find({
+          [label]: { $regex: filter[1] },
+        })
+          .limit(limit)
+          .skip(page * limit);
+
+        resolve({
+          status: "OK",
+          message: "All product filter success",
+          data: allProductFilter,
+          totalProduct,
+          pageCurrent: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
+
+      if (sort) {
+        const objectSort = {};
+        objectSort[sort[1]] = sort[0];
+
+        const allProductSort = await Product.find()
+          .limit(limit)
+          .skip(page * limit)
+          .sort(objectSort);
+
+        resolve({
+          status: "OK",
+          message: "All product sort success",
+          data: allProductSort,
+          totalProduct,
+          pageCurrent: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
+
+      const allProduct = await Product.find()
+        .limit(limit)
+        .skip(page * limit);
 
       resolve({
         status: "OK",
         message: "All product success",
         data: allProduct,
-        pageCurrent: Number(page + 1),
         totalProduct,
+        pageCurrent: Number(page + 1),
         totalPage: Math.ceil(totalProduct / limit),
       });
     } catch (e) {
