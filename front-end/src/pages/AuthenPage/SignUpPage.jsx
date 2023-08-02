@@ -2,20 +2,26 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CiMail } from "react-icons/ci";
 import { GoLock, GoUnlock } from "react-icons/go";
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import * as UserService from "../../services/UserService";
+import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 
 import "./AuthenPage.scss";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
 
+  //--------------------
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+
   // ----- Xử lyd API form đăng kí
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  //--------------------
-  const [isShowPassword, setIsShowPassword] = useState(false);
-  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+  const mutation = useMutationHooks((data) => UserService.createUser(data));
+  const { data, isLoading } = mutation;
 
   const handleOnChangeEmail = (e) => {
     const emailed = e.target.value;
@@ -31,7 +37,11 @@ const SignUpPage = () => {
   };
 
   const handleSignUp = () => {
-    console.log("submitSignUp", email, password, confirmPassword);
+    mutation.mutate({
+      email,
+      password,
+      confirmPassword,
+    });
   };
 
   return (
@@ -45,6 +55,9 @@ const SignUpPage = () => {
             </span>
             <input type="email" placeholder="..." value={email} onChange={handleOnChangeEmail} />
             <label>Email</label>
+            {data?.status === "Err-Empty-email" && <span className="message-err">{data?.message}</span>}
+            {data?.status === "Err-Email" && <span className="message-err">{data?.message}</span>}
+            {data?.status === "ERROR-EMAIL" && <span className="message-err">{data?.message}</span>}
           </div>
 
           <div className="input-box">
@@ -59,6 +72,7 @@ const SignUpPage = () => {
               autoComplete="on"
             />
             <label htmlFor="">Password</label>
+            {data?.status === "Err-Empty-password" && <span className="message-err">{data?.message}</span>}
           </div>
 
           <div className="input-box">
@@ -73,11 +87,15 @@ const SignUpPage = () => {
               autoComplete="on"
             />
             <label htmlFor="">Confirm Password</label>
+            {data?.status === "Err-Empty-confirmPassword" && <span className="message-err">{data?.message}</span>}
+            {data?.status === "Err-Equal-password" && <span className="message-err">{data?.message}</span>}
           </div>
 
-          <div className="btn-submit" onClick={handleSignUp}>
-            Register
-          </div>
+          <LoadingComponent isLoading={isLoading}>
+            <div className="btn-submit" onClick={handleSignUp}>
+              Register
+            </div>
+          </LoadingComponent>
           <div className="link">
             <span>You have a account?</span>
             <p onClick={() => navigate("/sign-in")}>Login Now</p>

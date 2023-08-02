@@ -1,25 +1,36 @@
 const UserService = require("../services/UserService");
 const jwtService = require("../services/jwtService");
+
 const createUser = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, phone } = req.body;
+    const { email, password, confirmPassword } = req.body;
     const regex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
     const isCheckEmail = regex.test(email);
 
-    if (!name || !email || !password || !confirmPassword || !phone) {
+    if (!email) {
       return res.status(200).json({
-        status: "ERR",
-        message: "The input is reqiured",
+        status: "Err-Empty-email",
+        message: "Không được để trống dữ liệu!",
+      });
+    } else if (!password) {
+      return res.status(200).json({
+        status: "Err-Empty-password",
+        message: "Không được để trống dữ liệu!",
+      });
+    } else if (!confirmPassword) {
+      return res.status(200).json({
+        status: "Err-Empty-confirmPassword",
+        message: "Không được để trống dữ liệu!",
       });
     } else if (!isCheckEmail) {
       return res.status(200).json({
-        status: "ERR",
-        message: "The input is email",
+        status: "Err-Email",
+        message: "Không đúng định dạng gmail!",
       });
     } else if (password !== confirmPassword) {
       return res.status(200).json({
-        status: "ERR",
-        message: "The password is equal confirmPassword",
+        status: "Err-Equal-password",
+        message: "Mật khẩu không khớp!",
       });
     }
 
@@ -35,24 +46,24 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, phone } = req.body;
+    const { email, password } = req.body;
     const regex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
     const isCheckEmail = regex.test(email);
 
-    if (!name || !email || !password || !confirmPassword || !phone) {
+    if (!email) {
       return res.status(200).json({
-        status: "ERR",
-        message: "The input is reqiured",
+        status: "Err-Empty-email",
+        message: "Không được để trống dữ liệu!",
+      });
+    } else if (!password) {
+      return res.status(200).json({
+        status: "Err-Empty-password",
+        message: "Không được để trống dữ liệu!",
       });
     } else if (!isCheckEmail) {
       return res.status(200).json({
-        status: "ERR",
-        message: "The input is email",
-      });
-    } else if (password !== confirmPassword) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "The password is equal confirmPassword",
+        status: "Err-Email",
+        message: "Không đúng định dạng gmail!",
       });
     }
 

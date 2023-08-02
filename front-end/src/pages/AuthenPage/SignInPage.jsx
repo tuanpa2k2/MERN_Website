@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CiMail } from "react-icons/ci";
 import { GoLock, GoUnlock } from "react-icons/go";
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import * as UserService from "../../services/UserService";
 
+import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 import "./AuthenPage.scss";
 
 const SignInPage = () => {
   const navigate = useNavigate();
   const [isShowPassword, setIsShowPassword] = useState(false);
 
-  // ----- Xử lyd API form đăng nhap
+  // ----- Xử ly API form đăng nhap
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const mutation = useMutationHooks((data) => UserService.loginUser(data));
+  const { data, isLoading } = mutation; // lấy data từ mutation
 
   const handleOnChangeEmail = (e) => {
     const emailed = e.target.value;
@@ -23,7 +29,10 @@ const SignInPage = () => {
   };
 
   const handleSignin = () => {
-    console.log("submitSignIn", email, password);
+    mutation.mutate({
+      email,
+      password,
+    });
   };
 
   return (
@@ -37,6 +46,9 @@ const SignInPage = () => {
             </span>
             <input type="email" placeholder="..." value={email} onChange={handleOnChangeEmail} />
             <label>Email</label>
+            {data?.status === "Err-Empty-email" && <span className="message-err">{data?.message}</span>}
+            {data?.status === "Err-Email" && <span className="message-err">{data?.message}</span>}
+            {data?.status === "ERROR-EMAIL" && <span className="message-err">{data?.message}</span>}
           </div>
           <div className="input-box">
             <span className="icon" onClick={() => setIsShowPassword(!isShowPassword)}>
@@ -50,6 +62,8 @@ const SignInPage = () => {
               autoComplete="on"
             />
             <label htmlFor="">Password</label>
+            {data?.status === "Err-Empty-password" && <span className="message-err">{data?.message}</span>}
+            {data?.status === "ERROR-PASSWORD" && <span className="message-err">{data?.message}</span>}
           </div>
           <div className="remember-forgot">
             <label>
@@ -58,9 +72,11 @@ const SignInPage = () => {
             </label>
             <p>Forgot password?</p>
           </div>
-          <div type="submit" id="btn" className="btn-submit" onClick={handleSignin}>
-            Login
-          </div>
+          <LoadingComponent isLoading={isLoading}>
+            <div className="btn-submit" onClick={handleSignin}>
+              Login
+            </div>
+          </LoadingComponent>
           <div className="link">
             <span>Don't you have an account?</span>
             <p onClick={() => navigate("/sign-up")}>Register Now</p>

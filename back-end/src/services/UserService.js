@@ -4,7 +4,7 @@ const { genneralAccessToken, genneralRefreshToken } = require("./jwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
-    const { name, email, password, confirmPassword, phone } = newUser;
+    const { email, password, confirmPassword } = newUser;
 
     try {
       const checkUser = await User.findOne({
@@ -13,7 +13,7 @@ const createUser = (newUser) => {
 
       if (checkUser !== null) {
         resolve({
-          status: "OK",
+          status: "ERROR-EMAIL",
           message: "Email đã tồn tại",
         });
       }
@@ -22,16 +22,14 @@ const createUser = (newUser) => {
       const hash = bcrypt.hashSync(password, 10);
 
       const createdUser = await User.create({
-        name,
         email,
         password: hash,
-        phone,
       });
 
       if (createdUser) {
         resolve({
           status: "OK",
-          message: "Success",
+          message: "Tạo tài khoản thành công.",
           data: createdUser,
         });
       }
@@ -43,7 +41,7 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
   return new Promise(async (resolve, reject) => {
-    const { name, email, password, confirmPassword, phone } = userLogin;
+    const { email, password } = userLogin;
 
     try {
       const checkUser = await User.findOne({
@@ -52,7 +50,7 @@ const loginUser = (userLogin) => {
 
       if (checkUser === null) {
         resolve({
-          status: "OK",
+          status: "ERROR-EMAIL",
           message: "Email không tồn tại",
         });
       }
@@ -60,8 +58,8 @@ const loginUser = (userLogin) => {
       const comparePassword = bcrypt.compareSync(password, checkUser.password);
       if (!comparePassword) {
         resolve({
-          status: "OK",
-          message: "Mật khẩu không đúng!",
+          status: "ERROR-PASSWORD",
+          message: "Mật khẩu không đúng! Vui lòng kiểm tra lại.",
         });
       }
 
@@ -77,7 +75,7 @@ const loginUser = (userLogin) => {
 
       resolve({
         status: "OK",
-        message: "Success",
+        message: "Đăng nhập thành công!",
         access_token,
         refresh_token,
       });
