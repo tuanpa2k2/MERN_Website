@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CiMail } from "react-icons/ci";
 import { GoLock, GoUnlock } from "react-icons/go";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
+import * as message from "../../components/MessageComp/MessageComponent";
 
 import "./AuthenPage.scss";
 
@@ -21,7 +22,16 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const mutation = useMutationHooks((data) => UserService.createUser(data));
-  const { data, isLoading } = mutation;
+  const { data, isLoading, isSuccess, isError } = mutation;
+
+  useEffect(() => {
+    if (isSuccess) {
+      message.success();
+      navigate("/sign-in");
+    } else if (isError) {
+      message.error();
+    }
+  }, [isSuccess, isError]);
 
   const handleOnChangeEmail = (e) => {
     const emailed = e.target.value;

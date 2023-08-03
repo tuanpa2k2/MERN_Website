@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { CiMail } from "react-icons/ci";
 import { GoLock, GoUnlock } from "react-icons/go";
-import { useMutationHooks } from "../../hooks/useMutationHook";
-import * as UserService from "../../services/UserService";
+import { useDispatch } from "react-redux";
 
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import { updateUser } from "../../redux/slides/userSlide";
+import * as UserService from "../../services/UserService";
+import * as message from "../../components/MessageComp/MessageComponent";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
+
 import "./AuthenPage.scss";
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isShowPassword, setIsShowPassword] = useState(false);
 
   // ----- Xử ly API form đăng nhap
@@ -17,7 +23,27 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
 
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
-  const { data, isLoading } = mutation; // lấy data từ mutation
+  const { data, isLoading, isSuccess } = mutation; // lấy data từ mutation
+
+  useEffect(() => {
+    if (isSuccess) {
+      message.success();
+      navigate("/");
+      localStorage.setItem("access_token", data?.access_token);
+      if (data?.access_token) {
+        const decoded = jwt_decode(data?.access_token);
+
+        if (decoded?.id) {
+          handleGetDetailsUser(decoded?.id, data?.access_token);
+        }
+      }
+    }
+  }, [isSuccess]);
+
+  const handleGetDetailsUser = async (id, token) => {
+    const res = await UserService.getDetailsUser(id, token);
+    dispatch(updateUser({ ...res?.data, access_token: token }));
+  };
 
   const handleOnChangeEmail = (e) => {
     const emailed = e.target.value;

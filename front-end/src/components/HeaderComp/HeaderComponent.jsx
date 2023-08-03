@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Tippy from "@tippyjs/react/headless";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import { AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
 import { CiMenuKebab } from "react-icons/ci";
 import { VscAccount } from "react-icons/vsc";
@@ -11,6 +11,7 @@ import "./HeaderComponent.scss";
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -45,22 +46,32 @@ const HeaderComponent = () => {
             </button>
           </div>
           <div className="right">
-            <Tippy
-              interactive
-              render={(attrs) => (
-                <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                  <span>Đăng nhập</span>
-                </div>
-              )}
-            >
-              <span
-                className="text-account"
-                onClick={() => navigate("/sign-in")}
+            {user?.name ? (
+              <Tippy
+                interactive
+                render={(attrs) => (
+                  <div className="tippy-popper" tabIndex="-1" {...attrs}>
+                    <span>Thông tin người dùng</span>
+                  </div>
+                )}
               >
-                <VscAccount />
-                tài khoản
-              </span>
-            </Tippy>
+                <span className="text-account">{user.name}</span>
+              </Tippy>
+            ) : (
+              <Tippy
+                interactive
+                render={(attrs) => (
+                  <div className="tippy-popper" tabIndex="-1" {...attrs}>
+                    <span>Đăng nhập</span>
+                  </div>
+                )}
+              >
+                <span className="text-account" onClick={() => navigate("/sign-in")}>
+                  <VscAccount />
+                  tài khoản
+                </span>
+              </Tippy>
+            )}
 
             <Tippy
               interactive
@@ -70,10 +81,7 @@ const HeaderComponent = () => {
                 </div>
               )}
             >
-              <div
-                className="cart-icon"
-                onClick={() => navigate("/productDetails")}
-              >
+              <div className="cart-icon" onClick={() => navigate("/productDetails")}>
                 <AiOutlineShoppingCart />
                 <span>5</span>
               </div>

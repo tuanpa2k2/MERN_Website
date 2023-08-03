@@ -68,8 +68,14 @@ const loginUser = async (req, res) => {
     }
 
     const response = await UserService.loginUser(req.body);
+    const { refresh_token, ...newResponse } = response;
 
-    return res.status(200).json(response);
+    res.cookie("refresh_token", refresh_token, {
+      HttpOnly: true,
+      Secure: true, // bảo mật phía client
+    });
+
+    return res.status(200).json(newResponse);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -151,7 +157,7 @@ const getDetailUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.headers.token.split(" ")[1];
+    const token = req.cookies.refresh_token;
 
     if (!token) {
       return res.status(200).json({
