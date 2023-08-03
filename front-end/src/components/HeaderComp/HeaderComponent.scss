@@ -140,11 +140,13 @@
         &::after {
           content: "";
           border-left: 10px solid transparent;
-          border-bottom: 6px solid rgb(182, 182, 182);
+          border-bottom: 8px solid rgb(182, 182, 182);
           border-right: 10px solid transparent;
           position: absolute;
           bottom: 100%;
-          right: 40%;
+          right: 50%;
+          top: -3px;
+          transform: translate(50%, -50%);
         }
       }
 
