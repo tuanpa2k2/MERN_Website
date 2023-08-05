@@ -16,7 +16,7 @@ const HeaderComponent = () => {
   const dispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user); // lấy user trong redux-store
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -35,6 +35,7 @@ const HeaderComponent = () => {
   const handleLogoutUser = () => {
     UserService.logoutUser();
     dispatch(resetUser());
+    navigate("/");
   };
 
   return (
@@ -56,18 +57,18 @@ const HeaderComponent = () => {
             </button>
           </div>
           <div className="right">
-            {user?.name ? (
+            {user?.access_token ? (
               <Tippy
                 interactive
                 render={(attrs) => (
                   <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                    <span>Thông tin cá nhân</span>
+                    <span onClick={() => navigate("/profile")}>Thông tin cá nhân</span>
                     <span>Cách sử dụng</span>
                     <span onClick={handleLogoutUser}>Đăng Xuất</span>
                   </div>
                 )}
               >
-                <p className="name-account">{user.name}</p>
+                <p className="name-account">{user?.name.length ? user?.name : user?.email}</p>
               </Tippy>
             ) : (
               <Tippy
