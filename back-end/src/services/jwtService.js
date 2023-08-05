@@ -37,12 +37,10 @@ const refreshTokenService = (token) => {
           });
         }
 
-        // const { payload } = user;
         const access_token = await genneralAccessToken({
           id: user?.id,
           isAdmin: user?.isAdmin,
         });
-        console.log("access_tokens", access_token);
 
         resolve({
           status: "OK",

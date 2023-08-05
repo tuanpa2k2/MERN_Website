@@ -124,16 +124,38 @@
       .tippy-popper {
         display: grid;
         text-align: center;
-        padding: 2px 15px;
         width: fit-content;
         background-color: #e9e6e6;
         border: 1px solid #a0a0a0;
         border-radius: 5px;
 
-        span {
-          padding: 3px 8px;
+        p {
+          padding: 3px 25px;
           color: var(--text-color);
           pointer-events: none;
+        }
+
+        span {
+          font-size: 1.5rem;
+          padding: 3px 25px;
+          color: var(--text-color);
+          cursor: pointer;
+
+          &:hover {
+            background-color: var(--background-hover);
+            cursor: pointer;
+          }
+
+          &:first-child {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+          }
+          &:last-child {
+            font-weight: 600;
+            border-top: 1px solid black;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+          }
         }
 
         // mũi tên arrow
@@ -150,21 +172,33 @@
         }
       }
 
-      .text-account {
+      .popper-intro,
+      .name-account {
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 5px 18px;
         border-radius: 5px;
+      }
 
+      .popper-intro {
         svg {
           font-size: 20px;
-          margin-right: 5px;
+          margin-right: 8px;
         }
 
         &:hover {
           cursor: pointer;
           background-color: var(--background-hover);
+        }
+      }
+
+      .name-account {
+        color: var(--blue);
+
+        &:hover {
+          color: var(--red);
+          cursor: pointer;
         }
       }
 

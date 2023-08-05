@@ -11,6 +11,7 @@ import "./HeaderComponent.scss";
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
+
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -51,25 +52,27 @@ const HeaderComponent = () => {
                 interactive
                 render={(attrs) => (
                   <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                    <span>Thông tin người dùng</span>
+                    <span>Thông tin cá nhân</span>
+                    <span>Cách sử dụng</span>
+                    <span>Đăng Xuất</span>
                   </div>
                 )}
               >
-                <span className="text-account">{user.name}</span>
+                <p className="name-account">{user.name}</p>
               </Tippy>
             ) : (
               <Tippy
                 interactive
                 render={(attrs) => (
                   <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                    <span>Đăng nhập</span>
+                    <p>Đăng nhập</p>
                   </div>
                 )}
               >
-                <span className="text-account" onClick={() => navigate("/sign-in")}>
+                <div className="popper-intro" onClick={() => navigate("/sign-in")}>
                   <VscAccount />
                   tài khoản
-                </span>
+                </div>
               </Tippy>
             )}
 
@@ -77,7 +80,7 @@ const HeaderComponent = () => {
               interactive
               render={(attrs) => (
                 <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                  <span>Giỏ hàng</span>
+                  <p>Giỏ hàng</p>
                 </div>
               )}
             >
