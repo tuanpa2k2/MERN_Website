@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Tippy from "@tippyjs/react/headless";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
 import { CiMenuKebab } from "react-icons/ci";
 import { VscAccount } from "react-icons/vsc";
 
+import * as UserService from "../../services/UserService";
+import { resetUser } from "../../redux/slides/userSlide";
+
 import "./HeaderComponent.scss";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
 
   const user = useSelector((state) => state.user);
@@ -26,6 +30,11 @@ const HeaderComponent = () => {
     } else {
       setScrolled(false);
     }
+  };
+
+  const handleLogoutUser = () => {
+    UserService.logoutUser();
+    dispatch(resetUser());
   };
 
   return (
@@ -54,7 +63,7 @@ const HeaderComponent = () => {
                   <div className="tippy-popper" tabIndex="-1" {...attrs}>
                     <span>Thông tin cá nhân</span>
                     <span>Cách sử dụng</span>
-                    <span>Đăng Xuất</span>
+                    <span onClick={handleLogoutUser}>Đăng Xuất</span>
                   </div>
                 )}
               >
