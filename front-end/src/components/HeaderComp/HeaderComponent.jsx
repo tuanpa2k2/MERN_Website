@@ -15,12 +15,17 @@ const HeaderComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
+  const [userAvatar, setUserAvatar] = useState("");
 
   const user = useSelector((state) => state.user); // lấy user trong redux-store
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    setUserAvatar(user?.avatar);
+  }, [user?.avatar]);
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -43,11 +48,6 @@ const HeaderComponent = () => {
       <header className={`wrapper-header ${scrolled ? "sticky-header" : ""}`}>
         <div className="inner">
           <div className="left" onClick={() => navigate("/")}>
-            <div className="fires-image">
-              <div className="fire" id="fire1"></div>
-              <div className="fire" id="fire2"></div>
-              <div className="fire" id="fire3"></div>
-            </div>
             <div className="logo">anhtuan shop</div>
           </div>
           <div className="center">
@@ -68,7 +68,10 @@ const HeaderComponent = () => {
                   </div>
                 )}
               >
-                <p className="name-account">{user?.name.length ? user?.name : user?.email}</p>
+                <p className="name-account">
+                  {userAvatar ? <img src={userAvatar} alt="userAvatar" /> : <VscAccount />}
+                  {user?.name.length ? user?.name : user?.email}
+                </p>
               </Tippy>
             ) : (
               <Tippy

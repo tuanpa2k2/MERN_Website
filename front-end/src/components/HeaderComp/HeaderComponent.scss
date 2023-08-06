@@ -12,37 +12,6 @@
     align-items: center;
 
     .left {
-      position: relative;
-
-      .fires-image {
-        .fire {
-          position: absolute;
-          top: 30px;
-          height: 20px;
-          width: 100%;
-          background: url("../../assets/images/product/fire-removebg-preview.png");
-          background-size: 150px 20px;
-        }
-
-        .fire#fire1 {
-          opacity: 1;
-          bottom: 0;
-          animation: animationfire1 15s linear infinite;
-        }
-
-        .fire#fire2 {
-          opacity: 0.5;
-          bottom: 10px;
-          animation: animationfire2 14s linear infinite;
-        }
-
-        .fire#fire3 {
-          opacity: 0.2;
-          bottom: 15px;
-          animation: animationfire1 13s linear infinite;
-        }
-      }
-
       .logo {
         padding: 15px 0;
         text-transform: uppercase;
@@ -179,14 +148,22 @@
         align-items: center;
         padding: 5px 18px;
         border-radius: 5px;
-      }
 
-      .popper-intro {
         svg {
           font-size: 20px;
           margin-right: 8px;
         }
 
+        img {
+          margin-right: 8px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+
+      .popper-intro {
         &:hover {
           cursor: pointer;
           background-color: var(--background-hover);
@@ -197,7 +174,8 @@
         color: var(--blue);
 
         &:hover {
-          color: var(--red);
+          color: red;
+          background-color: var(--background-hover);
           cursor: pointer;
         }
       }

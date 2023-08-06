@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { GoLock, GoUnlock } from "react-icons/go";
 import { BsPencilSquare, BsPhone } from "react-icons/bs";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiOutlineMail, AiOutlineCloudUpload } from "react-icons/ai";
 import { SlLocationPin } from "react-icons/sl";
-import { RxAvatar } from "react-icons/rx";
 
 import * as message from "../../components/MessageComp/MessageComponent";
 import * as UserService from "../../services/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 
-import img from "../../assets/images/product/book.jpg";
-
 import "./ProfilePage.scss";
 import { updateUser } from "../../redux/slides/userSlide";
+import { Button, Upload } from "antd";
+import { getBase64 } from "../../until";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -41,8 +41,7 @@ const ProfilePage = () => {
     const { id, access_token, ...rests } = data;
     UserService.updateUser(id, rests, access_token);
   });
-  const { data, isLoading, isSuccess, isError } = mutation;
-  console.log("dataProfile", data);
+  const { isLoading, isSuccess, isError } = mutation;
 
   useEffect(() => {
     if (isSuccess) {
@@ -78,8 +77,14 @@ const ProfilePage = () => {
     setAddress(e.target.value);
   };
 
-  const handleOnchangeAvatar = (e) => {
-    setAvatar(e.target.value);
+  const handleOnchangeAvatar = async ({ fileList }) => {
+    const file = fileList[0];
+
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setAvatar(file.preview);
   };
 
   const handleUpdateUser = () => {
@@ -88,11 +93,16 @@ const ProfilePage = () => {
 
   return (
     <div className="wapper-profilePage">
-      <div className="header-profile">Thông tin người dùng 👨‍🎓 😂 👨‍🎓 😂 👨‍🎓 </div>
+      <div className="header-profile">👨‍🎓 Thông Tin Người Dùng 👨‍🎓 </div>
       <LoadingComponent isLoading={isLoading}>
         <div className="content-profile">
           <div className="left">
-            <img src={img} alt="avatar" />
+            {avatar && <img src={avatar} alt="avatar" />}
+            <Upload onChange={handleOnchangeAvatar} maxCount={1} className="upload-file">
+              <Button className="btn-chooseFile" icon={<AiOutlineCloudUpload />}>
+                Chọn file ảnh của bạn
+              </Button>
+            </Upload>
           </div>
           <div className="right">
             <div className="imput-form">
@@ -125,21 +135,14 @@ const ProfilePage = () => {
             </div>
             <div className="imput-form">
               <div className="label">Địa chỉ</div>
-              <span className="icon" onClick={() => setIsShowPassword(!isShowPassword)}>
+              <span className="icon">
                 <SlLocationPin />
               </span>
               <input type="text" placeholder={address} onChange={handleOnchangeAddress} />
             </div>
-            <div className="imput-form">
-              <div className="label">Avartar</div>
-              <span className="icon" onClick={() => setIsShowPassword(!isShowPassword)}>
-                <RxAvatar />
-              </span>
-              <input type="text" placeholder={avatar} onChange={handleOnchangeAvatar} />
-            </div>
-            <div className="btn-update">
-              <button onClick={handleUpdateUser}>Cập nhập thông tin</button>
-            </div>
+            <button onClick={handleUpdateUser}>
+              <p>Cập nhập thông tin</p>
+            </button>
           </div>
         </div>
       </LoadingComponent>
