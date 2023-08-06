@@ -1,11 +1,12 @@
 .wrapper-cardComp {
   background-color: var(--white);
   width: 240px;
-  height: 380px;
+  height: 430px;
   border-radius: 10px;
 
   .thumb {
-    height: 75%;
+    height: 65%;
+    padding: 0.7rem;
 
     img {
       width: 100%;
@@ -19,31 +20,92 @@
       }
     }
   }
-
   .detail {
-    // height: 30%;
-    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
     border-top: 1px solid var(--background-hover);
+    padding: 0.7rem;
 
     .name {
-      font-size: 1.8rem;
-      font-weight: 600;
-      display: block;
-      text-transform: capitalize;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      margin-bottom: 8px;
+      min-height: 50px;
+      font-size: 1.7rem;
+      word-wrap: break-word;
+      white-space: normal;
       overflow: hidden;
+      display: -webkit-box;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
     }
 
-    .price {
-      text-transform: uppercase;
-      font-size: 1.7rem;
-      color: var(--primary);
+    .price-container {
+      display: flex;
+      line-height: 28px;
+
+      p {
+        padding: 0 5px;
+      }
+
+      .price {
+        display: flex;
+        align-items: flex-end;
+        width: fit-content;
+        font-size: 2.2rem;
+        color: red;
+      }
+
+      .price-discount {
+        font-size: 1.4rem;
+        text-decoration: line-through;
+        flex: 1;
+        color: rgba(0, 0, 0, 0.54);
+      }
+    }
+
+    .star-container {
+      display: flex;
+      align-items: center;
+      padding-right: 10px;
+      margin-top: 5px;
+
+      .rating {
+        padding-right: 4px;
+        font-size: 1.6rem;
+      }
+
+      .icon-star {
+        display: flex;
+
+        svg {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      color: var(--text-color);
+
+      p {
+        padding: 0 10px;
+      }
+
+      .countInStock {
+        // padding-right: 10px;
+      }
+
+      .selled {
+        flex: 1;
+      }
     }
 
     .des {
+      line-height: 2.5rem;
       font-size: 1.4rem;
-      color: var(--text-color);
+      color: rgba(0, 0, 0, 0.65);
       display: block;
       text-transform: capitalize;
       text-overflow: ellipsis;

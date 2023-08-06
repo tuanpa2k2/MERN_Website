@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
-import AOS from "aos";
+import React from "react";
 import TypeProductComponent from "../../components/TypeProductComp/TypeProductComponent";
 import SliderComponent from "../../components/SliderComp/SliderComponent";
 import CardComponent from "../../components/CardComp/CardComponent";
+import { useQuery } from "@tanstack/react-query";
+import * as ProductService from "../../services/ProductService";
 
 import slider1 from "../../assets/images/slider/slider1.jpg";
 import slider2 from "../../assets/images/slider/slider2.jpg";
@@ -25,9 +26,12 @@ const HomePage = () => {
     "kính thời trang",
   ];
 
-  useEffect(() => {
-    AOS.init();
-  }, []);
+  const fetchProductAll = async () => {
+    const res = await ProductService.getAllProduct();
+    return res;
+  };
+
+  const { data: products } = useQuery(["products"], fetchProductAll, { retry: 3, retryDelay: 1000 });
 
   return (
     <div className="wrapper-containerHomePage">
@@ -37,26 +41,28 @@ const HomePage = () => {
         })}
       </div>
       <div className="wrapper-sliderPage">
-        <SliderComponent
-          arrImages={[slider1, slider2, slider3, slider4, slider5]}
-        />
+        <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} />
       </div>
       <div className="wrapper-homePage">
         <div className="wrapper-cardPage">
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
+          {products?.data?.map((prod) => {
+            return (
+              <CardComponent
+                key={prod.name}
+                countInStock={prod.countInStock}
+                description={prod.description}
+                image={prod.image}
+                name={prod.name}
+                price={prod.price}
+                rating={prod.rating}
+                type={prod.type}
+                discount={prod.discount}
+                selled={prod.selled}
+              />
+            );
+          })}
         </div>
-        <div
-          className="btn-more"
-          data-aos="fade-up"
-          data-aos-anchor-placement="bottom-bottom"
-          data-aos-duration="2000"
-        >
+        <div className="btn-more">
           <button>Xem thêm</button>
         </div>
       </div>
