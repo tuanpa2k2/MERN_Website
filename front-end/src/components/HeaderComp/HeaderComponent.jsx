@@ -63,6 +63,7 @@ const HeaderComponent = () => {
                 render={(attrs) => (
                   <div className="tippy-popper" tabIndex="-1" {...attrs}>
                     <span onClick={() => navigate("/profile")}>Thông tin cá nhân</span>
+                    {user?.isAdmin === true && <span onClick={() => navigate("/system-admin")}>Quản lý hệ thống</span>}
                     <span>Cách sử dụng</span>
                     <span onClick={handleLogoutUser}>Đăng Xuất</span>
                   </div>

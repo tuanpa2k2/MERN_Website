@@ -97,7 +97,7 @@ const ProfilePage = () => {
       <LoadingComponent isLoading={isLoading}>
         <div className="content-profile">
           <div className="left">
-            {avatar && <img src={avatar} alt="avatar" />}
+            <div className="img">{avatar && <img src={avatar} alt="avatar" />}</div>
             <Upload onChange={handleOnchangeAvatar} maxCount={1} className="upload-file">
               <Button className="btn-chooseFile" icon={<AiOutlineCloudUpload />}>
                 Chọn file ảnh của bạn

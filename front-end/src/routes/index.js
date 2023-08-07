@@ -7,6 +7,7 @@ import SignInPage from "../pages/AuthenPage/SignInPage";
 import SignUpPage from "../pages/AuthenPage/SignUpPage";
 import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import AdminPage from "../pages/AdminPage/AdminPage";
 
 export const routes = [
   {
@@ -38,6 +39,11 @@ export const routes = [
     path: "/profile",
     page: ProfilePage,
     isShowHeader: true,
+  },
+  {
+    path: "/system-admin",
+    page: AdminPage,
+    isShowHeader: false,
   },
   {
     path: "/sign-in",
