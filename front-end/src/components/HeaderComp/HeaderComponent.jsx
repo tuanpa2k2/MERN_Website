@@ -11,7 +11,7 @@ import { resetUser } from "../../redux/slides/userSlide";
 
 import "./HeaderComponent.scss";
 
-const HeaderComponent = () => {
+const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
@@ -50,12 +50,14 @@ const HeaderComponent = () => {
           <div className="left" onClick={() => navigate("/")}>
             <div className="logo">anhtuan shop</div>
           </div>
-          <div className="center">
-            <input placeholder="Tìm kiếm sản phẩm..." spellCheck={false} />
-            <button className="btn-search">
-              <AiOutlineSearch />
-            </button>
-          </div>
+          {!isHidenSearch && (
+            <div className="center">
+              <input placeholder="Tìm kiếm sản phẩm..." spellCheck={false} />
+              <button className="btn-search">
+                <AiOutlineSearch />
+              </button>
+            </div>
+          )}
           <div className="right">
             {user?.access_token ? (
               <Tippy
@@ -90,19 +92,21 @@ const HeaderComponent = () => {
               </Tippy>
             )}
 
-            <Tippy
-              interactive
-              render={(attrs) => (
-                <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                  <p>Giỏ hàng</p>
+            {!isHidenCart && (
+              <Tippy
+                interactive
+                render={(attrs) => (
+                  <div className="tippy-popper" tabIndex="-1" {...attrs}>
+                    <p>Giỏ hàng</p>
+                  </div>
+                )}
+              >
+                <div className="cart-icon" onClick={() => navigate("/productDetails")}>
+                  <AiOutlineShoppingCart />
+                  <span>5</span>
                 </div>
-              )}
-            >
-              <div className="cart-icon" onClick={() => navigate("/productDetails")}>
-                <AiOutlineShoppingCart />
-                <span>5</span>
-              </div>
-            </Tippy>
+              </Tippy>
+            )}
 
             <span className="btn-more">
               <CiMenuKebab />

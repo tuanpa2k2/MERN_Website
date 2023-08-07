@@ -1,0 +1,23 @@
+.wrapper-adminPage {
+  display: flex;
+  margin: 0 120px;
+
+  .menu-adminPage {
+    font-size: 1.6rem;
+    width: 256px;
+    height: 100vh;
+    border-left: 1px solid black;
+    box-shadow: 1px 1px 2px #ccc;
+
+    .ant-menu-item {
+      svg {
+        font-size: 22px;
+      }
+    }
+  }
+
+  .right-content {
+    flex: 1;
+    border-right: 1px solid black;
+  }
+}
