@@ -1,46 +1,77 @@
 import React from "react";
 import { Table } from "antd";
 
+import image from "../../assets/images/product/OngVang.jpg";
+
+import "./TableComponent.scss";
+
 const TableComponent = (props) => {
   const columns = [
     {
-      title: "Name",
+      title: "Tên sản phẩm",
       dataIndex: "name",
-      render: (text) => <p>{text}</p>,
+      render: (name) => (
+        <div className="name-product">
+          <p>{name}</p>
+        </div>
+      ),
     },
     {
-      title: "Age",
-      dataIndex: "age",
+      title: "Giá ($)",
+      dataIndex: "price",
     },
     {
-      title: "Address",
-      dataIndex: "address",
+      title: "Đã bán",
+      dataIndex: "selled",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "countInStock",
+    },
+    {
+      title: "Đánh giá (*)",
+      dataIndex: "rating",
+    },
+    {
+      title: "Hình ảnh",
+      render: () => (
+        <div className="data-image">
+          <img src={image} alt="data-img" />
+        </div>
+      ),
+    },
+    {
+      title: "Actions",
+      dataIndex: "action",
     },
   ];
   const data = [
     {
       key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
+      name: "abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv",
+      price: "abc",
+      selled: "abc",
+      countInStock: "abc",
+      rating: "abc",
+      action: "abc",
     },
     {
       key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
+      name: "abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv",
+      price: "abc",
+      selled: "abc",
+      countInStock: "abc",
+      rating: "abc",
+      action: "abc",
     },
     {
       key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-    },
-    {
-      key: "4",
-      name: "Disabled User",
-      age: 99,
-      address: "Sydney No. 1 Lake Park",
+      name: "abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv abcde vdvdvv v abcde vdvdvv",
+      price: "abc",
+      selled: "abc",
+      countInStock: "abc",
+      rating: "abc",
+      action: "abc",
     },
   ];
 
@@ -60,7 +91,7 @@ const TableComponent = (props) => {
   return (
     <div>
       <Table
-        style={{ border: "1px solid black", height: "100vh" }}
+        className="wrapper-table"
         rowSelection={{
           type: selectionType,
           ...rowSelection,

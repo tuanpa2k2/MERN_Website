@@ -53,7 +53,7 @@ li {
   list-style: none;
 }
 
-/* CSS modal file AdminComponent */
+/* ---------------------------------CSS modal file AdminComponent ----------------------------*/
 :where(.css-dev-only-do-not-override-txh9fw).ant-modal {
   .ant-modal-content {
     width: 800px;
@@ -112,6 +112,25 @@ li {
 
 :where(.css-dev-only-do-not-override-txh9fw).ant-btn-primary {
   width: 100%;
+}
+
+/* -----------CSS Table admin ----------------- */
+:where(.css-dev-only-do-not-override-txh9fw).ant-table-wrapper .ant-table-thead > tr > th,
+:where(.css-dev-only-do-not-override-txh9fw).ant-table-wrapper .ant-table-thead > tr > td {
+  width: 280px;
+  text-align: center;
+  background-color: #c1c1c1;
+}
+
+:where(.css-dev-only-do-not-override-txh9fw).ant-table-wrapper table tr th.ant-table-selection-column,
+:where(.css-dev-only-do-not-override-txh9fw).ant-table-wrapper table tr td.ant-table-selection-column {
+  width: 40px;
+  border-right: 1px solid black;
+}
+
+:where(.css-dev-only-do-not-override-txh9fw).ant-table-wrapper .ant-table-tbody > tr > th,
+:where(.css-dev-only-do-not-override-txh9fw).ant-table-wrapper .ant-table-tbody > tr > td {
+  text-align: center;
 }
 
 /* scrollbar CSS */
