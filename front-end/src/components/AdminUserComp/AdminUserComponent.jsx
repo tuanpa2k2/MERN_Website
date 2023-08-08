@@ -1,5 +1,5 @@
 import React from "react";
-import { AiOutlineUsergroupAdd, AiOutlineSetting } from "react-icons/ai";
+import { AiOutlinePlusCircle, AiOutlineSetting } from "react-icons/ai";
 import TableComponent from "../TableComp/TableComponent";
 
 import "./AdminUserComponent.scss";
@@ -13,7 +13,7 @@ const AdminUserComponent = () => {
           Quản lý thông tin người dùng
         </h3>
         <button>
-          <AiOutlineUsergroupAdd />
+          <AiOutlinePlusCircle />
           Thêm mới người dùng
         </button>
       </div>
