@@ -13,7 +13,7 @@ import "./AdminPage.scss";
 const AdminPage = () => {
   const items = [
     getItem("Quản lý người dùng", "user", <AiOutlineUsergroupAdd />),
-    getItem("Quản lý sản phảm", "product", <AiOutlineShoppingCart />),
+    getItem("Quản lý sản phẩm", "product", <AiOutlineShoppingCart />),
   ];
   const [keySelected, setKeySelected] = useState("");
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle, AiOutlineSetting, AiOutlineCloudUpload } from "react-icons/ai";
+import { BsPen, BsTrash } from "react-icons/bs";
 import TableComponent from "../TableComp/TableComponent";
 
 import "./AdminProductComponent.scss";
@@ -9,8 +10,12 @@ import * as ProductService from "../../services/ProductService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 import * as message from "../../components/MessageComp/MessageComponent";
+import { useQuery } from "@tanstack/react-query";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css"; // optional
 
 const AdminProductComponent = () => {
+  const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stateProduct, setStateProduct] = useState({
     name: "",
@@ -23,7 +28,6 @@ const AdminProductComponent = () => {
     discount: "",
     selled: "",
   });
-  const [form] = Form.useForm();
 
   const mutation = useMutationHooks((data) => {
     const { name, image, type, price, countInStock, rating, description, discount, selled } = data;
@@ -42,8 +46,81 @@ const AdminProductComponent = () => {
     return res;
   });
 
+  const fetchProductAll = async () => {
+    const res = await ProductService.getAllProduct();
+    return res;
+  };
+
   const { data, isSuccess, isError, isLoading } = mutation;
-  console.log("dataaa", data);
+  const { data: products, isLoading: isLoadingProduct } = useQuery(["products"], fetchProductAll, {
+    retry: 3,
+    retryDelay: 1000,
+  });
+
+  const renderIconAction = () => {
+    return (
+      <div className="wrapper-iconAction">
+        <Tippy content="Chi tiết">
+          <div className="bsPen">
+            <BsPen />
+          </div>
+        </Tippy>
+
+        <Tippy content="Xóa">
+          <div className="mdDelete">
+            <BsTrash />
+          </div>
+        </Tippy>
+      </div>
+    );
+  };
+  const columns = [
+    {
+      title: "Tên sản phẩm",
+      dataIndex: "name",
+      render: (name) => (
+        <div className="name-product">
+          <p>{name}</p>
+        </div>
+      ),
+    },
+    {
+      title: "Giá ($)",
+      dataIndex: "price",
+    },
+    {
+      title: "Đã bán",
+      dataIndex: "selled",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "countInStock",
+    },
+    {
+      title: "Đánh giá (*)",
+      dataIndex: "rating",
+    },
+    {
+      title: "Hình ảnh",
+      dataIndex: "image",
+      render: (img) => (
+        <div className="data-image">
+          <img src={img} alt="data-img" />
+        </div>
+      ),
+    },
+    {
+      title: "Actions",
+      dataIndex: "action",
+      render: renderIconAction,
+    },
+  ];
+
+  const dataTable =
+    products?.data?.length &&
+    products?.data?.map((prod) => {
+      return { ...prod, key: prod._id };
+    });
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
@@ -106,7 +183,7 @@ const AdminProductComponent = () => {
         </button>
       </div>
       <div className="right-content-table">
-        <TableComponent />
+        <TableComponent columns={columns} data={dataTable} isLoading={isLoadingProduct} />
       </div>
       <Modal title="Thêm mới sản phẩm" open={isModalOpen} onCancel={handleCancel} centered>
         <LoadingComponent isLoading={isLoading}>

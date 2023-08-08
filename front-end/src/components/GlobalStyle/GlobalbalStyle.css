@@ -133,7 +133,7 @@ li {
   text-align: center;
 }
 
-/* scrollbar CSS */
+/* --------------scrollbar CSS---------------------- */
 html *::-webkit-scrollbar {
   border-radius: 0;
   width: 8px;
