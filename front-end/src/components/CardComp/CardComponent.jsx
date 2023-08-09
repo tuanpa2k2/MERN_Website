@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import { CiStar } from "react-icons/ci";
-
-import product from "../../assets/images/product/OngVang.jpg";
 import "./CardComponent.scss";
 
 const CardComponent = (props) => {
@@ -14,9 +12,7 @@ const CardComponent = (props) => {
 
   return (
     <div data-aos="fade-up" data-aos-duration="2000" className="wrapper-cardComp">
-      <div className="thumb">
-        {props.image ? <img src={image} alt="product" /> : <img src={product} alt="product" />}
-      </div>
+      <div className="thumb">{props.image && <img src={image} alt="product" />}</div>
       <div className="detail">
         <div className="name">{name}</div>
         <div className="price-container">

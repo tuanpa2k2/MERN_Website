@@ -13,10 +13,14 @@ import * as message from "../../components/MessageComp/MessageComponent";
 import { useQuery } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
+import DrawerComponent from "../DrawerComp/DrawerComponent";
+import imagee from "../../assets/images/product/book.jpg";
 
 const AdminProductComponent = () => {
   const [form] = Form.useForm();
+  const [rowSelected, setRowSelected] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [stateProduct, setStateProduct] = useState({
     name: "",
     image: "",
@@ -62,7 +66,7 @@ const AdminProductComponent = () => {
       <div className="wrapper-iconAction">
         <Tippy content="Chi tiết">
           <div className="bsPen">
-            <BsPen />
+            <BsPen onClick={handleDetailProduct} />
           </div>
         </Tippy>
 
@@ -170,6 +174,11 @@ const AdminProductComponent = () => {
     mutation.mutate(stateProduct);
   };
 
+  const handleDetailProduct = () => {
+    setIsOpenDrawer(true);
+    console.log("rowSelete", rowSelected);
+  };
+
   return (
     <div className="wrapper-adminProductComp">
       <div className="right-content-header">
@@ -183,7 +192,18 @@ const AdminProductComponent = () => {
         </button>
       </div>
       <div className="right-content-table">
-        <TableComponent columns={columns} data={dataTable} isLoading={isLoadingProduct} />
+        <TableComponent
+          columns={columns}
+          data={dataTable}
+          isLoading={isLoadingProduct}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                setRowSelected(record._id); //Lấy cái id trong cái Row khi click
+              },
+            };
+          }}
+        />
       </div>
       <Modal title="Thêm mới sản phẩm" open={isModalOpen} onCancel={handleCancel} centered>
         <LoadingComponent isLoading={isLoading}>
@@ -259,6 +279,104 @@ const AdminProductComponent = () => {
           </Form>
         </LoadingComponent>
       </Modal>
+
+      {/* ---------------------------------------------------------------------------------- */}
+      <DrawerComponent
+        title="Chi tiết sản phẩm"
+        isOpen={isOpenDrawer}
+        onClose={() => setIsOpenDrawer(false)}
+        width="70%"
+      >
+        <LoadingComponent isLoading={isLoading}>
+          <Form
+            name="basic"
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 20 }}
+            onFinish={onFinish}
+            autoComplete="on"
+            form={form}
+          >
+            <Form.Item label="Tên sản phẩm" name="name" rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}>
+              <Input name="name" value={stateProduct.name} onChange={handleOnchange} />
+            </Form.Item>
+
+            <Form.Item
+              label="Danh mục (loại)"
+              name="type"
+              rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
+            >
+              <Input name="type" value={stateProduct.type} onChange={handleOnchange} />
+            </Form.Item>
+
+            <Form.Item label="Giá bán ($)" name="price" rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}>
+              <Input name="price" value={stateProduct.price} onChange={handleOnchange} />
+            </Form.Item>
+
+            <Form.Item
+              label="Giảm giá ($)"
+              name="discount"
+              rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
+            >
+              <Input name="discount" value={stateProduct.discount} placeholder="0" onChange={handleOnchange} />
+            </Form.Item>
+
+            <Form.Item
+              label="Số lượng đã bán"
+              name="selled"
+              rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
+            >
+              <Input name="selled" value={stateProduct.selled} placeholder="0" onChange={handleOnchange} />
+            </Form.Item>
+
+            <Form.Item
+              label="Số lượng hàng"
+              name="countInStock"
+              rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
+            >
+              <Input name="countInStock" value={stateProduct.countInStock} onChange={handleOnchange} />
+            </Form.Item>
+
+            <Form.Item
+              label="Sao đánh giá (*)"
+              name="rating"
+              rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
+            >
+              <Input name="rating" value={stateProduct.rating} onChange={handleOnchange} />
+            </Form.Item>
+
+            <Form.Item
+              label="Mô tả sản phẩm"
+              name="description"
+              rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
+            >
+              <Input
+                name="description"
+                value={stateProduct.description}
+                placeholder="Thêm mô tả của sản phẩm..."
+                onChange={handleOnchange}
+              />
+            </Form.Item>
+
+            <Form.Item label="Hình ảnh" name="image">
+              <Upload onChange={handleOnchangeAvatar} maxCount={1}>
+                <Button icon={<AiOutlineCloudUpload />}>Chọn file ảnh của bạn</Button>
+              </Upload>
+              {stateProduct?.image && (
+                <div className="image-drawer">
+                  <img src={imagee} alt="avatar" />
+                  {/* <img src={stateProduct?.image} alt="avatar" /> */}
+                </div>
+              )}
+            </Form.Item>
+
+            <Form.Item name="button-submit" wrapperCol={{ span: 24 }}>
+              <Button type="primary" htmlType="submit">
+                Cập nhập
+              </Button>
+            </Form.Item>
+          </Form>
+        </LoadingComponent>
+      </DrawerComponent>
     </div>
   );
 };
