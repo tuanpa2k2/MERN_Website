@@ -14,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import DrawerComponent from "../DrawerComp/DrawerComponent";
-import imagee from "../../assets/images/product/book.jpg";
 
 const AdminProductComponent = () => {
   const [form] = Form.useForm();
@@ -22,6 +21,17 @@ const AdminProductComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [stateProduct, setStateProduct] = useState({
+    name: "",
+    image: "",
+    type: "",
+    price: "",
+    countInStock: "",
+    rating: "",
+    description: "",
+    discount: "",
+    selled: "",
+  });
+  const [stateProductDetails, setStateProductDetails] = useState({
     name: "",
     image: "",
     type: "",
@@ -50,9 +60,44 @@ const AdminProductComponent = () => {
     return res;
   });
 
+  useEffect(() => {
+    form.setFieldsValue(stateProductDetails);
+  }, [form, stateProductDetails]);
+
+  useEffect(() => {
+    if (rowSelected) {
+      fetchGetDetailProduct(rowSelected);
+    }
+    setRowSelected("");
+  }, [rowSelected]);
+
   const fetchProductAll = async () => {
     const res = await ProductService.getAllProduct();
     return res;
+  };
+  const fetchGetDetailProduct = async (rowSelected) => {
+    const res = await ProductService.getDetailProduct(rowSelected);
+
+    if (res?.data) {
+      setStateProductDetails({
+        name: res?.data?.name,
+        image: res?.data?.image,
+        type: res?.data?.type,
+        price: res?.data?.price,
+        countInStock: res?.data?.countInStock,
+        rating: res?.data?.rating,
+        description: res?.data?.description,
+        discount: res?.data?.discount,
+        selled: res?.data?.selled,
+      });
+    }
+  };
+
+  const handleDetailProduct = () => {
+    if (rowSelected) {
+      fetchGetDetailProduct();
+    }
+    setIsOpenDrawer(true);
   };
 
   const { data, isSuccess, isError, isLoading } = mutation;
@@ -141,6 +186,12 @@ const AdminProductComponent = () => {
       [e.target.name]: e.target.value,
     });
   };
+  const handleOnchangeDetails = (e) => {
+    setStateProductDetails({
+      ...stateProductDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleOnchangeAvatar = async ({ fileList }) => {
     const file = fileList[0];
@@ -151,6 +202,18 @@ const AdminProductComponent = () => {
 
     setStateProduct({
       ...stateProduct,
+      image: file.preview,
+    });
+  };
+  const handleOnchangeAvatarDetails = async ({ fileList }) => {
+    const file = fileList[0];
+
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setStateProductDetails({
+      ...stateProductDetails,
       image: file.preview,
     });
   };
@@ -174,11 +237,6 @@ const AdminProductComponent = () => {
     mutation.mutate(stateProduct);
   };
 
-  const handleDetailProduct = () => {
-    setIsOpenDrawer(true);
-    console.log("rowSelete", rowSelected);
-  };
-
   return (
     <div className="wrapper-adminProductComp">
       <div className="right-content-header">
@@ -200,6 +258,7 @@ const AdminProductComponent = () => {
             return {
               onClick: (event) => {
                 setRowSelected(record._id); //Lấy cái id trong cái Row khi click
+                console.log("record._id", record._id);
               },
             };
           }}
@@ -297,7 +356,7 @@ const AdminProductComponent = () => {
             form={form}
           >
             <Form.Item label="Tên sản phẩm" name="name" rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}>
-              <Input name="name" value={stateProduct.name} onChange={handleOnchange} />
+              <Input name="name" value={stateProductDetails.name} onChange={handleOnchangeDetails} />
             </Form.Item>
 
             <Form.Item
@@ -305,11 +364,11 @@ const AdminProductComponent = () => {
               name="type"
               rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
             >
-              <Input name="type" value={stateProduct.type} onChange={handleOnchange} />
+              <Input name="type" value={stateProductDetails.type} onChange={handleOnchangeDetails} />
             </Form.Item>
 
             <Form.Item label="Giá bán ($)" name="price" rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}>
-              <Input name="price" value={stateProduct.price} onChange={handleOnchange} />
+              <Input name="price" value={stateProductDetails.price} onChange={handleOnchangeDetails} />
             </Form.Item>
 
             <Form.Item
@@ -317,7 +376,12 @@ const AdminProductComponent = () => {
               name="discount"
               rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
             >
-              <Input name="discount" value={stateProduct.discount} placeholder="0" onChange={handleOnchange} />
+              <Input
+                name="discount"
+                value={stateProductDetails.discount}
+                placeholder="0"
+                onChange={handleOnchangeDetails}
+              />
             </Form.Item>
 
             <Form.Item
@@ -325,7 +389,12 @@ const AdminProductComponent = () => {
               name="selled"
               rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
             >
-              <Input name="selled" value={stateProduct.selled} placeholder="0" onChange={handleOnchange} />
+              <Input
+                name="selled"
+                value={stateProductDetails.selled}
+                placeholder="0"
+                onChange={handleOnchangeDetails}
+              />
             </Form.Item>
 
             <Form.Item
@@ -333,7 +402,7 @@ const AdminProductComponent = () => {
               name="countInStock"
               rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
             >
-              <Input name="countInStock" value={stateProduct.countInStock} onChange={handleOnchange} />
+              <Input name="countInStock" value={stateProductDetails.countInStock} onChange={handleOnchangeDetails} />
             </Form.Item>
 
             <Form.Item
@@ -341,7 +410,7 @@ const AdminProductComponent = () => {
               name="rating"
               rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
             >
-              <Input name="rating" value={stateProduct.rating} onChange={handleOnchange} />
+              <Input name="rating" value={stateProductDetails.rating} onChange={handleOnchangeDetails} />
             </Form.Item>
 
             <Form.Item
@@ -351,27 +420,26 @@ const AdminProductComponent = () => {
             >
               <Input
                 name="description"
-                value={stateProduct.description}
+                value={stateProductDetails.description}
                 placeholder="Thêm mô tả của sản phẩm..."
-                onChange={handleOnchange}
+                onChange={handleOnchangeDetails}
               />
             </Form.Item>
 
             <Form.Item label="Hình ảnh" name="image">
-              <Upload onChange={handleOnchangeAvatar} maxCount={1}>
+              <Upload onChange={handleOnchangeAvatarDetails} maxCount={1}>
                 <Button icon={<AiOutlineCloudUpload />}>Chọn file ảnh của bạn</Button>
               </Upload>
-              {stateProduct?.image && (
+              {stateProductDetails?.image && (
                 <div className="image-drawer">
-                  <img src={imagee} alt="avatar" />
-                  {/* <img src={stateProduct?.image} alt="avatar" /> */}
+                  <img src={stateProductDetails?.image} alt="avatar" />
                 </div>
               )}
             </Form.Item>
 
             <Form.Item name="button-submit" wrapperCol={{ span: 24 }}>
-              <Button type="primary" htmlType="submit">
-                Cập nhập
+              <Button type="primary" htmlType="submit" style={{ fontWeight: 600 }}>
+                CẬP NHẬP SẢN PHẨM
               </Button>
             </Form.Item>
           </Form>
