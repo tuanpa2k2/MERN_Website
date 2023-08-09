@@ -60,8 +60,8 @@ function App() {
 
   return (
     <div>
-      <LoadingComponent isLoading={isLoading}>
-        <Router>
+      <Router>
+        <LoadingComponent isLoading={isLoading}>
           <Routes>
             {routes.map((route) => {
               const Page = route.page;
@@ -81,8 +81,8 @@ function App() {
               );
             })}
           </Routes>
-        </Router>
-      </LoadingComponent>
+        </LoadingComponent>
+      </Router>
     </div>
   );
 }
