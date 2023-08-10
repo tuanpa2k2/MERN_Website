@@ -27,7 +27,7 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      message.success();
+      message.success("Đăng nhập thành công.");
       navigate("/");
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
 

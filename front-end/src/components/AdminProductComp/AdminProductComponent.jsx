@@ -14,12 +14,16 @@ import { useQuery } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import DrawerComponent from "../DrawerComp/DrawerComponent";
+import { useSelector } from "react-redux";
 
 const AdminProductComponent = () => {
-  const [form] = Form.useForm();
+  const user = useSelector((state) => state?.user);
+
   const [rowSelected, setRowSelected] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
   const [stateProduct, setStateProduct] = useState({
     name: "",
     image: "",
@@ -43,6 +47,8 @@ const AdminProductComponent = () => {
     selled: "",
   });
 
+  const [form] = Form.useForm();
+
   const mutation = useMutationHooks((data) => {
     const { name, image, type, price, countInStock, rating, description, discount, selled } = data;
     const res = ProductService.createProduct({
@@ -59,17 +65,12 @@ const AdminProductComponent = () => {
 
     return res;
   });
+  const mutationUpdate = useMutationHooks((data) => {
+    const { id, token, ...rests } = data;
+    const res = ProductService.updateProduct(id, token, rests);
 
-  useEffect(() => {
-    form.setFieldsValue(stateProductDetails);
-  }, [form, stateProductDetails]);
-
-  useEffect(() => {
-    if (rowSelected) {
-      fetchGetDetailProduct(rowSelected);
-    }
-    setRowSelected("");
-  }, [rowSelected]);
+    return res;
+  });
 
   const fetchProductAll = async () => {
     const res = await ProductService.getAllProduct();
@@ -91,20 +92,33 @@ const AdminProductComponent = () => {
         selled: res?.data?.selled,
       });
     }
+
+    setIsLoadingUpdate(false);
   };
 
-  const handleDetailProduct = () => {
+  useEffect(() => {
+    form.setFieldsValue(stateProductDetails);
+  }, [form, stateProductDetails]);
+
+  useEffect(() => {
     if (rowSelected) {
-      fetchGetDetailProduct();
+      setIsLoadingUpdate(true);
+      fetchGetDetailProduct(rowSelected);
     }
+  }, [rowSelected]);
+
+  const handleDetailProduct = () => {
     setIsOpenDrawer(true);
   };
 
   const { data, isSuccess, isError, isLoading } = mutation;
-  const { data: products, isLoading: isLoadingProduct } = useQuery(["products"], fetchProductAll, {
+  const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated } = mutationUpdate;
+
+  const queryProduct = useQuery(["products"], fetchProductAll, {
     retry: 3,
     retryDelay: 1000,
   });
+  const { data: products, isLoading: isLoadingProduct } = queryProduct;
 
   const renderIconAction = () => {
     return (
@@ -180,6 +194,13 @@ const AdminProductComponent = () => {
     }
   }, [isSuccess, isError]);
 
+  useEffect(() => {
+    if (isSuccessUpdated && dataUpdated?.status === "OK") {
+      message.success("Cập nhập sản phẩm thành công");
+      handleCloseDrawer();
+    }
+  }, [isSuccessUpdated]);
+
   const handleOnchange = (e) => {
     setStateProduct({
       ...stateProduct,
@@ -233,8 +254,42 @@ const AdminProductComponent = () => {
     });
     form.resetFields();
   };
+  const handleCloseDrawer = () => {
+    setIsOpenDrawer(false);
+    setStateProductDetails({
+      name: "",
+      image: "",
+      type: "",
+      price: "",
+      countInStock: "",
+      rating: "",
+      description: "",
+      discount: "",
+      selled: "",
+    });
+    form.resetFields();
+  };
+
   const onFinish = () => {
-    mutation.mutate(stateProduct);
+    mutation.mutate(stateProduct, {
+      onSettled: () => {
+        queryProduct.refetch(); // Tự động load data khi thêm mới 1 sản phẩm
+      },
+    });
+  };
+  const onUpdateProduct = () => {
+    mutationUpdate.mutate(
+      {
+        id: rowSelected,
+        token: user?.access_token,
+        ...stateProductDetails,
+      },
+      {
+        onSettled: () => {
+          queryProduct.refetch(); // Tự động load data khi thêm mới 1 sản phẩm
+        },
+      }
+    );
   };
 
   return (
@@ -254,11 +309,10 @@ const AdminProductComponent = () => {
           columns={columns}
           data={dataTable}
           isLoading={isLoadingProduct}
-          onRow={(record, rowIndex) => {
+          onRow={(record) => {
             return {
-              onClick: (event) => {
+              onClick: () => {
                 setRowSelected(record._id); //Lấy cái id trong cái Row khi click
-                console.log("record._id", record._id);
               },
             };
           }}
@@ -346,12 +400,12 @@ const AdminProductComponent = () => {
         onClose={() => setIsOpenDrawer(false)}
         width="70%"
       >
-        <LoadingComponent isLoading={isLoading}>
+        <LoadingComponent isLoading={isLoadingUpdate || isLoadingUpdated}>
           <Form
             name="basic"
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 20 }}
-            onFinish={onFinish}
+            onFinish={onUpdateProduct}
             autoComplete="on"
             form={form}
           >
