@@ -56,7 +56,6 @@ li {
 /* --------------------------------- CSS modal file AdminComponent ----------------------------*/
 :where(.css-dev-only-do-not-override-txh9fw).ant-modal {
   .ant-modal-content {
-    width: 800px;
     margin: 0 -120px;
   }
 
@@ -67,10 +66,6 @@ li {
     .ant-modal-title {
       font-size: 2rem;
     }
-  }
-
-  .ant-modal-footer .ant-btn + .ant-btn:not(.ant-dropdown-trigger) {
-    display: none;
   }
 
   .ant-modal-close {
@@ -119,10 +114,6 @@ li {
 
 :where(.css-dev-only-do-not-override-txh9fw).ant-modal .ant-modal-footer {
   margin-top: -15px;
-}
-
-:where(.css-dev-only-do-not-override-txh9fw).ant-btn-primary {
-  width: 100%;
 }
 
 /* ----------- CSS Table admin ----------------- */

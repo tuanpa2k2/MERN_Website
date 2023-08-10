@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle, AiOutlineSetting, AiOutlineCloudUpload } from "react-icons/ai";
 import { BsPen, BsTrash } from "react-icons/bs";
+import { CiWarning } from "react-icons/ci";
 import TableComponent from "../TableComp/TableComponent";
 
 import "./AdminProductComponent.scss";
-import { Button, Form, Input, Modal, Upload } from "antd";
+import { Button, Form, Input, Upload } from "antd";
 import { getBase64 } from "../../until";
 import * as ProductService from "../../services/ProductService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
@@ -15,6 +16,7 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import DrawerComponent from "../DrawerComp/DrawerComponent";
 import { useSelector } from "react-redux";
+import ModalComponent from "../ModalComp/ModalComponent";
 
 const AdminProductComponent = () => {
   const user = useSelector((state) => state?.user);
@@ -23,6 +25,7 @@ const AdminProductComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
 
   const [stateProduct, setStateProduct] = useState({
     name: "",
@@ -49,6 +52,7 @@ const AdminProductComponent = () => {
 
   const [form] = Form.useForm();
 
+  // Mutation -----------------------------------------------------------------------------
   const mutation = useMutationHooks((data) => {
     const { name, image, type, price, countInStock, rating, description, discount, selled } = data;
     const res = ProductService.createProduct({
@@ -71,7 +75,14 @@ const AdminProductComponent = () => {
 
     return res;
   });
+  const mutationDeleted = useMutationHooks((data) => {
+    const { id, token } = data;
+    const res = ProductService.deleteProduct(id, token);
 
+    return res;
+  });
+
+  // Handle API ---------------------------------------------------------------------------
   const fetchProductAll = async () => {
     const res = await ProductService.getAllProduct();
     return res;
@@ -111,8 +122,9 @@ const AdminProductComponent = () => {
     setIsOpenDrawer(true);
   };
 
-  const { data, isSuccess, isError, isLoading } = mutation;
+  const { data, isSuccess, isLoading } = mutation;
   const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated } = mutationUpdate;
+  const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted } = mutationDeleted;
 
   const queryProduct = useQuery(["products"], fetchProductAll, {
     retry: 3,
@@ -131,7 +143,7 @@ const AdminProductComponent = () => {
 
         <Tippy content="Xóa">
           <div className="mdDelete">
-            <BsTrash />
+            <BsTrash onClick={() => setIsModalOpenDelete(true)} />
           </div>
         </Tippy>
       </div>
@@ -185,14 +197,13 @@ const AdminProductComponent = () => {
       return { ...prod, key: prod._id };
     });
 
+  // -- useEffect() hiện thông báo khi handle ----------------------------------
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
       message.success("Thêm sản phẩm thành công");
       handleCancel();
-    } else if (isError && data?.status === "ERR") {
-      message.error("Đã xảy ra lỗi, vui logf kiểm tra lại");
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess]);
 
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === "OK") {
@@ -201,6 +212,14 @@ const AdminProductComponent = () => {
     }
   }, [isSuccessUpdated]);
 
+  useEffect(() => {
+    if (isLoadingDeleted && dataDeleted?.status === "OK") {
+      message.success("Xóa sản phẩm thành công");
+      handleCancelDelete();
+    }
+  }, [isSuccessDeleted]);
+
+  //----------------------------------------------------------------------------------------------
   const handleOnchange = (e) => {
     setStateProduct({
       ...stateProduct,
@@ -239,6 +258,10 @@ const AdminProductComponent = () => {
     });
   };
 
+  // Handle close (open) các modal, icons
+  const handleCancelDelete = () => {
+    setIsModalOpenDelete(false);
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
     setStateProduct({
@@ -270,6 +293,7 @@ const AdminProductComponent = () => {
     form.resetFields();
   };
 
+  // Nhận và xử lý mutate() trong react-query ------------------------------------------------------
   const onFinish = () => {
     mutation.mutate(stateProduct, {
       onSettled: () => {
@@ -286,7 +310,20 @@ const AdminProductComponent = () => {
       },
       {
         onSettled: () => {
-          queryProduct.refetch(); // Tự động load data khi thêm mới 1 sản phẩm
+          queryProduct.refetch(); // Tự động load data khi Update mới 1 sản phẩm
+        },
+      }
+    );
+  };
+  const onDeleteProduct = () => {
+    mutationDeleted.mutate(
+      {
+        id: rowSelected,
+        token: user?.access_token,
+      },
+      {
+        onSettled: () => {
+          queryProduct.refetch(); // Tự động load data khi Delete 1 sản phẩm
         },
       }
     );
@@ -318,50 +355,72 @@ const AdminProductComponent = () => {
           }}
         />
       </div>
-      <Modal title="Thêm mới sản phẩm" open={isModalOpen} onCancel={handleCancel} centered>
+      <ModalComponent
+        title="Thêm mới sản phẩm"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        okButtonProps={{ style: { display: "none" } }} // Ẩn button OK trong ant design
+        centered
+      >
         <LoadingComponent isLoading={isLoading}>
           <Form
             name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
             onFinish={onFinish}
             autoComplete="on"
             form={form}
           >
-            <Form.Item label="Name" name="name" rules={[{ required: true, message: "Please input your name!" }]}>
+            <Form.Item
+              label="Tên sản phẩm"
+              name="name"
+              rules={[{ required: true, message: "Please input your name!" }]}
+            >
               <Input name="name" value={stateProduct.name} onChange={handleOnchange} />
             </Form.Item>
 
-            <Form.Item label="Type" name="type" rules={[{ required: true, message: "Please input your type!" }]}>
+            <Form.Item
+              label="Danh mục (thể loại)"
+              name="type"
+              rules={[{ required: true, message: "Please input your type!" }]}
+            >
               <Input name="type" value={stateProduct.type} onChange={handleOnchange} />
             </Form.Item>
 
-            <Form.Item label="Price" name="price" rules={[{ required: true, message: "Please input your price!" }]}>
+            <Form.Item label="Giá bán" name="price" rules={[{ required: true, message: "Please input your price!" }]}>
               <Input name="price" value={stateProduct.price} onChange={handleOnchange} />
             </Form.Item>
 
-            <Form.Item label="Discount" name="discount" rules={[{ message: "Please input your discount!" }]}>
+            <Form.Item
+              label="Giảm giá"
+              name="discount"
+              rules={[{ required: true, message: "Please input your discount!" }]}
+            >
               <Input name="discount" value={stateProduct.discount} placeholder="0" onChange={handleOnchange} />
             </Form.Item>
 
-            <Form.Item label="Selled" name="selled" rules={[{ message: "Please input your selled!" }]}>
+            <Form.Item label="Đã bán" name="selled" rules={[{ required: true, message: "Please input your selled!" }]}>
               <Input name="selled" value={stateProduct.selled} placeholder="0" onChange={handleOnchange} />
             </Form.Item>
 
             <Form.Item
-              label="Count In Stock"
+              label="Số lượng còn"
               name="countInStock"
               rules={[{ required: true, message: "Please input your count In Stock!" }]}
             >
               <Input name="countInStock" value={stateProduct.countInStock} onChange={handleOnchange} />
             </Form.Item>
 
-            <Form.Item label="Rating" name="rating" rules={[{ required: true, message: "Please input your rating!" }]}>
+            <Form.Item
+              label="Đánh giá (*)"
+              name="rating"
+              rules={[{ required: true, message: "Please input your rating!" }]}
+            >
               <Input name="rating" value={stateProduct.rating} onChange={handleOnchange} />
             </Form.Item>
 
             <Form.Item
-              label="Description"
+              label="Mô tả sản phẩm"
               name="description"
               rules={[{ required: true, message: "Please input your description!" }]}
             >
@@ -373,7 +432,7 @@ const AdminProductComponent = () => {
               />
             </Form.Item>
 
-            <Form.Item label="Image" name="image" rules={[{ message: "Please choose image!" }]}>
+            <Form.Item label="Hình ảnh sản phẩm" name="image" rules={[{ message: "Please choose image!" }]}>
               <Upload onChange={handleOnchangeAvatar} maxCount={1}>
                 <Button icon={<AiOutlineCloudUpload />}>Chọn file ảnh của bạn</Button>
               </Upload>
@@ -385,13 +444,13 @@ const AdminProductComponent = () => {
             </Form.Item>
 
             <Form.Item name="button-submit" wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Submit
+              <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+                Tạo sản phẩm
               </Button>
             </Form.Item>
           </Form>
         </LoadingComponent>
-      </Modal>
+      </ModalComponent>
 
       {/* ---------------------------------------------------------------------------------- */}
       <DrawerComponent
@@ -499,6 +558,16 @@ const AdminProductComponent = () => {
           </Form>
         </LoadingComponent>
       </DrawerComponent>
+
+      {/* --------------------------------------------------------------------------------- */}
+      <ModalComponent title="Xóa Dữ Liệu" open={isModalOpenDelete} onOk={onDeleteProduct} onCancel={handleCancelDelete}>
+        <LoadingComponent isLoading={isLoadingDeleted}>
+          <div style={{ display: "grid", justifyItems: "center", paddingBottom: "20px" }}>
+            <span style={{ fontSize: "1.8rem" }}>Bạn có chắc xóa sản phẩm này không?</span>
+            <CiWarning style={{ fontSize: "100px", color: "yellow" }} />
+          </div>
+        </LoadingComponent>
+      </ModalComponent>
     </div>
   );
 };
