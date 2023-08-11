@@ -472,6 +472,7 @@ const AdminProductComponent = () => {
       </div>
       <ModalComponent
         title="Thêm mới sản phẩm"
+        forceRender
         open={isModalOpen}
         onCancel={handleCancel}
         okButtonProps={{ style: { display: "none" } }} // Ẩn button OK trong ant design
