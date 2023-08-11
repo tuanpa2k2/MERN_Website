@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlinePlusCircle, AiOutlineSetting, AiOutlineCloudUpload } from "react-icons/ai";
-import { BsPen, BsTrash } from "react-icons/bs";
+import { BsPen, BsTrash, BsSearch } from "react-icons/bs";
 import { CiWarning } from "react-icons/ci";
 import TableComponent from "../TableComp/TableComponent";
 
 import "./AdminProductComponent.scss";
-import { Button, Form, Input, Upload } from "antd";
+import { Button, Form, Input, Space, Upload } from "antd";
 import { getBase64 } from "../../until";
 import * as ProductService from "../../services/ProductService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
@@ -20,6 +20,7 @@ import ModalComponent from "../ModalComp/ModalComponent";
 
 const AdminProductComponent = () => {
   const user = useSelector((state) => state?.user);
+  const searchInput = useRef(null);
 
   const [rowSelected, setRowSelected] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -149,19 +150,90 @@ const AdminProductComponent = () => {
       </div>
     );
   };
+
+  // --------------------------------------------------------------------------------------------------------------------
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<BsSearch />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => <BsSearch style={{ color: filtered ? "#1677ff" : undefined }} />,
+    onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+  });
+
   const columns = [
     {
       title: "Tên sản phẩm",
       dataIndex: "name",
-      render: (name) => (
+      render: (text) => (
         <div className="name-product">
-          <p>{name}</p>
+          <p>{text}</p>
         </div>
       ),
+      sorter: (a, b) => a.name.length - b.name.length, // sắp xếp theo tên
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Giá ($)",
       dataIndex: "price",
+      filters: [
+        {
+          text: "Dưới 50$",
+          value: "<=",
+        },
+        {
+          text: "Từ 50$ đến 500$",
+          value: "=",
+        },
+        {
+          text: "Trên 500$",
+          value: ">=",
+        },
+      ],
+      onFilter: (value, record) => {
+        if (value === "<=") {
+          return record.price <= 50;
+        } else if (value === "=") {
+          return record.price > 50 && record.price < 500;
+        } else {
+          return record.price >= 500;
+        }
+      },
     },
     {
       title: "Đã bán",
@@ -174,6 +246,47 @@ const AdminProductComponent = () => {
     {
       title: "Đánh giá (*)",
       dataIndex: "rating",
+      filters: [
+        {
+          text: "Dưới 1 sao",
+          value: "<1",
+        },
+        {
+          text: "Trong khoảng 1 sao",
+          value: "<=2",
+        },
+        {
+          text: "Trong khoảng 2 sao",
+          value: "<=3",
+        },
+        {
+          text: "Trong khoảng 3 sao",
+          value: "<=4",
+        },
+        {
+          text: "Trong khoảng 4 sao",
+          value: "<=5",
+        },
+        {
+          text: "5 sao",
+          value: "=5",
+        },
+      ],
+      onFilter: (value, record) => {
+        if (value === "<1") {
+          return record.rating < 1;
+        } else if (value === "<=2") {
+          return record.rating >= 1 && record.rating < 2;
+        } else if (value === "<=3") {
+          return record.rating >= 2 && record.rating < 3;
+        } else if (value === "<=4") {
+          return record.rating >= 3 && record.rating < 4;
+        } else if (value === "<=5") {
+          return record.rating >= 4 && record.rating < 5;
+        } else {
+          return record.rating >= 5;
+        }
+      },
     },
     {
       title: "Hình ảnh",
@@ -212,12 +325,12 @@ const AdminProductComponent = () => {
     }
   }, [isSuccessUpdated]);
 
-  // useEffect(() => {
-  //   if (isLoadingDeleted && dataDeleted?.status === "OK") {
-  //     // handleCancelDelete();
-  //     message.success("Xóa sản phẩm thành công");
-  //   }
-  // }, [isSuccessDeleted]);
+  useEffect(() => {
+    if (isLoadingDeleted && dataDeleted?.status === "OK") {
+      // handleCancelDelete();
+      message.success("Xóa sản phẩm thành công");
+    }
+  }, [isSuccessDeleted]);
 
   //----------------------------------------------------------------------------------------------
   const handleOnchange = (e) => {
