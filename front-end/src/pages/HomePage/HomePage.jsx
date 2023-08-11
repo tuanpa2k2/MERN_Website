@@ -1,8 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import TypeProductComponent from "../../components/TypeProductComp/TypeProductComponent";
 import SliderComponent from "../../components/SliderComp/SliderComponent";
 import CardComponent from "../../components/CardComp/CardComponent";
 import { useQuery } from "@tanstack/react-query";
+import { BsCartX } from "react-icons/bs";
 import * as ProductService from "../../services/ProductService";
 
 import slider1 from "../../assets/images/slider/slider1.jpg";
@@ -45,26 +46,37 @@ const HomePage = () => {
       </div>
       <div className="wrapper-homePage">
         <div className="wrapper-cardPage">
-          {products?.data?.map((prod) => {
-            return (
-              <CardComponent
-                key={prod.name}
-                countInStock={prod.countInStock}
-                description={prod.description}
-                image={prod.image}
-                name={prod.name}
-                price={prod.price}
-                rating={prod.rating}
-                type={prod.type}
-                discount={prod.discount}
-                selled={prod.selled}
-              />
-            );
-          })}
+          {products?.data?.length ? (
+            products?.data?.map((prod) => {
+              return (
+                <CardComponent
+                  key={prod.name}
+                  countInStock={prod.countInStock}
+                  description={prod.description}
+                  image={prod.image}
+                  name={prod.name}
+                  price={prod.price}
+                  rating={prod.rating}
+                  type={prod.type}
+                  discount={prod.discount}
+                  selled={prod.selled}
+                />
+              );
+            })
+          ) : (
+            <div className="card-empty">
+              <span>Chưa có sản phẩm nào ở đây</span>
+              <BsCartX />
+            </div>
+          )}
         </div>
-        <div className="btn-more">
-          <button>Xem thêm</button>
-        </div>
+        {products?.data?.length >= 5 ? (
+          <div className="btn-more">
+            <button>Xem thêm</button>
+          </div>
+        ) : (
+          Fragment
+        )}
       </div>
     </div>
   );

@@ -140,9 +140,9 @@ const ProfilePage = () => {
               </span>
               <input type="text" placeholder={address} onChange={handleOnchangeAddress} />
             </div>
-            <button onClick={handleUpdateUser}>
-              <p>Cập nhập thông tin</p>
-            </button>
+            <div className="btn-updateInfo">
+              <button onClick={handleUpdateUser}>Cập nhập thông tin</button>
+            </div>
           </div>
         </div>
       </LoadingComponent>

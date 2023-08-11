@@ -212,12 +212,12 @@ const AdminProductComponent = () => {
     }
   }, [isSuccessUpdated]);
 
-  useEffect(() => {
-    if (isLoadingDeleted && dataDeleted?.status === "OK") {
-      message.success("Xóa sản phẩm thành công");
-      handleCancelDelete();
-    }
-  }, [isSuccessDeleted]);
+  // useEffect(() => {
+  //   if (isLoadingDeleted && dataDeleted?.status === "OK") {
+  //     // handleCancelDelete();
+  //     message.success("Xóa sản phẩm thành công");
+  //   }
+  // }, [isSuccessDeleted]);
 
   //----------------------------------------------------------------------------------------------
   const handleOnchange = (e) => {
@@ -327,6 +327,8 @@ const AdminProductComponent = () => {
         },
       }
     );
+    handleCancelDelete();
+    message.success("Xóa sản phẩm thành công");
   };
 
   return (

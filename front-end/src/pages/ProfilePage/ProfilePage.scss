@@ -28,12 +28,14 @@
       border-right: 1px solid black;
 
       .img {
-        min-height: 350px;
+        height: 400px;
         background-color: #ffffff;
         margin-bottom: 10px;
 
         img {
-          padding-bottom: 10px;
+          display: flex;
+          align-items: center;
+          padding: 10px;
           border-radius: 50%;
           width: 100%;
           height: 100%;
@@ -95,26 +97,26 @@
         }
       }
 
-      button {
-        background-color: white;
-        margin: 8px 0;
-        padding: 8px 35px;
-        width: 100%;
-        font-size: 1.8rem;
-        color: rgb(255, 0, 0);
-        border: 1px solid red;
-        border-radius: 5px;
+      .btn-updateInfo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 15px 20px;
 
-        &:hover {
-          border-color: blue;
+        button {
+          padding: 8px 0;
+          width: 100%;
+          background-color: white;
+          border: 1px solid blue;
+          border-radius: 10px;
           color: blue;
-          cursor: pointer;
-        }
+          font-weight: 600;
+          font-size: 2rem;
 
-        svg {
-          color: rgb(255, 0, 0);
-          margin-right: 10px;
-          font-size: 22px;
+          &:hover {
+            cursor: pointer;
+            box-shadow: 0 0 15px blue;
+          }
         }
       }
     }
