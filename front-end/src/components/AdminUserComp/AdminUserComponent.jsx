@@ -25,7 +25,6 @@ const AdminUserComponent = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [rowSelected, setRowSelected] = useState("");
-
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
 
   const [stateUser, setStateUser] = useState({
@@ -55,17 +54,21 @@ const AdminUserComponent = () => {
 
     return res;
   });
-
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
     const res = UserService.updateUser(id, token, rests);
 
     return res;
   });
-
   const mutationDeleted = useMutationHooks((data) => {
     const { id, token } = data;
     const res = UserService.deleteUser(id, token);
+
+    return res;
+  });
+  const mutationDeletedMany = useMutationHooks((data) => {
+    const { token, ...ids } = data;
+    const res = UserService.deleteManyUser(ids, token);
 
     return res;
   });
@@ -75,7 +78,6 @@ const AdminUserComponent = () => {
     const res = await UserService.getAllUser(user?.access_token);
     return res;
   };
-
   const getDetailUser = async (rowSelected) => {
     const res = await UserService.getDetailsUser(rowSelected, user?.access_token);
 
@@ -98,16 +100,17 @@ const AdminUserComponent = () => {
   }, [form, stateUserDetail]);
 
   useEffect(() => {
-    if (rowSelected) {
+    if (rowSelected && isOpenDrawer) {
       setIsLoadingUpdate(true);
       getDetailUser(rowSelected);
     }
-  }, [rowSelected]);
+  }, [rowSelected, isOpenDrawer]);
 
   // -----------------------------------------------------------------------------------------------------------------------
   const { data: dataCreate, isSuccess: isSuccessCreate, isLoading: isLoadingCreate } = mutationCreate;
   const { data: dataUpdated, isSuccess: isSuccessUpdated, isLoading: isLoadingUpdated } = mutationUpdate;
   const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted } = mutationDeleted;
+  const { data: dataDeletedMany, isSuccess: isSuccessDeletedMany } = mutationDeletedMany;
 
   const queryUser = useQuery(["users"], getUserAll, {
     retry: 3,
@@ -133,7 +136,6 @@ const AdminUserComponent = () => {
       </div>
     );
   };
-
   const columns = [
     {
       title: "Tên người dùng",
@@ -170,7 +172,6 @@ const AdminUserComponent = () => {
       render: renderIconAction,
     },
   ];
-
   const dataTable =
     users?.data?.length &&
     users?.data?.map((user) => {
@@ -198,6 +199,12 @@ const AdminUserComponent = () => {
       handleCancelDelete();
     }
   }, [isSuccessDeleted]);
+
+  useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
+      message.success("Xóa người dùng thành công");
+    }
+  }, [isSuccessDeletedMany]);
 
   // -----------------------------------------------------------------------------------------------------------------------
   const handleOnchange = (e) => {
@@ -308,6 +315,19 @@ const AdminUserComponent = () => {
       }
     );
   };
+  const handleDeleteManyUsers = (ids) => {
+    mutationDeletedMany.mutate(
+      {
+        ids: ids,
+        token: user?.access_token,
+      },
+      {
+        onSettled: () => {
+          queryUser.refetch(); // Tự động load data khi Update mới 1 sản phẩm
+        },
+      }
+    );
+  };
 
   return (
     <div className="wapper-adminUserComp">
@@ -323,6 +343,7 @@ const AdminUserComponent = () => {
       </div>
       <div className="right-content-table">
         <TableComponent
+          handleDeleteMany={handleDeleteManyUsers}
           columns={columns}
           data={dataTable}
           isLoading={isLoadingUser}
