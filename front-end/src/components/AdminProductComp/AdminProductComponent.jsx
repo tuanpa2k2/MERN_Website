@@ -119,11 +119,11 @@ const AdminProductComponent = () => {
   }, [form, stateProductDetails]);
 
   useEffect(() => {
-    if (rowSelected) {
+    if (rowSelected && isOpenDrawer) {
       setIsLoadingUpdate(true);
       fetchGetDetailProduct(rowSelected);
     }
-  }, [rowSelected]);
+  }, [rowSelected, isOpenDrawer]);
 
   const { data, isSuccess, isLoading } = mutation;
   const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated } = mutationUpdate;
@@ -688,7 +688,7 @@ const AdminProductComponent = () => {
             </Form.Item>
 
             <Form.Item name="button-submit" wrapperCol={{ span: 24 }}>
-              <Button type="primary" htmlType="submit" style={{ fontWeight: 600 }}>
+              <Button type="primary" htmlType="submit" style={{ fontWeight: 600, width: "100%" }}>
                 CẬP NHẬP SẢN PHẨM
               </Button>
             </Form.Item>
