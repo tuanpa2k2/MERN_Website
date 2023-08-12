@@ -418,19 +418,7 @@ const AdminUserComponent = () => {
               </Form.Item>
 
               <Form.Item name="button-submit" wrapperCol={{ offset: 8, span: 16 }}>
-                <div
-                  onClick={onFinish}
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    border: "1px solid blue",
-                    padding: "5px 0",
-                    borderRadius: "8px",
-                    fontSize: "1.7rem",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                  }}
-                >
+                <div className="btn-createUser" onClick={onFinish}>
                   Tạo người dùng
                 </div>
               </Form.Item>
@@ -512,19 +500,7 @@ const AdminUserComponent = () => {
             </Form.Item>
 
             <Form.Item name="button-submit" wrapperCol={{ offset: 8, span: 16 }}>
-              <div
-                onClick={onUpdateUser}
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  border: "1px solid blue",
-                  padding: "5px 0",
-                  borderRadius: "8px",
-                  fontSize: "1.7rem",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                }}
-              >
+              <div onClick={onUpdateUser} className="btn-createUser">
                 Cập nhập thông tin
               </div>
             </Form.Item>

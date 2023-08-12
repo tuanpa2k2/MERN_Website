@@ -135,6 +135,11 @@ li {
   text-align: center;
 }
 
+/* css hover vào table admin colums[name]*/
+:where(.css-dev-only-do-not-override-txh9fw).ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: #c1c1c1;
+}
+
 /* -------------- scrollbar CSS---------------------- */
 html *::-webkit-scrollbar {
   border-radius: 0;

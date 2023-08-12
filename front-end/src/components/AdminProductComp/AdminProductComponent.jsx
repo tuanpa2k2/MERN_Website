@@ -82,6 +82,12 @@ const AdminProductComponent = () => {
 
     return res;
   });
+  const mutationDeletedMany = useMutationHooks((data) => {
+    const { token, ...ids } = data;
+    const res = ProductService.deleteManyProduct(ids, token);
+
+    return res;
+  });
 
   // Handle API ---------------------------------------------------------------------------
   const fetchProductAll = async () => {
@@ -122,6 +128,7 @@ const AdminProductComponent = () => {
   const { data, isSuccess, isLoading } = mutation;
   const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated } = mutationUpdate;
   const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted } = mutationDeleted;
+  const { data: dataDeletedMany, isSuccess: isSuccessDeletedMany } = mutationDeletedMany;
 
   const queryProduct = useQuery(["products"], fetchProductAll, {
     retry: 3,
@@ -328,6 +335,12 @@ const AdminProductComponent = () => {
     }
   }, [isSuccessDeleted]);
 
+  useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
+      message.success("Xóa sản phẩm thành công");
+    }
+  }, [isSuccessDeletedMany]);
+
   //----------------------------------------------------------------------------------------------
   const handleOnchange = (e) => {
     setStateProduct({
@@ -437,6 +450,19 @@ const AdminProductComponent = () => {
       }
     );
   };
+  const handleDeleteManyProducts = (ids) => {
+    mutationDeletedMany.mutate(
+      {
+        ids: ids,
+        token: user?.access_token,
+      },
+      {
+        onSettled: () => {
+          queryProduct.refetch(); // Tự động load data khi Delete 1 sản phẩm
+        },
+      }
+    );
+  };
 
   return (
     <div className="wrapper-adminProductComp">
@@ -452,6 +478,7 @@ const AdminProductComponent = () => {
       </div>
       <div className="right-content-table">
         <TableComponent
+          handleDeleteMany={handleDeleteManyProducts}
           columns={columns}
           data={dataTable}
           isLoading={isLoadingProduct}
