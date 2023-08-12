@@ -135,11 +135,6 @@ li {
   text-align: center;
 }
 
-/* -------------------- CSS Drawer btn-chooseFile ------------------- */
-/* :where(.css-dev-only-do-not-override-txh9fw).ant-btn-default {
-  width: 180%;
-} */
-
 /* -------------- scrollbar CSS---------------------- */
 html *::-webkit-scrollbar {
   border-radius: 0;

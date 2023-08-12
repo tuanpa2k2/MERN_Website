@@ -16,11 +16,14 @@ import * as message from "../../components/MessageComp/MessageComponent";
 import LoadingComponent from "../LoadingComp/LoadingComponent";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import DrawerComponent from "../DrawerComp/DrawerComponent";
 
 const AdminUserComponent = () => {
   const user = useSelector((state) => state?.user);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [rowSelected, setRowSelected] = useState("");
 
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
@@ -36,10 +39,26 @@ const AdminUserComponent = () => {
     avatar: "",
   });
 
+  const [stateUserDetail, setStateUserDetail] = useState({
+    name: "",
+    email: "",
+    isAdmin: false,
+    phone: "",
+    address: "",
+    avatar: "",
+  });
+
   // -----------------------------------------------------------------------------------------------------------------------
   const mutationCreate = useMutationHooks((data) => {
     const { name, email, password, confirmPassword, isAdmin, phone, address, avatar } = data;
     const res = UserService.createUser({ name, email, password, confirmPassword, isAdmin, phone, address, avatar });
+
+    return res;
+  });
+
+  const mutationUpdate = useMutationHooks((data) => {
+    const { id, token, ...rests } = data;
+    const res = UserService.updateUser(id, token, rests);
 
     return res;
   });
@@ -57,8 +76,37 @@ const AdminUserComponent = () => {
     return res;
   };
 
+  const getDetailUser = async (rowSelected) => {
+    const res = await UserService.getDetailsUser(rowSelected, user?.access_token);
+
+    if (res?.data) {
+      setStateUserDetail({
+        name: res?.data?.name,
+        email: res?.data?.email,
+        isAdmin: res?.data?.isAdmin,
+        phone: res?.data?.phone,
+        address: res?.data?.address,
+        avatar: res?.data?.avatar,
+      });
+    }
+
+    setIsLoadingUpdate(false);
+  };
+
+  useEffect(() => {
+    form.setFieldsValue(stateUserDetail);
+  }, [form, stateUserDetail]);
+
+  useEffect(() => {
+    if (rowSelected) {
+      setIsLoadingUpdate(true);
+      getDetailUser(rowSelected);
+    }
+  }, [rowSelected]);
+
   // -----------------------------------------------------------------------------------------------------------------------
   const { data: dataCreate, isSuccess: isSuccessCreate, isLoading: isLoadingCreate } = mutationCreate;
+  const { data: dataUpdated, isSuccess: isSuccessUpdated, isLoading: isLoadingUpdated } = mutationUpdate;
   const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted } = mutationDeleted;
 
   const queryUser = useQuery(["users"], getUserAll, {
@@ -72,7 +120,7 @@ const AdminUserComponent = () => {
     return (
       <div className="wrapper-iconAction">
         <Tippy content="Chi tiết">
-          <div className="bsPen">
+          <div className="bsPen" onClick={() => setIsOpenDrawer(true)}>
             <BsPen />
           </div>
         </Tippy>
@@ -138,18 +186,35 @@ const AdminUserComponent = () => {
   }, [isSuccessCreate]);
 
   useEffect(() => {
+    if (isSuccessUpdated && dataUpdated?.status === "OK") {
+      message.success("Cập nhập nguời dùng thành công");
+      handleCloseDrawer();
+    }
+  }, [isSuccessUpdated]);
+
+  useEffect(() => {
     if (isSuccessDeleted && dataDeleted?.status === "OK") {
       message.success("Xóa sản phẩm thành công");
       handleCancelDelete();
     }
   }, [isSuccessDeleted]);
 
+  // -----------------------------------------------------------------------------------------------------------------------
   const handleOnchange = (e) => {
     setStateUser({
       ...stateUser,
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleOnchangedetails = (e) => {
+    setStateUserDetail({
+      ...stateUserDetail,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // -----------------------------------------------------------------------------------------------------------------------
   const handleOnchangeAvatar = async ({ fileList }) => {
     const file = fileList[0];
 
@@ -163,7 +228,20 @@ const AdminUserComponent = () => {
     });
   };
 
-  // Handle close (open) các modal, icons
+  const handleOnchangeAvatarDetails = async ({ fileList }) => {
+    const file = fileList[0];
+
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setStateUserDetail({
+      ...stateUserDetail,
+      avatar: file.preview,
+    });
+  };
+
+  // Handle close (open) các modal, icons ----------------------------------------------------------------------------------
   const handleCancelDelete = () => {
     setIsModalOpenDelete(false);
   };
@@ -180,6 +258,18 @@ const AdminUserComponent = () => {
       avatar: "",
     });
 
+    form.resetFields();
+  };
+  const handleCloseDrawer = () => {
+    setIsOpenDrawer(false);
+    setStateUserDetail({
+      name: "",
+      email: "",
+      isAdmin: false,
+      phone: "",
+      address: "",
+      avatar: "",
+    });
     form.resetFields();
   };
 
@@ -200,6 +290,20 @@ const AdminUserComponent = () => {
       {
         onSettled: () => {
           queryUser.refetch(); // Tự động load data khi Delete 1 sản phẩm
+        },
+      }
+    );
+  };
+  const onUpdateUser = () => {
+    mutationUpdate.mutate(
+      {
+        id: rowSelected,
+        token: user?.access_token,
+        ...stateUserDetail,
+      },
+      {
+        onSettled: () => {
+          queryUser.refetch(); // Tự động load data khi Update mới 1 sản phẩm
         },
       }
     );
@@ -235,6 +339,7 @@ const AdminUserComponent = () => {
       {/* --------------------------------------------------------------------------------------- */}
       <ModalComponent
         title="Tạo mới người dùng"
+        forceRender
         open={isModalOpen}
         onCancel={handleCancel}
         okButtonProps={{ style: { display: "none" } }} // Ẩn button OK trong ant design
@@ -335,7 +440,13 @@ const AdminUserComponent = () => {
       </ModalComponent>
 
       {/* --------------------------------------------------------------------------------- */}
-      <ModalComponent title="Xóa Dữ Liệu" open={isModalOpenDelete} onOk={onDeleteUser} onCancel={handleCancelDelete}>
+      <ModalComponent
+        forceRender
+        title="Xóa Dữ Liệu"
+        open={isModalOpenDelete}
+        onOk={onDeleteUser}
+        onCancel={handleCancelDelete}
+      >
         <LoadingComponent isLoading={isLoadingDeleted}>
           <div style={{ display: "grid", justifyItems: "center", paddingBottom: "20px" }}>
             <span style={{ fontSize: "1.8rem" }}>Bạn có chắc xóa sản phẩm này không?</span>
@@ -343,6 +454,83 @@ const AdminUserComponent = () => {
           </div>
         </LoadingComponent>
       </ModalComponent>
+
+      {/* --------------------------------------------------------------------------------------- */}
+      <DrawerComponent
+        title="Chi tiết thông tin người dùng"
+        isOpen={isOpenDrawer}
+        onClose={() => setIsOpenDrawer(false)}
+        width="70%"
+      >
+        <LoadingComponent isLoading={isLoadingUpdate || isLoadingUpdated}>
+          <Form name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} autoComplete="on" form={form}>
+            <Form.Item label="Email truy cập" name="email">
+              <Input
+                type="email"
+                name="email"
+                value={stateUserDetail.email}
+                onChange={handleOnchangedetails}
+                placeholder="vd: abc@gmail.com"
+              />
+            </Form.Item>
+
+            <Form.Item label="Quyền truy cập" name="isAdmin">
+              <Input
+                name="isAdmin"
+                value={stateUserDetail.isAdmin}
+                onChange={handleOnchangedetails}
+                placeholder="false or true (default: false)"
+              />
+            </Form.Item>
+
+            <Form.Item label="Tên người dùng" name="name">
+              <Input name="name" value={stateUserDetail.name} onChange={handleOnchangedetails} placeholder="..." />
+            </Form.Item>
+
+            <Form.Item label="Số điện thoại" name="phone">
+              <Input name="phone" value={stateUserDetail.phone} onChange={handleOnchangedetails} placeholder="..." />
+            </Form.Item>
+
+            <Form.Item label="Thông tin địa chỉ" name="address">
+              <Input
+                name="address"
+                value={stateUserDetail.address}
+                onChange={handleOnchangedetails}
+                placeholder="..."
+              />
+            </Form.Item>
+
+            <Form.Item label="Hình ảnh sản phẩm" name="avatar">
+              <Upload onChange={handleOnchangeAvatarDetails} maxCount={1}>
+                <Button icon={<AiOutlineCloudUpload />}>Chọn file ảnh của bạn</Button>
+              </Upload>
+              {stateUserDetail?.avatar && (
+                <div className="image-modal">
+                  <img src={stateUserDetail?.avatar} alt="avatar" />
+                </div>
+              )}
+            </Form.Item>
+
+            <Form.Item name="button-submit" wrapperCol={{ offset: 8, span: 16 }}>
+              <div
+                onClick={onUpdateUser}
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  border: "1px solid blue",
+                  padding: "5px 0",
+                  borderRadius: "8px",
+                  fontSize: "1.7rem",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                }}
+              >
+                Cập nhập thông tin
+              </div>
+            </Form.Item>
+          </Form>
+        </LoadingComponent>
+      </DrawerComponent>
     </div>
   );
 };

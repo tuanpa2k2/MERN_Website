@@ -119,10 +119,6 @@ const AdminProductComponent = () => {
     }
   }, [rowSelected]);
 
-  const handleDetailProduct = () => {
-    setIsOpenDrawer(true);
-  };
-
   const { data, isSuccess, isLoading } = mutation;
   const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated } = mutationUpdate;
   const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted } = mutationDeleted;
@@ -138,7 +134,7 @@ const AdminProductComponent = () => {
       <div className="wrapper-iconAction">
         <Tippy content="Chi tiết">
           <div className="bsPen">
-            <BsPen onClick={handleDetailProduct} />
+            <BsPen onClick={() => setIsOpenDrawer(true)} />
           </div>
         </Tippy>
 
@@ -440,8 +436,6 @@ const AdminProductComponent = () => {
         },
       }
     );
-    // handleCancelDelete();
-    // message.success("Xóa sản phẩm thành công");
   };
 
   return (
@@ -676,7 +670,13 @@ const AdminProductComponent = () => {
       </DrawerComponent>
 
       {/* --------------------------------------------------------------------------------- */}
-      <ModalComponent title="Xóa Dữ Liệu" open={isModalOpenDelete} onOk={onDeleteProduct} onCancel={handleCancelDelete}>
+      <ModalComponent
+        forceRender
+        title="Xóa Dữ Liệu"
+        open={isModalOpenDelete}
+        onOk={onDeleteProduct}
+        onCancel={handleCancelDelete}
+      >
         <LoadingComponent isLoading={isLoadingDeleted}>
           <div style={{ display: "grid", justifyItems: "center", paddingBottom: "20px" }}>
             <span style={{ fontSize: "1.8rem" }}>Bạn có chắc xóa sản phẩm này không?</span>
