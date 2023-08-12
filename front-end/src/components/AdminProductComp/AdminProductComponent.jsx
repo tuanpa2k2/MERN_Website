@@ -152,7 +152,7 @@ const AdminProductComponent = () => {
   };
 
   // --------------------------------------------------------------------------------------------------------------------
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleSearch = (confirm) => {
     confirm();
   };
 
@@ -326,9 +326,9 @@ const AdminProductComponent = () => {
   }, [isSuccessUpdated]);
 
   useEffect(() => {
-    if (isLoadingDeleted && dataDeleted?.status === "OK") {
-      // handleCancelDelete();
+    if (isSuccessDeleted && dataDeleted?.status === "OK") {
       message.success("Xóa sản phẩm thành công");
+      handleCancelDelete();
     }
   }, [isSuccessDeleted]);
 
@@ -440,8 +440,8 @@ const AdminProductComponent = () => {
         },
       }
     );
-    handleCancelDelete();
-    message.success("Xóa sản phẩm thành công");
+    // handleCancelDelete();
+    // message.success("Xóa sản phẩm thành công");
   };
 
   return (

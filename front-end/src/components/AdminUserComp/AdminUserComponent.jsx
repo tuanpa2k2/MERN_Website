@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlinePlusCircle, AiOutlineSetting } from "react-icons/ai";
 import TableComponent from "../TableComp/TableComponent";
-import { AiOutlineCloudUpload } from "react-icons/ai";
+import { AiOutlinePlusCircle, AiOutlineSetting, AiOutlineCloudUpload } from "react-icons/ai";
+import { CiWarning } from "react-icons/ci";
+import { BsPen, BsTrash } from "react-icons/bs";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css"; // optional
 
 import "./AdminUserComponent.scss";
 import ModalComponent from "../ModalComp/ModalComponent";
@@ -11,10 +14,17 @@ import * as UserService from "../../services/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as message from "../../components/MessageComp/MessageComponent";
 import LoadingComponent from "../LoadingComp/LoadingComponent";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 const AdminUserComponent = () => {
+  const user = useSelector((state) => state?.user);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rowSelected, setRowSelected] = useState("");
+
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+
   const [stateUser, setStateUser] = useState({
     name: "",
     email: "",
@@ -34,15 +44,105 @@ const AdminUserComponent = () => {
     return res;
   });
 
-  // -----------------------------------------------------------------------------------------------------------------------
-  const { data, isSuccess: isSuccessCreate, isLoading: isLoadingCreate } = mutationCreate;
+  const mutationDeleted = useMutationHooks((data) => {
+    const { id, token } = data;
+    const res = UserService.deleteUser(id, token);
 
+    return res;
+  });
+
+  // Handle API ---------------------------------------------------------------------------
+  const getUserAll = async () => {
+    const res = await UserService.getAllUser(user?.access_token);
+    return res;
+  };
+
+  // -----------------------------------------------------------------------------------------------------------------------
+  const { data: dataCreate, isSuccess: isSuccessCreate, isLoading: isLoadingCreate } = mutationCreate;
+  const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted } = mutationDeleted;
+
+  const queryUser = useQuery(["users"], getUserAll, {
+    retry: 3,
+    retryDelay: 1000,
+  });
+  const { data: users, isLoading: isLoadingUser } = queryUser;
+
+  // -----------------------------------------------------------------------------------------------------------------------
+  const renderIconAction = () => {
+    return (
+      <div className="wrapper-iconAction">
+        <Tippy content="Chi tiết">
+          <div className="bsPen">
+            <BsPen />
+          </div>
+        </Tippy>
+
+        <Tippy content="Xóa">
+          <div className="mdDelete" onClick={() => setIsModalOpenDelete(true)}>
+            <BsTrash />
+          </div>
+        </Tippy>
+      </div>
+    );
+  };
+
+  const columns = [
+    {
+      title: "Tên người dùng",
+      dataIndex: "name",
+    },
+    {
+      title: "Email ",
+      dataIndex: "email",
+    },
+    {
+      title: "Quyền truy cập ",
+      dataIndex: "isAdmin",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+    },
+    {
+      title: "Địa chỉ",
+      dataIndex: "address",
+    },
+    {
+      title: "Hình ảnh",
+      dataIndex: "avatar",
+      render: (img) => (
+        <div className="data-image">
+          <img src={img} alt="" />
+        </div>
+      ),
+    },
+    {
+      title: "Actions",
+      dataIndex: "action",
+      render: renderIconAction,
+    },
+  ];
+
+  const dataTable =
+    users?.data?.length &&
+    users?.data?.map((user) => {
+      return { ...user, key: user._id, isAdmin: user.isAdmin ? "True" : "False" };
+    });
+
+  // -----------------------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    if (isLoadingCreate && data?.status === "OK") {
-      handleCancel();
+    if (isSuccessCreate && dataCreate?.status === "OK") {
       message.success("Thêm nguời dùng thành công");
+      handleCancel();
     }
   }, [isSuccessCreate]);
+
+  useEffect(() => {
+    if (isSuccessDeleted && dataDeleted?.status === "OK") {
+      message.success("Xóa sản phẩm thành công");
+      handleCancelDelete();
+    }
+  }, [isSuccessDeleted]);
 
   const handleOnchange = (e) => {
     setStateUser({
@@ -63,6 +163,10 @@ const AdminUserComponent = () => {
     });
   };
 
+  // Handle close (open) các modal, icons
+  const handleCancelDelete = () => {
+    setIsModalOpenDelete(false);
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
     setStateUser({
@@ -81,8 +185,26 @@ const AdminUserComponent = () => {
 
   // Nhận và xử lý mutate() trong react-query ------------------------------------------------------
   const onFinish = () => {
-    mutationCreate.mutate(stateUser);
+    mutationCreate.mutate(stateUser, {
+      onSettled: () => {
+        queryUser.refetch(); // Tự động load data khi thêm mới 1 sản phẩm
+      },
+    });
   };
+  const onDeleteUser = () => {
+    mutationDeleted.mutate(
+      {
+        id: rowSelected,
+        token: user?.access_token,
+      },
+      {
+        onSettled: () => {
+          queryUser.refetch(); // Tự động load data khi Delete 1 sản phẩm
+        },
+      }
+    );
+  };
+
   return (
     <div className="wapper-adminUserComp">
       <div className="right-content-header">
@@ -96,7 +218,18 @@ const AdminUserComponent = () => {
         </button>
       </div>
       <div className="right-content-table">
-        <TableComponent />
+        <TableComponent
+          columns={columns}
+          data={dataTable}
+          isLoading={isLoadingUser}
+          onRow={(record) => {
+            return {
+              onClick: () => {
+                setRowSelected(record._id); //Lấy cái id trong cái Row khi click
+              },
+            };
+          }}
+        />
       </div>
 
       {/* --------------------------------------------------------------------------------------- */}
@@ -198,6 +331,16 @@ const AdminUserComponent = () => {
               </Form.Item>
             </Form>
           </Form>
+        </LoadingComponent>
+      </ModalComponent>
+
+      {/* --------------------------------------------------------------------------------- */}
+      <ModalComponent title="Xóa Dữ Liệu" open={isModalOpenDelete} onOk={onDeleteUser} onCancel={handleCancelDelete}>
+        <LoadingComponent isLoading={isLoadingDeleted}>
+          <div style={{ display: "grid", justifyItems: "center", paddingBottom: "20px" }}>
+            <span style={{ fontSize: "1.8rem" }}>Bạn có chắc xóa sản phẩm này không?</span>
+            <CiWarning style={{ fontSize: "100px", color: "yellow" }} />
+          </div>
         </LoadingComponent>
       </ModalComponent>
     </div>
