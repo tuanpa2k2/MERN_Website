@@ -8,6 +8,7 @@ import { VscAccount } from "react-icons/vsc";
 
 import * as UserService from "../../services/UserService";
 import { resetUser } from "../../redux/slides/userSlide";
+import { searchProduct } from "../../redux/slides/productSlide";
 
 import "./HeaderComponent.scss";
 
@@ -16,6 +17,7 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
   const dispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
   const [userAvatar, setUserAvatar] = useState("");
+  const [search, setSearch] = useState(""); // search product
 
   const user = useSelector((state) => state.user); // lấy user trong redux-store
 
@@ -43,6 +45,11 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
     navigate("/");
   };
 
+  const handleOnSearch = (e) => {
+    setSearch(e.target.value);
+    dispatch(searchProduct(e.target.value));
+  };
+
   return (
     <div>
       <header className={`wrapper-header ${scrolled ? "sticky-header" : ""}`}>
@@ -52,7 +59,7 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
           </div>
           {!isHidenSearch && (
             <div className="center">
-              <input placeholder="Tìm kiếm sản phẩm..." spellCheck={false} />
+              <input placeholder="Tìm kiếm sản phẩm..." spellCheck={false} onChange={handleOnSearch} />
               <button className="btn-search">
                 <AiOutlineSearch />
               </button>
