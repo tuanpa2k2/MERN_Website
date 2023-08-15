@@ -16,9 +16,8 @@ const CardComponent = (props) => {
       <div className="detail">
         <div className="name">{name}</div>
         <div className="price-container">
-          <div className="price">${price}</div>
-          <p>-</p>
-          <div className="price-discount">${discount || 0}</div>
+          <div className="price">{price.toLocaleString()} vnđ</div>
+          <div className="price-discount">{discount || 0}%</div>
         </div>
         <div className="star-container">
           <div className="rating">{rating}</div>

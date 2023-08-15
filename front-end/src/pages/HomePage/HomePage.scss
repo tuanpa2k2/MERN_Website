@@ -45,7 +45,7 @@
     .btn-more {
       display: flex;
       justify-content: center;
-      height: 50px;
+      height: 40px;
       margin: 10px 0;
 
       button {
@@ -54,12 +54,12 @@
         border-radius: 10px;
         font-size: 1.8rem;
         font-weight: 600;
-        background-color: var(--white);
         color: var(--blue);
+        background-color: white;
 
         &:hover {
-          background-color: var(--blue);
-          color: var(--white);
+          cursor: pointer;
+          box-shadow: 0 0 15px var(--blue);
         }
       }
     }

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useState } from "react";
 import TypeProductComponent from "../../components/TypeProductComp/TypeProductComponent";
 import SliderComponent from "../../components/SliderComp/SliderComponent";
 import CardComponent from "../../components/CardComp/CardComponent";
@@ -19,9 +19,7 @@ import { useDebounceHook } from "../../hooks/useDebounceHook";
 const HomePage = () => {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounceHook(searchProduct, 2000);
-  const refSearch = useRef();
-  const [stateProducts, setStateProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [limitPage, setLimitPage] = useState(10);
 
   const arrTypeProduct = [
     "Tivi",
@@ -36,35 +34,24 @@ const HomePage = () => {
     "kính thời trang",
   ];
 
-  const fetchProductAll = async (search) => {
-    const res = await ProductService.getAllProduct(search);
-    if (search?.length > 0 || refSearch.current) {
-      setStateProducts(res?.data);
-      return [];
-    }
+  const fetchProductAll = async (context) => {
+    const limit = context?.queryKey && context?.queryKey[1];
+    const search = context?.queryKey && context?.queryKey[2];
+
+    const res = await ProductService.getAllProduct(search, limit);
+
     return res;
   };
 
-  useEffect(() => {
-    if (refSearch.current) {
-      setIsLoading(true);
-      fetchProductAll(searchDebounce);
-    }
-
-    refSearch.current = true;
-    setIsLoading(false);
-  }, [searchDebounce]);
-
-  const { data: products, isLoading: isLoadingProducts } = useQuery(["products"], fetchProductAll, {
+  const {
+    data: products,
+    isLoading: isLoadingProducts,
+    isPreviousData,
+  } = useQuery(["products", limitPage, searchDebounce], fetchProductAll, {
     retry: 3,
     retryDelay: 1000,
+    keepPreviousData: true, // Nó sẽ giữ lại những data đã load rồi, khi click 'xem thêm' thì nó chỉ load data chưa đc load
   });
-
-  useEffect(() => {
-    if (products?.data?.length > 0) {
-      setStateProducts(products?.data);
-    }
-  }, [products]);
 
   return (
     <div className="wrapper-containerHomePage">
@@ -76,11 +63,11 @@ const HomePage = () => {
       <div className="wrapper-sliderPage">
         <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} />
       </div>
-      <LoadingComponent isLoading={isLoading || isLoadingProducts}>
+      <LoadingComponent isLoading={isLoadingProducts}>
         <div className="wrapper-homePage">
           <div className="wrapper-cardPage">
-            {stateProducts?.length ? (
-              stateProducts?.map((prod) => {
+            {products?.data?.length ? (
+              products?.data?.map((prod) => {
                 return (
                   <CardComponent
                     key={prod.name}
@@ -103,12 +90,13 @@ const HomePage = () => {
               </div>
             )}
           </div>
-          {products?.data?.length >= 5 ? (
-            <div className="btn-more">
-              <button>Xem thêm</button>
-            </div>
-          ) : (
+
+          {products?.total === products?.data?.length ? (
             Fragment
+          ) : (
+            <div className="btn-more" onClick={() => setLimitPage((prev) => prev + 5)}>
+              <button>{isPreviousData ? "Đang xử lý..." : "Xem thêm"}</button>
+            </div>
           )}
         </div>
       </LoadingComponent>

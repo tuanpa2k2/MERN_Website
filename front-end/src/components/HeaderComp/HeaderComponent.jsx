@@ -32,7 +32,7 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
   const handleScroll = () => {
     const offset = window.scrollY;
 
-    if (offset > 180) {
+    if (offset > 200) {
       setScrolled(true);
     } else {
       setScrolled(false);

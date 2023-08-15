@@ -42,26 +42,17 @@
 
     .price-container {
       display: flex;
+      justify-content: space-between;
       line-height: 28px;
 
-      p {
-        padding: 0 5px;
-      }
-
       .price {
-        display: flex;
-        margin-top: 2px;
-        width: fit-content;
         font-size: 2.2rem;
         color: red;
       }
 
       .price-discount {
-        display: flex;
-        align-items: flex-end;
         font-size: 1.4rem;
         text-decoration: line-through;
-        flex: 1;
         color: rgba(0, 0, 0, 0.54);
       }
     }
