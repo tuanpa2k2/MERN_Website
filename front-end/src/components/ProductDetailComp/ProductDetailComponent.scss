@@ -47,196 +47,255 @@
   .col-right {
     width: 60%;
     border-left: 1px solid var(--text-color);
-    padding: 5px 10px;
 
     .title-name {
-      line-height: 1.6;
+      padding: 10px 10px;
+      background-color: #d9d9d9;
       text-transform: capitalize;
       font-size: 2.2rem;
-      margin-bottom: 15px;
       color: rgba(0, 0, 0, 0.8);
     }
 
-    h4 {
-      color: rgba(0, 0, 0, 0.8);
-      font-size: 1.8rem;
-      width: 130px;
-      margin-left: 15px;
-    }
-
-    .quantity {
+    .content-details {
       display: flex;
+      justify-content: center;
       align-items: center;
+      padding: 3px 10px;
 
-      .action-quantity {
-        display: flex;
-        align-items: center;
-
-        svg {
-          color: rgba(0, 0, 0, 0.9);
-          font-size: 17px;
-        }
-
-        // -------- btn minus -------
-        .minus {
-          width: 50px;
-          height: 35px;
-          border: 1px solid rgba(0, 0, 0, 0.09);
-        }
-        .minus:first-child {
-          border-top-left-radius: 10px;
-          border-bottom-left-radius: 10px;
-
-          &:hover {
-            cursor: pointer;
-            background-color: var(--background-hover);
-          }
-        }
-
-        .input-text {
-          width: 70px;
-          height: 35px;
-          text-align: center;
-          font-size: 1.8rem;
-          border-top: 1px solid rgba(0, 0, 0, 0.09);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.09);
-        }
-
-        // -------- btn plus -------
-        .plus {
-          width: 50px;
-          height: 35px;
-          border: 1px solid rgba(0, 0, 0, 0.09);
-        }
-
-        .plus:last-child {
-          border-top-right-radius: 10px;
-          border-bottom-right-radius: 10px;
-
-          &:hover {
-            cursor: pointer;
-            background-color: var(--background-hover);
-          }
-        }
+      .name-label {
+        font-size: 1.8rem;
+        font-weight: 500;
+        width: 140px;
       }
-    }
 
-    .price {
-      display: flex;
-      align-items: center;
-      line-height: 40px;
-
-      .price-number {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.3rem;
-        color: var(--red);
-        font-weight: 600;
-
-        p {
-          margin-left: 5px;
-          font-weight: 500;
-        }
-      }
-    }
-
-    .description {
-      display: flex;
-      margin: 10px 0;
-
-      .content-des {
-        font-size: 1.6rem;
+      .detail-label {
         flex: 1;
-        color: rgba(0, 0, 0, 0.8);
-        line-height: 1.8;
-      }
-    }
+        display: flex;
 
-    .location {
-      display: flex;
+        // price -------------------------------------
+        .price {
+          color: red;
+          font-size: 2.6rem;
+          font-weight: 600;
+        }
 
-      .content-location {
-        flex: 1;
-        color: rgba(0, 0, 0, 0.8);
-        font-size: 1.7rem;
-
-        .send-location,
-        .receive-location {
+        .price-discount {
+          flex: 1;
           display: flex;
+          align-items: center;
+          padding-left: 10px;
+          font-size: 1.6rem;
+          text-decoration: line-through;
+          color: rgba(0, 0, 0, 0.54);
+        }
 
-          .icons {
-            display: flex;
-            width: 90px;
+        // Số lượng--------------------------------------
+        .action-quantity {
+          display: flex;
+          align-items: center;
+
+          svg {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 17px;
           }
 
-          span {
-            flex: 1;
-            margin-left: 20px;
+          // -------- btn minus -------
+          .minus {
+            width: 50px;
+            height: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.09);
+          }
+          .minus:first-child {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
 
             &:hover {
               cursor: pointer;
-              text-decoration: underline;
+              background-color: var(--background-hover);
+            }
+          }
+
+          .input-text {
+            width: 70px;
+            height: 40px;
+            text-align: center;
+            font-size: 1.8rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.09);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+          }
+
+          // -------- btn plus -------
+          .plus {
+            width: 50px;
+            height: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.09);
+          }
+
+          .plus:last-child {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+
+            &:hover {
+              cursor: pointer;
+              background-color: var(--background-hover);
             }
           }
         }
 
-        .receive-location {
-          svg {
-            color: var(--blue);
-            font-size: 22px;
-            margin-right: 10px;
-          }
-
-          span {
-            color: var(--blue);
-          }
+        .space {
+          display: flex;
+          padding: 0 25px;
+          justify-content: center;
+          font-size: 22px;
         }
 
-        .send-location {
-          svg {
-            color: var(--red);
-            font-size: 22px;
-            margin-right: 10px;
+        .countInStock {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          font-size: 1.8rem;
+          color: var(--text-color);
+        }
+
+        // Thể loại------------------------------------------
+        .type {
+          font-size: 1.7rem;
+          color: blue;
+        }
+      }
+
+      .detailRating-label {
+        display: flex;
+        flex: 1;
+
+        .rating {
+          display: flex;
+          align-items: center;
+          font-size: 2.2rem;
+          padding-right: 4px;
+        }
+
+        .space-rating {
+          margin: 0 15px;
+          font-size: 20px;
+        }
+
+        .selled {
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          font-size: 1.8rem;
+        }
+      }
+    }
+
+    .content2-details {
+      display: flex;
+      justify-content: flex-start;
+      padding: 3px 10px;
+
+      .name-label {
+        font-size: 1.8rem;
+        font-weight: 500;
+        width: 140px;
+      }
+
+      .detail-label {
+        flex: 1;
+        font-size: 1.7rem;
+        color: rgba(0, 0, 0, 0.8);
+
+        // Chi tiết sản phẩm ------------------------------------
+        p {
+          color: var(--text-color);
+        }
+
+        // Chi tiết nơi vận chuyển --------------------
+        .content-location {
+          flex: 1;
+          color: rgba(0, 0, 0, 0.8);
+
+          .send-location,
+          .receive-location {
+            display: flex;
+
+            .icons {
+              display: flex;
+              width: 90px;
+            }
+
+            span {
+              flex: 1;
+              margin-left: 20px;
+
+              &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+              }
+            }
           }
 
-          span {
-            color: var(--red);
+          .receive-location {
+            svg {
+              color: var(--blue);
+              font-size: 22px;
+              margin-right: 10px;
+            }
+
+            span {
+              color: var(--blue);
+            }
+          }
+
+          .send-location {
+            svg {
+              color: var(--red);
+              font-size: 22px;
+              margin-right: 10px;
+            }
+
+            span {
+              color: var(--red);
+            }
           }
         }
       }
     }
 
+    // -------------------------------------
     .btn-action {
       display: flex;
       align-items: center;
+      justify-content: space-evenly;
       height: 45px;
       margin: 10px 0;
       padding-top: 15px;
       border-top: 1px solid var(--text-color);
 
       button {
-        width: 50%;
-        color: var(--white);
+        width: 40%;
+        color: var(--black);
         border-radius: 20px;
         font-size: 1.8rem;
         height: 40px;
-
-        &:hover {
-          cursor: pointer;
-          opacity: 0.8;
-        }
       }
 
       .add-to-card {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: var(--primary);
+        border: 1px solid var(--primary);
+        border-radius: 10px;
 
         svg {
           font-size: 22px;
           margin-right: 10px;
+        }
+
+        &:hover {
+          cursor: pointer;
+          color: var(--primary);
+          box-shadow: 0 0 10px var(--primary);
         }
       }
 
@@ -244,11 +303,18 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: var(--blue);
+        border: 1px solid var(--blue);
+        border-radius: 10px;
 
         svg {
           font-size: 22px;
           margin-right: 10px;
+        }
+
+        &:hover {
+          cursor: pointer;
+          color: var(--blue);
+          box-shadow: 0 0 10px var(--blue);
         }
       }
     }

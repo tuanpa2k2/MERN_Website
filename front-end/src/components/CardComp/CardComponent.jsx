@@ -1,17 +1,29 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import { CiStar } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
+
 import "./CardComponent.scss";
 
 const CardComponent = (props) => {
-  const { countInStock, image, name, price, rating, type, discount, selled } = props;
+  const { countInStock, image, name, price, rating, type, discount, selled, id } = props;
+  const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init();
   }, []);
 
+  const handleDetailProduct = (id) => {
+    navigate(`/productDetails/${id}`);
+  };
+
   return (
-    <div data-aos="fade-up" data-aos-duration="2000" className="wrapper-cardComp">
+    <div
+      data-aos="fade-up"
+      data-aos-duration="2000"
+      className="wrapper-cardComp"
+      onClick={() => handleDetailProduct(id)}
+    >
       <div className="thumb">{props.image && <img src={image} alt="product" />}</div>
       <div className="detail">
         <div className="name">{name}</div>

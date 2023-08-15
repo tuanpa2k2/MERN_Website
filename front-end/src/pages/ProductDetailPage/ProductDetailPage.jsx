@@ -2,28 +2,26 @@ import React from "react";
 
 import "./ProductDetailPage.scss";
 import ProductDetailComponent from "../../components/ProductDetailComp/ProductDetailComponent";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ProductDetailPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   return (
     <div className="wrapper-proDetailPage">
       <div className="breadcrumb">
         <ul>
-          <li>
+          <li onClick={() => navigate("/")} style={{ fontWeight: "bold" }}>
             <p>Home</p>
           </li>
           <li>
-            <p>type product</p>
-          </li>
-          <li>
-            <p>product detail</p>
-          </li>
-          <li>
-            <p>name product</p>
+            <p>Chi tiết sản phẩm</p>
           </li>
         </ul>
       </div>
       <div className="wrapper-productDetailComp">
-        <ProductDetailComponent />
+        <ProductDetailComponent idProduct={id} />
       </div>
     </div>
   );

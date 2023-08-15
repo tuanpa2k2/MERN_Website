@@ -1,105 +1,160 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { AiOutlineShoppingCart, AiOutlineMinusCircle } from "react-icons/ai";
 import { CiMoneyCheck1, CiLocationOn } from "react-icons/ci";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import { GoPlusCircle } from "react-icons/go";
+import * as ProductService from "../../services/ProductService";
 
-import prod from "../../assets/images/product/naruto.jpg";
+import { useQuery } from "@tanstack/react-query";
 
 import "./ProductDetailComponent.scss";
+import LoadingComponent from "../LoadingComp/LoadingComponent";
+import { Rate } from "antd";
+import { useSelector } from "react-redux";
 
-const ProductDetailComponent = () => {
+const ProductDetailComponent = ({ idProduct }) => {
+  const user = useSelector((state) => state?.user);
+
+  const [numQuantity, setNumQuantity] = useState(1);
+  const onchangeInput = (value) => {
+    setNumQuantity(Number(value));
+  };
+
+  const fetchGetDetailProduct = async (context) => {
+    const idPro = context?.queryKey && context?.queryKey[1];
+
+    const res = await ProductService.getDetailProduct(idPro);
+    return res.data;
+  };
+
+  const { data: productsDetails, isLoading } = useQuery(["products-detils", idProduct], fetchGetDetailProduct, {
+    enabled: !!idProduct,
+  });
+
+  const handleChangeCount = (type) => {
+    if (type === "incraese") {
+      setNumQuantity(numQuantity + 1);
+    } else {
+      setNumQuantity(numQuantity - 1);
+    }
+  };
+
   return (
-    <div className="wrapper-productComp">
-      <div className="col-left">
-        <div className="img-big">
-          <img src={prod} alt="prod" />
-        </div>
-        <div className="img-small">
-          <div className="img-children">
-            <img src={prod} alt="prod" />
+    <LoadingComponent isLoading={isLoading}>
+      <div className="wrapper-productComp">
+        <div className="col-left">
+          <div className="img-big">
+            <img src={productsDetails?.image} alt="prod" />
           </div>
-          <div className="img-children">
-            <img src={prod} alt="prod" />
-          </div>
-          <div className="img-children">
-            <img src={prod} alt="prod" />
-          </div>
-          <div className="img-children">
-            <img src={prod} alt="prod" />
-          </div>
-        </div>
-      </div>
-      <div className="col-right">
-        <div className="title-name">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Recusandae
-          dignissimos illum quod, suscipit doloribus id, quasi fugiat vero eaque
-          a quis! Eaque rem exercitationem nulla, itaque qui expedita odio
-          rerum?
-        </div>
-        <div className="price">
-          <h4>Giá bán:</h4>
-          <span className="price-number">
-            6.000.000 <p>vnd</p>
-          </span>
-        </div>
-        <div className="quantity">
-          <h4>Số lượng:</h4>
-          <div className="action-quantity">
-            <button className="minus">
-              <AiOutlineMinusCircle />
-            </button>
-            <input className="input-text" type="text" value="1" />
-            <button className="plus">
-              <GoPlusCircle />
-            </button>
-          </div>
-        </div>
-        <div className="description">
-          <h4>Mô tả:</h4>
-          <p className="content-des">
-            CHI TIẾT SẢN PHẨM : Thắt lưng nam, Thắt lưng da, Dây nịt nam, Dây
-            lưng nam - Kiểu khóa: Khóa tự động- răng cài khóa - Mặt khóa thiết
-            kế gọn, làm bằng hợp kim Nano chống xước , dễ sử dụng để bạn thoải
-            mái hơn khi cài. - Kích thước dây: Chiều rộng 3cm - Chiều dài dây
-            115 cm
-          </p>
-        </div>
-        <div className="location">
-          <h4>Vận chuyển:</h4>
-          <div className="content-location">
-            <div className="send-location">
-              <div className="icons">
-                <CiLocationOn />
-                gửi từ
-              </div>
-              <span>Thuần Thành, huyện Thái Thụy - Thái Bình.</span>
+          <div className="img-small">
+            <div className="img-children">
+              <img src={productsDetails?.image} alt="prod" />
             </div>
-            <div className="receive-location">
-              <div className="icons">
-                <LiaShippingFastSolid />
-                gửi đến
-              </div>
-              <span>
-                số 8, ngõ 144/4 Quan Nhân, phường Nhân Chính, Thanh Xuân - Hà
-                Nội.
-              </span>
+            <div className="img-children">
+              <img src={productsDetails?.image} alt="prod" />
+            </div>
+            <div className="img-children">
+              <img src={productsDetails?.image} alt="prod" />
+            </div>
+            <div className="img-children">
+              <img src={productsDetails?.image} alt="prod" />
             </div>
           </div>
         </div>
-        <div className="btn-action">
-          <button className="add-to-card">
-            <AiOutlineShoppingCart />
-            Thêm vào giỏ hàng
-          </button>
-          <button className="buy-now">
-            <CiMoneyCheck1 />
-            Mua ngay
-          </button>
+        <div className="col-right">
+          <div className="title-name">{productsDetails?.name}</div>
+
+          <div className="content-details">
+            <div className="name-label">Giá bán:</div>
+            <div className="detail-label">
+              <span className="price">{productsDetails?.price.toLocaleString()} vnđ</span>
+              <span className="price-discount">{productsDetails?.discount}%</span>
+            </div>
+          </div>
+
+          <div className="content-details">
+            <div className="name-label">Số lượng</div>
+            <div className="detail-label">
+              <div className="action-quantity">
+                <button className="minus" onClick={() => handleChangeCount("decraese")}>
+                  <AiOutlineMinusCircle />
+                </button>
+                <input
+                  className="input-text"
+                  type="text"
+                  defaultValue={1}
+                  value={numQuantity}
+                  onChange={onchangeInput}
+                />
+                <button className="plus" onClick={() => handleChangeCount("incraese")}>
+                  <GoPlusCircle />
+                </button>
+              </div>
+              <span className="space">|</span>
+              <span className="countInStock"> Kho hàng: {productsDetails?.countInStock}</span>
+            </div>
+          </div>
+
+          <div className="content-details">
+            <div className="name-label">Thể loại:</div>
+            <div className="detail-label">
+              <span className="type">{productsDetails?.type}</span>
+            </div>
+          </div>
+
+          <div className="content-details">
+            <div className="name-label">Đánh giá:</div>
+            <div className="detailRating-label">
+              <span className="rating">{productsDetails?.rating}-</span>
+              <Rate disabled defaultValue={productsDetails?.rating} value={productsDetails?.rating} />
+              <div className="space-rating">|</div>
+              <span className="selled">Đã bán: {productsDetails?.selled}</span>
+            </div>
+          </div>
+
+          <div className="content2-details">
+            <div className="name-label">Mô tả:</div>
+            <div className="detail-label">
+              <p>{productsDetails?.description}</p>
+            </div>
+          </div>
+
+          <div className="content2-details">
+            <div className="name-label">Vận chuyển:</div>
+            <div className="detail-label">
+              <div className="content-location">
+                <div className="send-location">
+                  <div className="icons">
+                    <CiLocationOn />
+                    gửi từ
+                  </div>
+                  <span>Thuần Thành, huyện Thái Thụy - Thái Bình.</span>
+                </div>
+                <div className="receive-location">
+                  <div className="icons">
+                    <LiaShippingFastSolid />
+                    gửi đến
+                  </div>
+                  <span>{user?.address}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="btn-action">
+            <button className="add-to-card">
+              <AiOutlineShoppingCart />
+              Thêm vào giỏ hàng
+            </button>
+            <button className="buy-now">
+              <CiMoneyCheck1 />
+              Mua ngay
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </LoadingComponent>
   );
 };
 
