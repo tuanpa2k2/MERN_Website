@@ -45,6 +45,7 @@
   }
 
   .col-right {
+    position: relative;
     width: 60%;
     border-left: 1px solid var(--text-color);
 
@@ -61,6 +62,7 @@
       justify-content: center;
       align-items: center;
       padding: 3px 10px;
+      box-shadow: 0px 0px 1px rgb(0, 0, 0);
 
       .name-label {
         font-size: 1.8rem;
@@ -82,9 +84,10 @@
         .price-discount {
           flex: 1;
           display: flex;
-          align-items: center;
-          padding-left: 10px;
-          font-size: 1.6rem;
+          align-items: flex-end;
+          height: 35px;
+          padding-left: 15px;
+          font-size: 1.7rem;
           text-decoration: line-through;
           color: rgba(0, 0, 0, 0.54);
         }
@@ -221,7 +224,8 @@
 
             .icons {
               display: flex;
-              width: 90px;
+              align-items: center;
+              width: 150px;
             }
 
             span {
@@ -264,19 +268,22 @@
 
     // -------------------------------------
     .btn-action {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-evenly;
-      height: 45px;
-      margin: 10px 0;
-      padding-top: 15px;
+      padding: 8px 0;
       border-top: 1px solid var(--text-color);
+      background-color: rgb(155, 155, 155);
 
       button {
-        width: 40%;
+        width: 45%;
         color: var(--black);
         border-radius: 20px;
         font-size: 1.8rem;
+        font-weight: 600;
         height: 40px;
       }
 

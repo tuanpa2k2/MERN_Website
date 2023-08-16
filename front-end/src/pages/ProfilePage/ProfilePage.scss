@@ -19,7 +19,7 @@
     display: flex;
     align-items: flex-start;
     width: 100%;
-    min-height: 640px;
+    min-height: calc(100vh - 250px);
 
     .left {
       width: 35%;

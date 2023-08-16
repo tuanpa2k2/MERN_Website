@@ -126,14 +126,14 @@ const ProductDetailComponent = ({ idProduct }) => {
                 <div className="send-location">
                   <div className="icons">
                     <CiLocationOn />
-                    gửi từ
+                    kho hàng ở:
                   </div>
                   <span>Thuần Thành, huyện Thái Thụy - Thái Bình.</span>
                 </div>
                 <div className="receive-location">
                   <div className="icons">
                     <LiaShippingFastSolid />
-                    gửi đến
+                    địa chỉ của bạn:
                   </div>
                   <span>{user?.address}</span>
                 </div>
