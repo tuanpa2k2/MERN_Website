@@ -5,8 +5,8 @@ import { CiWarning } from "react-icons/ci";
 import TableComponent from "../TableComp/TableComponent";
 
 import "./AdminProductComponent.scss";
-import { Button, Form, Input, Space, Upload } from "antd";
-import { getBase64 } from "../../until";
+import { Button, Form, Input, Select, Space, Upload } from "antd";
+import { getBase64, renderOpptions } from "../../until";
 import * as ProductService from "../../services/ProductService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
@@ -38,6 +38,7 @@ const AdminProductComponent = () => {
     description: "",
     discount: "",
     selled: "",
+    newType: "",
   });
   const [stateProductDetails, setStateProductDetails] = useState({
     name: "",
@@ -113,6 +114,10 @@ const AdminProductComponent = () => {
 
     setIsLoadingUpdate(false);
   };
+  const fetchProductAllType = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    return res;
+  };
 
   useEffect(() => {
     form.setFieldsValue(stateProductDetails);
@@ -134,6 +139,11 @@ const AdminProductComponent = () => {
     retry: 3,
     retryDelay: 1000,
   });
+  const queryTypeProduct = useQuery(["type-product"], fetchProductAllType, {
+    retry: 3,
+    retryDelay: 1000,
+  });
+
   const { data: products, isLoading: isLoadingProduct } = queryProduct;
 
   const renderIconAction = () => {
@@ -212,7 +222,7 @@ const AdminProductComponent = () => {
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Giá ($)",
+      title: "Giá (vnđ)",
       dataIndex: "price",
       filters: [
         {
@@ -379,6 +389,12 @@ const AdminProductComponent = () => {
       image: file.preview,
     });
   };
+  const handleChangeSelectType = (value) => {
+    setStateProduct({
+      ...stateProduct,
+      type: value,
+    });
+  };
 
   // Handle close (open) các modal, icons
   const handleCancelDelete = () => {
@@ -417,7 +433,19 @@ const AdminProductComponent = () => {
 
   // Nhận và xử lý mutate() trong react-query ------------------------------------------------------
   const onFinish = () => {
-    mutation.mutate(stateProduct, {
+    const params = {
+      name: stateProduct.name,
+      image: stateProduct.image,
+      type: stateProduct.type === "add_type" ? stateProduct.newType : stateProduct.type,
+      price: stateProduct.price,
+      countInStock: stateProduct.countInStock,
+      rating: stateProduct.rating,
+      description: stateProduct.description,
+      discount: stateProduct.discount,
+      selled: stateProduct.selled,
+    };
+
+    mutation.mutate(params, {
       onSettled: () => {
         queryProduct.refetch(); // Tự động load data khi thêm mới 1 sản phẩm
       },
@@ -482,6 +510,7 @@ const AdminProductComponent = () => {
           columns={columns}
           data={dataTable}
           isLoading={isLoadingProduct}
+          // pagination={false}
           onRow={(record) => {
             return {
               onClick: () => {
@@ -521,8 +550,23 @@ const AdminProductComponent = () => {
               name="type"
               rules={[{ required: true, message: "Please input your type!" }]}
             >
-              <Input name="type" value={stateProduct.type} onChange={handleOnchange} />
+              <Select
+                name="type"
+                value={stateProduct.type}
+                onChange={handleChangeSelectType}
+                options={renderOpptions(queryTypeProduct?.data?.data)}
+              />
             </Form.Item>
+
+            {stateProduct.type === "add_type" && (
+              <Form.Item
+                label="Thêm loại sản phẩm:"
+                name="newType"
+                rules={[{ required: true, message: "Please input your type!" }]}
+              >
+                <Input name="newType" value={stateProduct.newType} onChange={handleOnchange} />
+              </Form.Item>
+            )}
 
             <Form.Item label="Giá bán" name="price" rules={[{ required: true, message: "Please input your price!" }]}>
               <Input name="price" value={stateProduct.price} onChange={handleOnchange} />

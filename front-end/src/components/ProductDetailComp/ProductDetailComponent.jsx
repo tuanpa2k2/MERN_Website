@@ -106,7 +106,6 @@ const ProductDetailComponent = ({ idProduct }) => {
           <div className="content-details">
             <div className="name-label">Đánh giá:</div>
             <div className="detailRating-label">
-              <span className="rating">{productsDetails?.rating}-</span>
               <Rate disabled defaultValue={productsDetails?.rating} value={productsDetails?.rating} />
               <div className="space-rating">|</div>
               <span className="selled">Đã bán: {productsDetails?.selled}</span>

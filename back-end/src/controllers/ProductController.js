@@ -66,7 +66,18 @@ const getAllProduct = async (req, res) => {
   try {
     const { limit, page, sort, filter } = req.query;
 
-    const response = await ProductService.getAllProduct(Number(limit) || 15, Number(page) || 0, sort, filter);
+    const response = await ProductService.getAllProduct(Number(limit) || 10, Number(page) || 0, sort, filter);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const getAllTypeProduct = async (req, res) => {
+  try {
+    const response = await ProductService.getAllTypeProduct();
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -120,6 +131,7 @@ module.exports = {
   updateProduct,
   getDetailProduct,
   getAllProduct,
+  getAllTypeProduct,
   deleteProduct,
   deleteManyProduct,
 };

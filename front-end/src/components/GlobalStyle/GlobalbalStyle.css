@@ -140,6 +140,11 @@ li {
   background: #c1c1c1;
 }
 
+/* css đánh giá sao --------------------------------*/
+:where(.css-dev-only-do-not-override-txh9fw).ant-rate {
+  font-size: 17px;
+}
+
 /* -------------- scrollbar CSS---------------------- */
 html *::-webkit-scrollbar {
   border-radius: 0;

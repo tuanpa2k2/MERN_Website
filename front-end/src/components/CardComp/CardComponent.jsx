@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
-import { CiStar } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
 import "./CardComponent.scss";
+import { Rate } from "antd";
 
 const CardComponent = (props) => {
   const { countInStock, image, name, price, rating, type, discount, selled, id } = props;
@@ -33,13 +33,7 @@ const CardComponent = (props) => {
         </div>
         <div className="star-container">
           <div className="rating">{rating}</div>
-          <div className="icon-star">
-            <CiStar />
-            <CiStar />
-            <CiStar />
-            <CiStar />
-            <CiStar />
-          </div>
+          <Rate disabled defaultValue={rating} value={rating} />
         </div>
         <div className="quantity">
           <div className="countInStock">Số lượng: {countInStock}</div>

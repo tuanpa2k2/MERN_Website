@@ -25,3 +25,22 @@ export function getItem(label, key, icon, children, type) {
     type,
   };
 }
+
+export const renderOpptions = (arr) => {
+  let results = [];
+
+  if (arr) {
+    results = arr?.map((opp) => {
+      return {
+        value: opp,
+        label: opp,
+      };
+    });
+  }
+  results.push({
+    label: "Thêm loại sản phẩm của bạn...",
+    value: "add_type",
+  });
+
+  return results;
+};

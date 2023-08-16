@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import TypeProductComponent from "../../components/TypeProductComp/TypeProductComponent";
 import SliderComponent from "../../components/SliderComp/SliderComponent";
 import CardComponent from "../../components/CardComp/CardComponent";
@@ -20,26 +20,21 @@ const HomePage = () => {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounceHook(searchProduct, 2000);
   const [limitPage, setLimitPage] = useState(10);
-
-  const arrTypeProduct = [
-    "Tivi",
-    "Tủ lạnh",
-    "máy giặt",
-    "điều hòa",
-    "laptop",
-    "điện thoại",
-    "áo phông",
-    "giày",
-    "quần jean",
-    "kính thời trang",
-  ];
+  const [typeProduct, setTypeProduct] = useState([]);
 
   const fetchProductAll = async (context) => {
     const limit = context?.queryKey && context?.queryKey[1];
     const search = context?.queryKey && context?.queryKey[2];
 
     const res = await ProductService.getAllProduct(search, limit);
+    return res;
+  };
 
+  const fetchProductAllType = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    if (res?.status === "OK") {
+      setTypeProduct(res?.data);
+    }
     return res;
   };
 
@@ -53,10 +48,15 @@ const HomePage = () => {
     keepPreviousData: true, // Nó sẽ giữ lại những data đã load rồi, khi click 'xem thêm' thì nó chỉ load data chưa đc load
   });
 
+  // Gọi luôn type product
+  useEffect(() => {
+    fetchProductAllType();
+  }, []);
+
   return (
     <div className="wrapper-containerHomePage">
       <div className="wrapper-typeProductComp">
-        {arrTypeProduct.map((item) => {
+        {typeProduct.map((item) => {
           return <TypeProductComponent key={item} name={item} />;
         })}
       </div>
