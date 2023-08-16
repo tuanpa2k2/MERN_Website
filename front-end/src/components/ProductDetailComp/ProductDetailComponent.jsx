@@ -68,7 +68,7 @@ const ProductDetailComponent = ({ idProduct }) => {
           <div className="content-details">
             <div className="name-label">Giá bán:</div>
             <div className="detail-label">
-              <span className="price">{productsDetails?.price.toLocaleString()} vnđ</span>
+              <span className="price">{productsDetails?.price?.toLocaleString()} vnđ</span>
               <span className="price-discount">{productsDetails?.discount}%</span>
             </div>
           </div>
