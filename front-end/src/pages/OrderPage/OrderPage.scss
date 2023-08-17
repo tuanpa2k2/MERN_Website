@@ -43,6 +43,7 @@
       border: 1px solid black;
 
       .selected-table {
+        position: relative;
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -53,7 +54,7 @@
         background-color: #acacac;
 
         .input-action {
-          width: 5%;
+          width: 5.3%;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -71,6 +72,36 @@
             margin: 0 5px;
             color: red;
             font-style: oblique;
+          }
+        }
+
+        .btn-deleteAll {
+          position: absolute;
+          right: 0;
+
+          button {
+            padding: 4px 20px;
+            display: flex;
+            align-items: center;
+            border: 1px solid blue;
+            border-radius: 8px;
+            color: blue;
+            font-size: 1.5rem;
+
+            p {
+              margin-top: 2px;
+            }
+
+            svg {
+              font-size: 18px;
+              margin-right: 5px;
+            }
+
+            &:hover {
+              cursor: pointer;
+              background-color: red;
+              color: whitesmoke;
+            }
           }
         }
       }

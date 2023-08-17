@@ -1,15 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import { FcShipped } from "react-icons/fc";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 import "./OrderPage.scss";
 import { Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { decreaseAmount, increaseAmount, removeOrderProduct } from "../../redux/slides/orderSlide";
+import {
+  decreaseAmount,
+  increaseAmount,
+  removeOrderProduct,
+  removeOrderProductAll,
+} from "../../redux/slides/orderSlide";
+import * as message from "../../components/MessageComp/MessageComponent";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
   const dispatch = useDispatch();
+  const [listChecked, setListChecked] = useState([]);
+
+  const onchangeCheckbox = (e) => {
+    if (listChecked.includes(e.target.value)) {
+      const newListChecked = listChecked.filter((item) => item !== e.target.value);
+      setListChecked(newListChecked);
+    } else {
+      setListChecked([...listChecked, e.target.value]);
+    }
+  };
+
+  const onchangeCheckboxAll = (e) => {
+    if (e.target.checked) {
+      const newListChecked = [];
+      order?.orderItems?.forEach((element) => {
+        newListChecked.push(element?.product);
+      });
+      setListChecked(newListChecked);
+    } else {
+      setListChecked([]);
+    }
+  };
 
   const handleOnchangeCount = (type, idProduct) => {
     if (type === "increase") {
@@ -20,7 +48,15 @@ const OrderPage = () => {
   };
 
   const handleDeleteProduct = (idProduct) => {
+    message.success("Xóa sản phẩm thành công!");
     dispatch(removeOrderProduct({ idProduct }));
+  };
+
+  const handleDeleteProductAll = () => {
+    if (listChecked?.length > 0) {
+      message.success("Xóa sản phẩm thành công!");
+      dispatch(removeOrderProductAll({ listChecked }));
+    }
   };
 
   return (
@@ -35,17 +71,22 @@ const OrderPage = () => {
         <div className="left">
           <div className="selected-table">
             <div className="input-action">
-              <Checkbox />
+              <Checkbox onChange={onchangeCheckboxAll} checked={listChecked?.length === order?.orderItems?.length} />
             </div>
             <div className="texttttt">
               Tất cả giỏ hàng có <p>{order?.orderItems?.length}</p> sản phẩm
             </div>
+            {listChecked?.length > 0 && (
+              <div className="btn-deleteAll" onClick={handleDeleteProductAll}>
+                <button>
+                  <RiDeleteBin6Line /> <p>Xóa tất cả</p>
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="header-table">
-            <div className="input-action">
-              <Checkbox />
-            </div>
+            <div className="input-action">#</div>
             <div className="image-product">Hình ảnh</div>
             <div className="name-product">Tên sản phẩm</div>
             <div className="quantity-product">Số lượng</div>
@@ -56,11 +97,14 @@ const OrderPage = () => {
 
           <div className="kkkkkkk">
             {order?.orderItems?.map((iten) => {
-              console.log("iten", iten);
               return (
                 <div className="content-table" key={iten?.product}>
                   <div className="input-action">
-                    <Checkbox />
+                    <Checkbox
+                      onChange={onchangeCheckbox}
+                      value={iten?.product}
+                      checked={listChecked.includes(iten?.product)}
+                    />
                   </div>
                   <div className="image">
                     <img src={iten?.image} alt="" />

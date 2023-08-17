@@ -44,10 +44,17 @@ export const orderSlice = createSlice({
       const itemOrder = state?.orderItems?.filter((item) => item?.product !== idProduct);
       state.orderItems = itemOrder;
     },
+    removeOrderProductAll: (state, action) => {
+      const { listChecked } = action.payload;
+
+      const itemOrder = state?.orderItems?.filter((item) => !listChecked.includes(item.product));
+      state.orderItems = itemOrder;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addOrderProduct, increaseAmount, decreaseAmount, removeOrderProduct } = orderSlice.actions;
+export const { addOrderProduct, increaseAmount, decreaseAmount, removeOrderProduct, removeOrderProductAll } =
+  orderSlice.actions;
 
 export default orderSlice.reducer;
