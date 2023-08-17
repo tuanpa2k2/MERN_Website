@@ -4,6 +4,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 import prod from "../../assets/images/product/book.jpg";
 import "./OrderPage.scss";
+import { Checkbox } from "antd";
 
 const OrderPage = () => {
   return (
@@ -18,14 +19,16 @@ const OrderPage = () => {
         <div className="left">
           <div className="selected-table">
             <div className="input-action">
-              <input type="checkbox" />
+              {/* <input type="checkbox" /> */}
+              <Checkbox />
             </div>
-            <span>Tất cả (10 sản phẩm)</span>
+            <div className="texttttt">Tất cả giỏ hàng có (10 sản phẩm)</div>
           </div>
 
           <div className="header-table">
             <div className="input-action">
-              <input type="checkbox" />
+              {/* <input type="checkbox" /> */}
+              <Checkbox />
             </div>
             <div className="image-product">Hình ảnh</div>
             <div className="name-product">Tên sản phẩm</div>
@@ -38,7 +41,8 @@ const OrderPage = () => {
           <div className="kkkkkkk">
             <div className="content-table">
               <div className="input-action">
-                <input type="checkbox" />
+                {/* <input type="checkbox" /> */}
+                <Checkbox />
               </div>
               <div className="image">
                 <img src={prod} alt="" />

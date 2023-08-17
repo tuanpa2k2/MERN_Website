@@ -54,14 +54,13 @@
 
         .input-action {
           width: 5%;
-          height: 100%;
           display: flex;
           justify-content: center;
           align-items: center;
           border-right: 1px solid black;
         }
 
-        span {
+        .texttttt {
           width: 95%;
           padding-left: 8px;
           font-size: 1.7rem;
@@ -134,7 +133,7 @@
           height: fit-content;
           font-size: 1.6rem;
           text-align: center;
-          border: 1px solid blue;
+          border-bottom: 1px solid blue;
 
           .input-action {
             width: 5%;
