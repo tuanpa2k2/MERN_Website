@@ -20,6 +20,7 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
   const [search, setSearch] = useState(""); // search product
 
   const user = useSelector((state) => state.user); // lấy user trong redux-store
+  const order = useSelector((state) => state.order);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -110,7 +111,7 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
               >
                 <div className="cart-icon" onClick={() => navigate("/order")}>
                   <AiOutlineShoppingCart />
-                  <span>5</span>
+                  <span>{order?.orderItems?.length}</span>
                 </div>
               </Tippy>
             )}

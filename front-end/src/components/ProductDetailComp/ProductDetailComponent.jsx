@@ -5,16 +5,22 @@ import { CiMoneyCheck1, CiLocationOn } from "react-icons/ci";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import { GoPlusCircle } from "react-icons/go";
 import * as ProductService from "../../services/ProductService";
+import * as message from "../MessageComp/MessageComponent";
 
 import { useQuery } from "@tanstack/react-query";
 
 import "./ProductDetailComponent.scss";
 import LoadingComponent from "../LoadingComp/LoadingComponent";
 import { Rate } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addOrderProduct } from "../../redux/slides/orderSlide";
 
 const ProductDetailComponent = ({ idProduct }) => {
   const user = useSelector((state) => state?.user);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   const [numQuantity, setNumQuantity] = useState(1);
   const onchangeInput = (value) => {
@@ -37,6 +43,26 @@ const ProductDetailComponent = ({ idProduct }) => {
       setNumQuantity(numQuantity + 1);
     } else {
       setNumQuantity(numQuantity - 1);
+    }
+  };
+
+  const handleAddOrderProduct = () => {
+    if (!user?.id) {
+      message.warning("Vui lòng phải đăng nhập để mua hàng!");
+      navigate("/sign-in", { state: location?.pathname });
+    } else {
+      message.success("Thêm vào giỏ hàng thành công!");
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: productsDetails?.name,
+            amount: numQuantity,
+            image: productsDetails?.image,
+            price: productsDetails?.price,
+            product: productsDetails?._id,
+          },
+        })
+      );
     }
   };
 
@@ -142,7 +168,7 @@ const ProductDetailComponent = ({ idProduct }) => {
           </div>
 
           <div className="btn-action">
-            <button className="add-to-card">
+            <button className="add-to-card" onClick={handleAddOrderProduct}>
               <AiOutlineShoppingCart />
               Thêm vào giỏ hàng
             </button>

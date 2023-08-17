@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CiMail } from "react-icons/ci";
 import { GoLock, GoUnlock } from "react-icons/go";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 import "./AuthenPage.scss";
 
 const SignInPage = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -27,8 +28,14 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      message.success("Đăng nhập thành công.");
-      navigate("/");
+      if (location?.state) {
+        // cái state này là state `pathname`, nó nằm ở 'btn-thêm vào giỏ hàng trong ProductDetailComp'
+        message.success("Đăng nhập thành công.");
+        navigate(location?.state);
+      } else {
+        message.success("Đăng nhập thành công.");
+        navigate("/");
+      }
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
 
       if (data?.access_token) {

@@ -5,8 +5,11 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import prod from "../../assets/images/product/book.jpg";
 import "./OrderPage.scss";
 import { Checkbox } from "antd";
+import { useSelector } from "react-redux";
 
 const OrderPage = () => {
+  const order = useSelector((state) => state.order);
+
   return (
     <div className="wrapper-containerOrderPage">
       <div className="header-title">
@@ -19,15 +22,15 @@ const OrderPage = () => {
         <div className="left">
           <div className="selected-table">
             <div className="input-action">
-              {/* <input type="checkbox" /> */}
               <Checkbox />
             </div>
-            <div className="texttttt">Tất cả giỏ hàng có (10 sản phẩm)</div>
+            <div className="texttttt">
+              Tất cả giỏ hàng có <p>{order?.orderItems?.length}</p> sản phẩm
+            </div>
           </div>
 
           <div className="header-table">
             <div className="input-action">
-              {/* <input type="checkbox" /> */}
               <Checkbox />
             </div>
             <div className="image-product">Hình ảnh</div>
@@ -39,28 +42,31 @@ const OrderPage = () => {
           </div>
 
           <div className="kkkkkkk">
-            <div className="content-table">
-              <div className="input-action">
-                {/* <input type="checkbox" /> */}
-                <Checkbox />
-              </div>
-              <div className="image">
-                <img src={prod} alt="" />
-              </div>
-              <div className="name">Te sản phẩm v n phẩm ên sản phẩm v</div>
-              <div className="quantity">
-                <div className="abcd">
-                  <button className="btn-decrease">-</button>
-                  <input type="text" />
-                  <button className="btn-increase">+</button>
+            {order?.orderItems?.map((iten) => {
+              return (
+                <div className="content-table" key={iten?.name}>
+                  <div className="input-action">
+                    <Checkbox />
+                  </div>
+                  <div className="image">
+                    <img src={iten?.image} alt="" />
+                  </div>
+                  <div className="name">{iten?.name}</div>
+                  <div className="quantity">
+                    <div className="abcd">
+                      <button className="btn-decrease">-</button>
+                      <input type="text" defaultValue={1} value={iten?.amount} />
+                      <button className="btn-increase">+</button>
+                    </div>
+                  </div>
+                  <div className="price">{iten?.price?.toLocaleString()}</div>
+                  <div className="total">{(iten?.price * iten?.amount).toLocaleString()}</div>
+                  <div className="action">
+                    <RiDeleteBin6Line />
+                  </div>
                 </div>
-              </div>
-              <div className="price">200.000</div>
-              <div className="total">1.000.000</div>
-              <div className="action">
-                <RiDeleteBin6Line />
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
 
