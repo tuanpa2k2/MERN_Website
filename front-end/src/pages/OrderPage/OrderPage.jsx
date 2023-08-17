@@ -2,13 +2,22 @@ import React from "react";
 import { FcShipped } from "react-icons/fc";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-import prod from "../../assets/images/product/book.jpg";
 import "./OrderPage.scss";
 import { Checkbox } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { decreaseAmount, increaseAmount } from "../../redux/slides/orderSlide";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  const handleOnchangeCount = (type, idProduct) => {
+    if (type === "increase") {
+      dispatch(increaseAmount({ idProduct }));
+    } else {
+      dispatch(decreaseAmount({ idProduct }));
+    }
+  };
 
   return (
     <div className="wrapper-containerOrderPage">
@@ -43,8 +52,9 @@ const OrderPage = () => {
 
           <div className="kkkkkkk">
             {order?.orderItems?.map((iten) => {
+              console.log("iten", iten);
               return (
-                <div className="content-table" key={iten?.name}>
+                <div className="content-table" key={iten?.product}>
                   <div className="input-action">
                     <Checkbox />
                   </div>
@@ -54,9 +64,13 @@ const OrderPage = () => {
                   <div className="name">{iten?.name}</div>
                   <div className="quantity">
                     <div className="abcd">
-                      <button className="btn-decrease">-</button>
+                      <button className="btn-decrease" onClick={() => handleOnchangeCount("decrease", iten?.product)}>
+                        -
+                      </button>
                       <input type="text" defaultValue={1} value={iten?.amount} />
-                      <button className="btn-increase">+</button>
+                      <button className="btn-increase" onClick={() => handleOnchangeCount("increase", iten?.product)}>
+                        +
+                      </button>
                     </div>
                   </div>
                   <div className="price">{iten?.price?.toLocaleString()}</div>
