@@ -108,7 +108,7 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
                   </div>
                 )}
               >
-                <div className="cart-icon" onClick={() => navigate("/productDetails")}>
+                <div className="cart-icon" onClick={() => navigate("/order")}>
                   <AiOutlineShoppingCart />
                   <span>5</span>
                 </div>

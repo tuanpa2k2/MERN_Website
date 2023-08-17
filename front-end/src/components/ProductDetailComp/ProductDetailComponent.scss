@@ -61,7 +61,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 3px 10px;
+      padding: 8px 10px;
       box-shadow: 0px 0px 1px rgb(0, 0, 0);
 
       .name-label {
@@ -104,10 +104,16 @@
 
           // -------- btn minus -------
           .minus {
-            width: 50px;
-            height: 40px;
+            width: 45px;
+            height: 32px;
             border: 1px solid rgba(0, 0, 0, 0.09);
+
+            svg {
+              display: flex;
+              margin-left: 14px;
+            }
           }
+
           .minus:first-child {
             border-top-left-radius: 10px;
             border-bottom-left-radius: 10px;
@@ -119,8 +125,8 @@
           }
 
           .input-text {
-            width: 70px;
-            height: 40px;
+            width: 60px;
+            height: 32px;
             text-align: center;
             font-size: 1.8rem;
             border-top: 1px solid rgba(0, 0, 0, 0.09);
@@ -129,9 +135,14 @@
 
           // -------- btn plus -------
           .plus {
-            width: 50px;
-            height: 40px;
+            width: 45px;
+            height: 32px;
             border: 1px solid rgba(0, 0, 0, 0.09);
+
+            svg {
+              display: flex;
+              margin-left: 14px;
+            }
           }
 
           .plus:last-child {
@@ -195,7 +206,7 @@
     .content2-details {
       display: flex;
       justify-content: flex-start;
-      padding: 3px 10px;
+      padding: 8px 10px;
 
       .name-label {
         font-size: 1.8rem;
@@ -207,6 +218,7 @@
         flex: 1;
         font-size: 1.7rem;
         color: rgba(0, 0, 0, 0.8);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
         // Chi tiết sản phẩm ------------------------------------
         p {
@@ -276,7 +288,7 @@
       justify-content: space-evenly;
       padding: 8px 0;
       border-top: 1px solid var(--text-color);
-      background-color: rgb(155, 155, 155);
+      background-color: #e6e6e6;
 
       button {
         width: 45%;
