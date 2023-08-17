@@ -48,6 +48,6 @@ export const orderSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addOrderProduct, increaseAmount, decreaseAmount } = orderSlice.actions;
+export const { addOrderProduct, increaseAmount, decreaseAmount, removeOrderProduct } = orderSlice.actions;
 
 export default orderSlice.reducer;

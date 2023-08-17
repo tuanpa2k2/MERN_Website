@@ -5,7 +5,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import "./OrderPage.scss";
 import { Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { decreaseAmount, increaseAmount } from "../../redux/slides/orderSlide";
+import { decreaseAmount, increaseAmount, removeOrderProduct } from "../../redux/slides/orderSlide";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
@@ -17,6 +17,10 @@ const OrderPage = () => {
     } else {
       dispatch(decreaseAmount({ idProduct }));
     }
+  };
+
+  const handleDeleteProduct = (idProduct) => {
+    dispatch(removeOrderProduct({ idProduct }));
   };
 
   return (
@@ -76,7 +80,7 @@ const OrderPage = () => {
                   <div className="price">{iten?.price?.toLocaleString()}</div>
                   <div className="total">{(iten?.price * iten?.amount).toLocaleString()}</div>
                   <div className="action">
-                    <RiDeleteBin6Line />
+                    <RiDeleteBin6Line onClick={() => handleDeleteProduct(iten?.product)} />
                   </div>
                 </div>
               );
