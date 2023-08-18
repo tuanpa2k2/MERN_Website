@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FcShipped } from "react-icons/fc";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { BsCartX } from "react-icons/bs";
 
 import "./OrderPage.scss";
 import { Checkbox } from "antd";
@@ -12,6 +13,8 @@ import {
   removeOrderProductAll,
 } from "../../redux/slides/orderSlide";
 import * as message from "../../components/MessageComp/MessageComponent";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css"; // optional
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
@@ -96,39 +99,49 @@ const OrderPage = () => {
           </div>
 
           <div className="kkkkkkk">
-            {order?.orderItems?.map((iten) => {
-              return (
-                <div className="content-table" key={iten?.product}>
-                  <div className="input-action">
-                    <Checkbox
-                      onChange={onchangeCheckbox}
-                      value={iten?.product}
-                      checked={listChecked.includes(iten?.product)}
-                    />
-                  </div>
-                  <div className="image">
-                    <img src={iten?.image} alt="" />
-                  </div>
-                  <div className="name">{iten?.name}</div>
-                  <div className="quantity">
-                    <div className="abcd">
-                      <button className="btn-decrease" onClick={() => handleOnchangeCount("decrease", iten?.product)}>
-                        -
-                      </button>
-                      <input type="text" defaultValue={1} value={iten?.amount} />
-                      <button className="btn-increase" onClick={() => handleOnchangeCount("increase", iten?.product)}>
-                        +
-                      </button>
+            {order?.orderItems?.length ? (
+              order?.orderItems?.map((iten) => {
+                return (
+                  <div className="content-table" key={iten?.product}>
+                    <div className="input-action">
+                      <Checkbox
+                        onChange={onchangeCheckbox}
+                        value={iten?.product}
+                        checked={listChecked.includes(iten?.product)}
+                      />
                     </div>
+                    <div className="image">
+                      <img src={iten?.image} alt="" />
+                    </div>
+                    <div className="name">{iten?.name}</div>
+                    <div className="quantity">
+                      <div className="abcd">
+                        <button className="btn-decrease" onClick={() => handleOnchangeCount("decrease", iten?.product)}>
+                          -
+                        </button>
+                        <input type="text" value={iten?.amount} />
+                        <button className="btn-increase" onClick={() => handleOnchangeCount("increase", iten?.product)}>
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div className="price">{iten?.price?.toLocaleString()}</div>
+                    <div className="total">{(iten?.price * iten?.amount).toLocaleString()}</div>
+                    <Tippy content="Xóa">
+                      <div className="action">
+                        <RiDeleteBin6Line onClick={() => handleDeleteProduct(iten?.product)} />
+                      </div>
+                    </Tippy>
                   </div>
-                  <div className="price">{iten?.price?.toLocaleString()}</div>
-                  <div className="total">{(iten?.price * iten?.amount).toLocaleString()}</div>
-                  <div className="action">
-                    <RiDeleteBin6Line onClick={() => handleDeleteProduct(iten?.product)} />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="card-empty">
+                <span>Giỏ hàng của bạn chưa có sản phẩm nào...</span>
+                <BsCartX />
+                <button>Về Trang Chủ</button>
+              </div>
+            )}
           </div>
         </div>
 

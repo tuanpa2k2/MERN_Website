@@ -1,5 +1,6 @@
 .wapper-profilePage {
   margin: 0 120px;
+  height: fit-content;
 
   .header-profile {
     padding: 5px 20px;
@@ -19,7 +20,8 @@
     display: flex;
     align-items: flex-start;
     width: 100%;
-    min-height: calc(100vh - 250px);
+    // min-height: calc(100vh - 250px);
+    height: 635px;
 
     .left {
       width: 35%;
@@ -101,21 +103,35 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 15px;
         margin: 15px 20px;
 
         button {
           padding: 8px 0;
           width: 100%;
           background-color: white;
-          border: 1px solid blue;
           border-radius: 10px;
-          color: blue;
           font-weight: 600;
-          font-size: 1.8rem;
+          font-size: 1.7rem;
+        }
+
+        .btn-updated {
+          border: 1px solid blue;
+          color: blue;
 
           &:hover {
             cursor: pointer;
             box-shadow: 0 0 15px blue;
+          }
+        }
+
+        .btn-backhome {
+          border: 1px solid red;
+          color: red;
+
+          &:hover {
+            cursor: pointer;
+            box-shadow: 0 0 15px red;
           }
         }
       }

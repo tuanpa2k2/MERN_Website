@@ -135,7 +135,7 @@
 
         .quantity-product {
           border-right: 1px solid black;
-          width: 10%;
+          width: 12%;
         }
 
         .price-product {
@@ -150,7 +150,7 @@
 
         .action {
           color: red;
-          width: 7%;
+          width: 5%;
         }
       }
 
@@ -213,7 +213,7 @@
 
           .quantity {
             border-right: 1px solid black;
-            width: 10%;
+            width: 12%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -273,7 +273,7 @@
             color: blue;
           }
           .action {
-            width: 7%;
+            width: 5%;
 
             svg {
               margin-top: 4px;
@@ -283,6 +283,42 @@
                 cursor: pointer;
                 color: red;
               }
+            }
+          }
+        }
+
+        .card-empty {
+          display: grid;
+          justify-items: center;
+          align-items: center;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+
+          span {
+            font-size: 2rem;
+            font-weight: 600;
+            color: blue;
+          }
+
+          svg {
+            font-size: 120px;
+            color: red;
+          }
+
+          button {
+            margin-top: 20px;
+            padding: 10px 30px;
+            border: 1px solid blue;
+            border-radius: 8px;
+            color: blue;
+            font-size: 1.6em;
+
+            &:hover {
+              cursor: pointer;
+              color: red;
+              box-shadow: 0 0 15px blue;
             }
           }
         }
@@ -402,7 +438,9 @@
 
       button {
         position: absolute;
-        transform: translateX(8px);
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: aqua;
         width: 95%;
         text-align: center;
         font-size: 1.7rem;

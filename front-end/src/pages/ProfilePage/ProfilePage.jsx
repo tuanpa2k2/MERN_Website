@@ -15,15 +15,15 @@ import "./ProfilePage.scss";
 import { updateUser } from "../../redux/slides/userSlide";
 import { Button, Upload } from "antd";
 import { getBase64 } from "../../until";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user); // lấy user trong redux-store
-  const [isShowPassword, setIsShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -31,7 +31,6 @@ const ProfilePage = () => {
   useEffect(() => {
     setName(user?.name);
     setEmail(user?.email);
-    setPassword(user?.password);
     setAddress(user?.address);
     setPhone(user?.phone);
     setAvatar(user?.avatar);
@@ -65,10 +64,6 @@ const ProfilePage = () => {
     setEmail(e.target.value);
   };
 
-  const handleOnchangePassword = (e) => {
-    setPassword(e.target.value);
-  };
-
   const handleOnchangePhone = (e) => {
     setPhone(e.target.value);
   };
@@ -88,7 +83,7 @@ const ProfilePage = () => {
   };
 
   const handleUpdateUser = () => {
-    mutation.mutate({ id: user?.id, name, email, password, phone, address, avatar, access_token: user?.access_token });
+    mutation.mutate({ id: user?.id, name, email, phone, address, avatar, access_token: user?.access_token });
   };
 
   return (
@@ -120,13 +115,6 @@ const ProfilePage = () => {
               <input type="email" placeholder={email} onChange={handleOnchangeEmail} />
             </div>
             <div className="imput-form">
-              <div className="label">Mật khẩu</div>
-              <span className="icon" onClick={() => setIsShowPassword(!isShowPassword)}>
-                {isShowPassword ? <GoUnlock /> : <GoLock />}
-              </span>
-              <input type="password" placeholder={password} onChange={handleOnchangePassword} />
-            </div>
-            <div className="imput-form">
               <div className="label">Số điện thoại</div>
               <span className="icon">
                 <BsPhone />
@@ -141,7 +129,12 @@ const ProfilePage = () => {
               <input type="text" placeholder={address} onChange={handleOnchangeAddress} />
             </div>
             <div className="btn-updateInfo">
-              <button onClick={handleUpdateUser}>Cập nhập thông tin</button>
+              <button className="btn-updated" onClick={handleUpdateUser}>
+                Cập nhập thông tin
+              </button>
+              <button className="btn-backhome" onClick={() => navigate("/")}>
+                Về trang chủ
+              </button>
             </div>
           </div>
         </div>
