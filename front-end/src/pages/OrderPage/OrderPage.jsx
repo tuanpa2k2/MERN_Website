@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FcShipped } from "react-icons/fc";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BsCartX } from "react-icons/bs";
@@ -11,6 +11,7 @@ import {
   increaseAmount,
   removeOrderProduct,
   removeOrderProductAll,
+  selectedOrder,
 } from "../../redux/slides/orderSlide";
 import * as message from "../../components/MessageComp/MessageComponent";
 import Tippy from "@tippyjs/react";
@@ -45,9 +46,13 @@ const OrderPage = () => {
     }
   };
 
+  useEffect(() => {
+    dispatch(selectedOrder({ listChecked }));
+  }, [listChecked]);
+
   // Xử lý phần order thanh toán -----------------------------------------------------------------------------------------
   const priceMemo = useMemo(() => {
-    const result = order?.orderItems?.reduce((total, cur) => {
+    const result = order?.orderItemsSelected?.reduce((total, cur) => {
       return total + cur.price * cur.amount;
     }, 0);
 
@@ -55,7 +60,7 @@ const OrderPage = () => {
   }, [order]);
 
   const discountPriceMemo = useMemo(() => {
-    const result = order?.orderItems?.reduce((total, cur) => {
+    const result = order?.orderItemsSelected?.reduce((total, cur) => {
       return total + cur.discount * cur.amount;
     }, 0);
 
@@ -69,6 +74,8 @@ const OrderPage = () => {
   const diliveryPriceMemo = useMemo(() => {
     if (priceMemo > 200000) {
       return 10000;
+    } else if (priceMemo === 0) {
+      return 0;
     }
     return 20000;
   }, [priceMemo]);
