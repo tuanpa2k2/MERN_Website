@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./CardComponent.scss";
 import { Rate } from "antd";
+import { convertPrice } from "../../until";
 
 const CardComponent = (props) => {
   const { countInStock, image, name, price, rating, type, discount, selled, id } = props;
@@ -28,7 +29,7 @@ const CardComponent = (props) => {
       <div className="detail">
         <div className="name">{name}</div>
         <div className="price-container">
-          <div className="price">{price?.toLocaleString()} vnđ</div>
+          <div className="price">{convertPrice(price)}</div>
           <div className="price-discount">{discount || 0}%</div>
         </div>
         <div className="star-container">

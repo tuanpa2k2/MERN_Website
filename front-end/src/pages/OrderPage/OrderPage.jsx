@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FcShipped } from "react-icons/fc";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BsCartX } from "react-icons/bs";
@@ -15,10 +15,13 @@ import {
 import * as message from "../../components/MessageComp/MessageComponent";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
+import { convertPrice } from "../../until";
+import { useNavigate } from "react-router-dom";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [listChecked, setListChecked] = useState([]);
 
   const onchangeCheckbox = (e) => {
@@ -42,6 +45,39 @@ const OrderPage = () => {
     }
   };
 
+  // Xử lý phần order thanh toán -----------------------------------------------------------------------------------------
+  const priceMemo = useMemo(() => {
+    const result = order?.orderItems?.reduce((total, cur) => {
+      return total + cur.price * cur.amount;
+    }, 0);
+
+    return result;
+  }, [order]);
+
+  const discountPriceMemo = useMemo(() => {
+    const result = order?.orderItems?.reduce((total, cur) => {
+      return total + cur.discount * cur.amount;
+    }, 0);
+
+    if (Number(result)) {
+      return result;
+    } else {
+      return 0;
+    }
+  }, [order]);
+
+  const diliveryPriceMemo = useMemo(() => {
+    if (priceMemo > 200000) {
+      return 10000;
+    }
+    return 20000;
+  }, [priceMemo]);
+
+  const totalPriceMemo = useMemo(() => {
+    return Number(priceMemo) - Number(discountPriceMemo) + Number(diliveryPriceMemo);
+  }, [priceMemo, discountPriceMemo, diliveryPriceMemo]);
+
+  // Xử lý phần handle -----------------------------------------------------------------------------------------
   const handleOnchangeCount = (type, idProduct) => {
     if (type === "increase") {
       dispatch(increaseAmount({ idProduct }));
@@ -93,14 +129,15 @@ const OrderPage = () => {
             <div className="image-product">Hình ảnh</div>
             <div className="name-product">Tên sản phẩm</div>
             <div className="quantity-product">Số lượng</div>
-            <div className="price-product">Đơn giá (vnd)</div>
-            <div className="total-product">Tổng (vnd)</div>
+            <div className="price-product">Đơn giá</div>
+            <div className="total-product">Tổng</div>
             <div className="action">Xóa</div>
           </div>
 
           <div className="kkkkkkk">
             {order?.orderItems?.length ? (
               order?.orderItems?.map((iten) => {
+                console.log("iten", iten);
                 return (
                   <div className="content-table" key={iten?.product}>
                     <div className="input-action">
@@ -125,8 +162,8 @@ const OrderPage = () => {
                         </button>
                       </div>
                     </div>
-                    <div className="price">{iten?.price?.toLocaleString()}</div>
-                    <div className="total">{(iten?.price * iten?.amount).toLocaleString()}</div>
+                    <div className="price">{convertPrice(iten?.price)}</div>
+                    <div className="total">{convertPrice(iten?.price * iten?.amount)}</div>
                     <Tippy content="Xóa">
                       <div className="action">
                         <RiDeleteBin6Line onClick={() => handleDeleteProduct(iten?.product)} />
@@ -139,7 +176,7 @@ const OrderPage = () => {
               <div className="card-empty">
                 <span>Giỏ hàng của bạn chưa có sản phẩm nào...</span>
                 <BsCartX />
-                <button>Về Trang Chủ</button>
+                <button onClick={() => navigate("/")}>Về Trang Chủ</button>
               </div>
             )}
           </div>
@@ -195,24 +232,20 @@ const OrderPage = () => {
               <div className="details-price">
                 <div className="row-1">
                   <div className="name-label">Tạm tính:</div>
-                  <div className="price-order">0 vnđ</div>
+                  <div className="price-order">{convertPrice(priceMemo)}</div>
                 </div>
                 <div className="row-2">
                   <div className="name-label">Giảm giá:</div>
-                  <div className="price-order">0 vnđ</div>
-                </div>
-                <div className="row-3">
-                  <div className="name-label">Thuế:</div>
-                  <div className="price-order">0 vnđ</div>
+                  <div className="price-order">{discountPriceMemo} %</div>
                 </div>
                 <div className="row-4">
                   <div className="name-label">Phí giao hàng:</div>
-                  <div className="price-order">0 vnđ</div>
+                  <div className="price-order">{convertPrice(diliveryPriceMemo)}</div>
                 </div>
                 <hr />
                 <div className="row-5">
                   <div className="name-label">Tổng tiền:</div>
-                  <div className="total-price">0 vnđ</div>
+                  <div className="total-price">{convertPrice(totalPriceMemo)}</div>
                 </div>
               </div>
             </div>

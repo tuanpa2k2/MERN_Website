@@ -15,6 +15,7 @@ import { Rate } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slides/orderSlide";
+import { convertPrice } from "../../until";
 
 const ProductDetailComponent = ({ idProduct }) => {
   const user = useSelector((state) => state?.user);
@@ -59,6 +60,7 @@ const ProductDetailComponent = ({ idProduct }) => {
             amount: numQuantity,
             image: productsDetails?.image,
             price: productsDetails?.price,
+            // discount: productsDetails?.discount,
             product: productsDetails?._id,
           },
         })
@@ -94,7 +96,7 @@ const ProductDetailComponent = ({ idProduct }) => {
           <div className="content-details">
             <div className="name-label">Giá bán:</div>
             <div className="detail-label">
-              <span className="price">{productsDetails?.price?.toLocaleString()} vnđ</span>
+              <span className="price">{convertPrice(productsDetails?.price)}</span>
               <span className="price-discount">{productsDetails?.discount}%</span>
             </div>
           </div>
