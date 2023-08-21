@@ -35,6 +35,7 @@ const AdminUserComponent = () => {
     isAdmin: false,
     phone: "",
     address: "",
+    city: "",
     avatar: "",
   });
 
@@ -44,13 +45,24 @@ const AdminUserComponent = () => {
     isAdmin: false,
     phone: "",
     address: "",
+    city: "",
     avatar: "",
   });
 
   // -----------------------------------------------------------------------------------------------------------------------
   const mutationCreate = useMutationHooks((data) => {
-    const { name, email, password, confirmPassword, isAdmin, phone, address, avatar } = data;
-    const res = UserService.createUser({ name, email, password, confirmPassword, isAdmin, phone, address, avatar });
+    const { name, email, password, confirmPassword, isAdmin, phone, address, city, avatar } = data;
+    const res = UserService.createUser({
+      name,
+      email,
+      password,
+      confirmPassword,
+      isAdmin,
+      phone,
+      address,
+      city,
+      avatar,
+    });
 
     return res;
   });
@@ -88,6 +100,7 @@ const AdminUserComponent = () => {
         isAdmin: res?.data?.isAdmin,
         phone: res?.data?.phone,
         address: res?.data?.address,
+        city: res?.data?.city,
         avatar: res?.data?.avatar,
       });
     }
@@ -195,7 +208,7 @@ const AdminUserComponent = () => {
 
   useEffect(() => {
     if (isSuccessDeleted && dataDeleted?.status === "OK") {
-      message.success("Xóa sản phẩm thành công");
+      message.success("Xóa người dùng thành công");
       handleCancelDelete();
     }
   }, [isSuccessDeleted]);
@@ -262,6 +275,7 @@ const AdminUserComponent = () => {
       isAdmin: false,
       phone: "",
       address: "",
+      city: "",
       avatar: "",
     });
 
@@ -275,6 +289,7 @@ const AdminUserComponent = () => {
       isAdmin: false,
       phone: "",
       address: "",
+      city: "",
       avatar: "",
     });
     form.resetFields();
@@ -423,7 +438,11 @@ const AdminUserComponent = () => {
                 <Input name="phone" value={stateUser.phone} onChange={handleOnchange} placeholder="..." />
               </Form.Item>
 
-              <Form.Item label="Thông tin địa chỉ" name="address">
+              <Form.Item label="Tỉnh (thành phố)" name="city">
+                <Input name="city" value={stateUser.city} onChange={handleOnchange} placeholder="..." />
+              </Form.Item>
+
+              <Form.Item label="Địa chỉ chi tiết" name="address">
                 <Input name="address" value={stateUser.address} onChange={handleOnchange} placeholder="..." />
               </Form.Item>
 
@@ -500,7 +519,11 @@ const AdminUserComponent = () => {
               <Input name="phone" value={stateUserDetail.phone} onChange={handleOnchangedetails} placeholder="..." />
             </Form.Item>
 
-            <Form.Item label="Thông tin địa chỉ" name="address">
+            <Form.Item label="Tỉnh (thành phố)" name="city">
+              <Input name="city" value={stateUserDetail.city} onChange={handleOnchangedetails} placeholder="..." />
+            </Form.Item>
+
+            <Form.Item label="Địa chỉ chi tiết" name="address">
               <Input
                 name="address"
                 value={stateUserDetail.address}

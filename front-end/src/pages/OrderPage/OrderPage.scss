@@ -350,8 +350,8 @@
       }
 
       .details-order {
+        position: relative;
         overflow: scroll;
-        height: 558px;
         font-size: 1.6rem;
         height: calc(100% - 85px);
 
@@ -381,13 +381,38 @@
                 font-size: 1.5rem;
                 text-align: end;
                 text-transform: capitalize;
+                margin-left: 10px;
+              }
+            }
+
+            .change-address {
+              font-style: oblique;
+              color: blue;
+              font-weight: 500;
+              text-align: end;
+
+              &:hover {
+                cursor: pointer;
+                text-decoration: underline;
               }
             }
           }
         }
 
         .info-order {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+
+          .label-order-total {
+            text-align: center;
+            font-weight: 500;
+            padding: 5px 5px;
+            background-color: #aeaeae;
+          }
+
           .details-price {
+            background-color: rgb(236, 236, 236);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -440,21 +465,21 @@
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        background-color: aqua;
+        background-color: blue;
         width: 95%;
         text-align: center;
         font-size: 1.7rem;
         font-weight: 600;
         padding: 8px 5px;
-        margin: 5px 0;
         border: 1px solid blue;
         border-radius: 8px;
-        color: red;
+        color: white;
 
         &:hover {
           cursor: pointer;
           box-shadow: 0 0 5px blue;
-          color: blue;
+          background-color: red;
+          color: white;
         }
       }
     }

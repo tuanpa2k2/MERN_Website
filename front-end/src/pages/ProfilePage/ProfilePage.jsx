@@ -26,21 +26,23 @@ const ProfilePage = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState("");
-
-  useEffect(() => {
-    setName(user?.name);
-    setEmail(user?.email);
-    setAddress(user?.address);
-    setPhone(user?.phone);
-    setAvatar(user?.avatar);
-  }, [user]);
 
   const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
     UserService.updateUser(id, access_token, rests);
   });
   const { isLoading, isSuccess, isError } = mutation;
+
+  useEffect(() => {
+    setName(user?.name);
+    setEmail(user?.email);
+    setAddress(user?.address);
+    setPhone(user?.phone);
+    setCity(user?.city);
+    setAvatar(user?.avatar);
+  }, [user]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -68,6 +70,10 @@ const ProfilePage = () => {
     setPhone(e.target.value);
   };
 
+  const handleOnchangeCity = (e) => {
+    setAddress(e.target.value);
+  };
+
   const handleOnchangeAddress = (e) => {
     setAddress(e.target.value);
   };
@@ -83,7 +89,7 @@ const ProfilePage = () => {
   };
 
   const handleUpdateUser = () => {
-    mutation.mutate({ id: user?.id, name, email, phone, address, avatar, access_token: user?.access_token });
+    mutation.mutate({ id: user?.id, name, email, phone, address, city, avatar, access_token: user?.access_token });
   };
 
   return (
@@ -122,7 +128,14 @@ const ProfilePage = () => {
               <input type="text" placeholder={phone} onChange={handleOnchangePhone} />
             </div>
             <div className="imput-form">
-              <div className="label">Địa chỉ</div>
+              <div className="label">Thành phố</div>
+              <span className="icon">
+                <SlLocationPin />
+              </span>
+              <input type="text" placeholder={city} onChange={handleOnchangeCity} />
+            </div>
+            <div className="imput-form">
+              <div className="label">Địa chỉ cụ thể</div>
               <span className="icon">
                 <SlLocationPin />
               </span>
