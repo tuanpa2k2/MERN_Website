@@ -1,37 +1,27 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { FcShipped } from "react-icons/fc";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { BsCartX } from "react-icons/bs";
-
-import "./OrderPage.scss";
-import { Checkbox, Form, Input } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  decreaseAmount,
-  increaseAmount,
-  removeOrderProduct,
-  removeOrderProductAll,
-  selectedOrder,
-} from "../../redux/slides/orderSlide";
-import * as message from "../../components/MessageComp/MessageComponent";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css"; // optional
-import { convertPrice } from "../../until";
 import { useNavigate } from "react-router-dom";
-import ModalComponent from "../../components/ModalComp/ModalComponent";
-import * as UserService from "../../services/UserService";
-import { useMutationHooks } from "../../hooks/useMutationHook";
-import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
+import { RiSecurePaymentLine } from "react-icons/ri";
+import { useSelector } from "react-redux";
+import { Form, Input, Radio } from "antd";
 
-const OrderPage = () => {
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import * as UserService from "../../services/UserService";
+import * as OrderService from "../../services/OrderService";
+import * as message from "../../components/MessageComp/MessageComponent";
+import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
+import ModalComponent from "../../components/ModalComp/ModalComponent";
+import { convertPrice } from "../../until";
+import "./PaymentPage.scss";
+
+const PaymentPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
   const [form] = Form.useForm();
-
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [listChecked, setListChecked] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [payment, setPayment] = useState("later_money");
+  const [delivery, setDelivery] = useState("fast");
 
   const [stateUserDetail, setStateUserDetail] = useState({
     name: "",
@@ -40,41 +30,25 @@ const OrderPage = () => {
     city: "",
   });
 
+  // -----------------------------------------------------------------------------------------------------------------------------
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
     const res = UserService.updateUser(id, token, rests);
 
     return res;
   });
+  const mutationAddOrder = useMutationHooks((data) => {
+    const { token, ...rests } = data;
+    const res = OrderService.createOrder(token, rests);
 
+    return res;
+  });
+
+  // -----------------------------------------------------------------------------------------------------------------------------
   const { data: dataUpdated, isSuccess: isSuccessUpdated, isLoading: isLoadingUpdated } = mutationUpdate;
+  const { data: dataAddOrdered, isSuccess: isSuccessAddOrdered } = mutationAddOrder;
 
-  const onchangeCheckbox = (e) => {
-    if (listChecked.includes(e.target.value)) {
-      const newListChecked = listChecked.filter((item) => item !== e.target.value);
-      setListChecked(newListChecked);
-    } else {
-      setListChecked([...listChecked, e.target.value]);
-    }
-  };
-
-  const onchangeCheckboxAll = (e) => {
-    if (e.target.checked) {
-      const newListChecked = [];
-      order?.orderItems?.forEach((element) => {
-        newListChecked.push(element?.product);
-      });
-      setListChecked(newListChecked);
-    } else {
-      setListChecked([]);
-    }
-  };
-
-  useEffect(() => {
-    dispatch(selectedOrder({ listChecked }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listChecked]);
-
+  // -----------------------------------------------------------------------------------------------------------------------------
   useEffect(() => {
     form.setFieldsValue(stateUserDetail);
   }, [form, stateUserDetail]);
@@ -98,6 +72,14 @@ const OrderPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessUpdated]);
+
+  useEffect(() => {
+    if (isSuccessAddOrdered && dataAddOrdered?.status === "OK") {
+      message.success("Đặt hàng thành công...");
+      navigate("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessAddOrdered]);
 
   // Xử lý phần order thanh toán -----------------------------------------------------------------------------------------
   const priceMemo = useMemo(() => {
@@ -141,34 +123,6 @@ const OrderPage = () => {
     });
   };
 
-  const handleOnchangeCount = (type, idProduct) => {
-    if (type === "increase") {
-      dispatch(increaseAmount({ idProduct }));
-    } else {
-      dispatch(decreaseAmount({ idProduct }));
-    }
-  };
-
-  const handleDeleteProduct = (idProduct) => {
-    message.success("Xóa sản phẩm thành công!");
-    dispatch(removeOrderProduct({ idProduct }));
-  };
-
-  const handleDeleteProductAll = () => {
-    if (listChecked?.length > 0) {
-      message.success("Xóa sản phẩm thành công!");
-      dispatch(removeOrderProductAll({ listChecked }));
-    }
-  };
-
-  const handleAddtocart = () => {
-    if (!user?.name || !user?.phone || !user?.address || !user?.city) {
-      setIsModalOpen(true);
-    } else {
-      navigate("/payment");
-    }
-  };
-
   const handleChangeAddress = () => {
     setIsModalOpen(true);
   };
@@ -184,6 +138,15 @@ const OrderPage = () => {
     form.resetFields();
   };
 
+  const handlePayment = (e) => {
+    setPayment(e.target.value);
+  };
+
+  const handleDilivery = (e) => {
+    setDelivery(e.target.value);
+  };
+
+  // Xử lý phần mutate -----------------------------------------------------------------------------------------
   const handleUpdateInfoUser = () => {
     const { name, phone, address, city } = stateUserDetail;
 
@@ -202,114 +165,69 @@ const OrderPage = () => {
       );
     }
   };
+  const handleAddOrderPayment = () => {
+    if (
+      user?.access_token &&
+      order?.orderItemsSelected &&
+      user?.name &&
+      user?.phone &&
+      user?.address &&
+      user?.city &&
+      user?.id &&
+      priceMemo
+    ) {
+      mutationAddOrder.mutate({
+        token: user?.access_token,
+        orderItems: order?.orderItemsSelected,
+        fullName: user?.name,
+        address: user?.address,
+        phone: user?.phone,
+        city: user?.city,
+        paymentMethod: payment,
+        itemsPrice: priceMemo,
+        shippingPrice: diliveryPriceMemo,
+        totalPrice: totalPriceMemo,
+        user: user?.id,
+      });
+    }
+  };
 
   return (
     <div className="wrapper-containerOrderPage">
       <div className="header-title">
-        <FcShipped />
+        <RiSecurePaymentLine />
         <span>
-          Giỏ hàng của bạn<p>- vui lòng kiểm tra kĩ thông tin trước khi mua nhé... 🥰🥰🥰</p>
+          Xác nhận thanh toán<p>- vui lòng kiểm tra kĩ thông tin trước khi mua nhé... 🥰🥰🥰</p>
         </span>
       </div>
       <div className="detail-behind">
         <div className="left">
-          <div className="selected-table">
-            <div className="input-action">
-              <Checkbox onChange={onchangeCheckboxAll} checked={listChecked?.length === order?.orderItems?.length} />
+          <div className="container-rafce">
+            <div className="text-label">Chọn phương thức giao hàng</div>
+            <div className="select-radio">
+              <Radio.Group onChange={handleDilivery} value={delivery}>
+                <Radio value="fast">
+                  <span className="abcd">FAST</span> Giao hàng tiết kiệm
+                </Radio>
+                <Radio value="goject">
+                  <span className="abcd">GO_JECT</span> Giao hàng nhanh
+                </Radio>
+              </Radio.Group>
             </div>
-            <div className="texttttt">
-              Tất cả giỏ hàng có <p>{order?.orderItems?.length}</p> sản phẩm
+          </div>
+          <div className="container-rafce">
+            <div className="text-label">Chọn phương thức thanh toán</div>
+            <div className="select-radio">
+              <Radio.Group onChange={handlePayment} value={payment}>
+                <Radio value="later_money">Thanh toán khi nhận hàng</Radio>
+              </Radio.Group>
             </div>
-            {listChecked?.length > 0 && (
-              <div className="btn-deleteAll" onClick={handleDeleteProductAll}>
-                <button>
-                  <RiDeleteBin6Line /> <p>Xóa tất cả</p>
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="header-table">
-            <div className="input-action">#</div>
-            <div className="image-product">Hình ảnh</div>
-            <div className="name-product">Tên sản phẩm</div>
-            <div className="quantity-product">Số lượng</div>
-            <div className="price-product">Đơn giá</div>
-            <div className="total-product">Tổng</div>
-            <div className="action">Xóa</div>
-          </div>
-
-          <div className="kkkkkkk">
-            {order?.orderItems?.length ? (
-              order?.orderItems?.map((iten) => {
-                return (
-                  <div className="content-table" key={iten?.product}>
-                    <div className="input-action">
-                      <Checkbox
-                        onChange={onchangeCheckbox}
-                        value={iten?.product}
-                        checked={listChecked.includes(iten?.product)}
-                      />
-                    </div>
-                    <div className="image">
-                      <img src={iten?.image} alt="" />
-                    </div>
-                    <div className="name">{iten?.name}</div>
-                    <div className="quantity">
-                      <div className="abcd">
-                        <button className="btn-decrease" onClick={() => handleOnchangeCount("decrease", iten?.product)}>
-                          -
-                        </button>
-                        <input type="text" value={iten?.amount} />
-                        <button className="btn-increase" onClick={() => handleOnchangeCount("increase", iten?.product)}>
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div className="price">{convertPrice(iten?.price)}</div>
-                    <div className="total">{convertPrice(iten?.price * iten?.amount)}</div>
-                    <Tippy content="Xóa">
-                      <div className="action">
-                        <RiDeleteBin6Line onClick={() => handleDeleteProduct(iten?.product)} />
-                      </div>
-                    </Tippy>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="card-empty">
-                <span>Giỏ hàng của bạn chưa có sản phẩm nào...</span>
-                <BsCartX />
-                <button onClick={() => navigate("/")}>Về Trang Chủ</button>
-              </div>
-            )}
           </div>
         </div>
 
         <div className="right">
           <div className="title-order">Anhtuan shop</div>
           <div className="details-order">
-            <div className="info-employee">
-              <div className="label-order">Thông tin người bán</div>
-              <div className="details-infoEmployee">
-                <div className="name">
-                  <div className="name-label">Họ và tên:</div>
-                  <div className="name-info">Phi anh tuan</div>
-                </div>
-                <div className="address">
-                  <div className="name-label">Địa chỉ:</div>
-                  <div className="name-info">Thôn thanh xuân, xã thuần thành, thái thụy - thái bình</div>
-                </div>
-                <div className="phone">
-                  <div className="name-label">Số điện thoại:</div>
-                  <div className="name-info" style={{ fontWeight: "500" }}>
-                    036 526 9311
-                  </div>
-                </div>
-              </div>
-              <hr />
-            </div>
-
             <div className="info-buyer">
               <div className="label-order">Thông tin người mua hàng</div>
               <div className="details-infobuyer">
@@ -357,11 +275,7 @@ const OrderPage = () => {
               </div>
             </div>
           </div>
-          {listChecked.length > 0 ? (
-            <button onClick={() => handleAddtocart()}>Đặt mua</button>
-          ) : (
-            <button style={{ opacity: 0.5, pointerEvents: "none" }}>Đặt mua</button>
-          )}
+          <button onClick={() => handleAddOrderPayment()}>Thanh Toán</button>
         </div>
       </div>
 
@@ -405,10 +319,10 @@ const OrderPage = () => {
             </Form.Item>
 
             {/* <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-                Cập nhập
-              </Button>
-            </Form.Item> */}
+                <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+                  Cập nhập
+                </Button>
+              </Form.Item> */}
           </Form>
         </LoadingComponent>
       </ModalComponent>
@@ -416,4 +330,4 @@ const OrderPage = () => {
   );
 };
 
-export default OrderPage;
+export default PaymentPage;
