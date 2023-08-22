@@ -22,6 +22,15 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 17px;
+
+      .loading-product {
+        font-size: 2.2rem;
+        color: blue;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -75%);
+      }
     }
 
     .pagination {

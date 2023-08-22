@@ -42,32 +42,36 @@ const TypeProductPage = () => {
 
         <div className="column-right">
           <div className="card-Comp">
-            {products
-              // eslint-disable-next-line array-callback-return
-              ?.filter((pro) => {
-                if (searchDebounce === "") {
-                  return pro;
-                } else if (pro?.name?.toLowerCase()?.includes(searchDebounce?.toLowerCase())) {
-                  return pro;
-                }
-              })
-              ?.map((prod) => {
-                return (
-                  <CardComponent
-                    key={prod.name}
-                    countInStock={prod.countInStock}
-                    description={prod.description}
-                    image={prod.image}
-                    name={prod.name}
-                    price={prod.price}
-                    rating={prod.rating}
-                    type={prod.type}
-                    discount={prod.discount}
-                    selled={prod.selled}
-                    id={prod._id}
-                  />
-                );
-              })}
+            {products.length > 0 ? (
+              products
+                // eslint-disable-next-line array-callback-return
+                ?.filter((pro) => {
+                  if (searchDebounce === "") {
+                    return pro;
+                  } else if (pro?.name?.toLowerCase()?.includes(searchDebounce?.toLowerCase())) {
+                    return pro;
+                  }
+                })
+                ?.map((prod) => {
+                  return (
+                    <CardComponent
+                      key={prod.name}
+                      countInStock={prod.countInStock}
+                      description={prod.description}
+                      image={prod.image}
+                      name={prod.name}
+                      price={prod.price}
+                      rating={prod.rating}
+                      type={prod.type}
+                      discount={prod.discount}
+                      selled={prod.selled}
+                      id={prod._id}
+                    />
+                  );
+                })
+            ) : (
+              <div className="loading-product">Đang tải dữ liệu...</div>
+            )}
           </div>
           <div className="pagination">
             <Pagination total={500} />

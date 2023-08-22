@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { GoLock, GoUnlock } from "react-icons/go";
 import { BsPencilSquare, BsPhone } from "react-icons/bs";
 import { AiOutlineMail, AiOutlineCloudUpload } from "react-icons/ai";
 import { SlLocationPin } from "react-icons/sl";
@@ -33,7 +32,7 @@ const ProfilePage = () => {
     const { id, access_token, ...rests } = data;
     UserService.updateUser(id, access_token, rests);
   });
-  const { isLoading, isSuccess, isError } = mutation;
+  const { isLoading, isSuccess } = mutation;
 
   useEffect(() => {
     setName(user?.name);
@@ -48,10 +47,8 @@ const ProfilePage = () => {
     if (isSuccess) {
       handleUpdateGetDetailsUser(user?.id, user?.access_token);
       message.success("Cập nhập thành công!");
-    } else if (isError) {
-      message.error("Cập nhập thất bại, vui lòng kiểm tra lại!");
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess]);
 
   const handleUpdateGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token);
