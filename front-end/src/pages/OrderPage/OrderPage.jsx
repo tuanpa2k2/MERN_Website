@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+/* eslint-disable no-mixed-operators */
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { FcShipped } from "react-icons/fc";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BsCartX } from "react-icons/bs";
@@ -22,6 +23,7 @@ import ModalComponent from "../../components/ModalComp/ModalComponent";
 import * as UserService from "../../services/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
+import StepComponent from "../../components/StepComp/StepComponent";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
@@ -39,6 +41,25 @@ const OrderPage = () => {
     address: "",
     city: "",
   });
+
+  const itemsDelevery = [
+    {
+      title: "30.000 vnd",
+      description: "Dưới 200K",
+    },
+    {
+      title: "20.000 vnd",
+      description: "Từ 200K đến 499K",
+    },
+    {
+      title: "10.000 vnd",
+      description: "Từ 500K đến 999K",
+    },
+    {
+      title: "0 vnd",
+      description: "Trên 1.000K",
+    },
+  ];
 
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
@@ -121,12 +142,16 @@ const OrderPage = () => {
   }, [order]);
 
   const diliveryPriceMemo = useMemo(() => {
-    if (priceMemo > 200000) {
-      return 10000;
-    } else if (priceMemo === 0) {
+    if ((priceMemo === 0 && order?.orderItemsSelected.length === 0) || priceMemo >= 1000000) {
       return 0;
+    } else if (500000 <= priceMemo && priceMemo < 1000000) {
+      return 10000;
+    } else if (200000 <= priceMemo && priceMemo < 500000) {
+      return 20000;
+    } else if (priceMemo < 200000) {
+      return 30000;
     }
-    return 20000;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceMemo]);
 
   const totalPriceMemo = useMemo(() => {
@@ -213,76 +238,94 @@ const OrderPage = () => {
       </div>
       <div className="detail-behind">
         <div className="left">
-          <div className="selected-table">
-            <div className="input-action">
-              <Checkbox onChange={onchangeCheckboxAll} checked={listChecked?.length === order?.orderItems?.length} />
-            </div>
-            <div className="texttttt">
-              Tất cả giỏ hàng có <p>{order?.orderItems?.length}</p> sản phẩm
-            </div>
-            {listChecked?.length > 0 && (
-              <div className="btn-deleteAll" onClick={handleDeleteProductAll}>
-                <button>
-                  <RiDeleteBin6Line /> <p>Xóa tất cả</p>
-                </button>
-              </div>
-            )}
+          <div className="steps">
+            <p>Cước phí vận chuyển đơn hàng...</p>
+            <StepComponent
+              items={itemsDelevery}
+              current={
+                diliveryPriceMemo === 30000 ? 1 : diliveryPriceMemo === 20000 ? 2 : diliveryPriceMemo === 10000 ? 3 : 4
+              }
+            />
           </div>
 
-          <div className="header-table">
-            <div className="input-action">#</div>
-            <div className="image-product">Hình ảnh</div>
-            <div className="name-product">Tên sản phẩm</div>
-            <div className="quantity-product">Số lượng</div>
-            <div className="price-product">Đơn giá</div>
-            <div className="total-product">Tổng</div>
-            <div className="action">Xóa</div>
-          </div>
-
-          <div className="kkkkkkk">
-            {order?.orderItems?.length ? (
-              order?.orderItems?.map((iten) => {
-                return (
-                  <div className="content-table" key={iten?.product}>
-                    <div className="input-action">
-                      <Checkbox
-                        onChange={onchangeCheckbox}
-                        value={iten?.product}
-                        checked={listChecked.includes(iten?.product)}
-                      />
-                    </div>
-                    <div className="image">
-                      <img src={iten?.image} alt="" />
-                    </div>
-                    <div className="name">{iten?.name}</div>
-                    <div className="quantity">
-                      <div className="abcd">
-                        <button className="btn-decrease" onClick={() => handleOnchangeCount("decrease", iten?.product)}>
-                          -
-                        </button>
-                        <input type="text" value={iten?.amount} />
-                        <button className="btn-increase" onClick={() => handleOnchangeCount("increase", iten?.product)}>
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div className="price">{convertPrice(iten?.price)}</div>
-                    <div className="total">{convertPrice(iten?.price * iten?.amount)}</div>
-                    <Tippy content="Xóa">
-                      <div className="action">
-                        <RiDeleteBin6Line onClick={() => handleDeleteProduct(iten?.product)} />
-                      </div>
-                    </Tippy>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="card-empty">
-                <span>Giỏ hàng của bạn chưa có sản phẩm nào...</span>
-                <BsCartX />
-                <button onClick={() => navigate("/")}>Về Trang Chủ</button>
+          <div className="iiiiiiiii">
+            <div className="selected-table">
+              <div className="input-action">
+                <Checkbox onChange={onchangeCheckboxAll} checked={listChecked?.length === order?.orderItems?.length} />
               </div>
-            )}
+              <div className="texttttt">
+                Tất cả giỏ hàng có <p>{order?.orderItems?.length}</p> sản phẩm
+              </div>
+              {listChecked?.length > 0 && (
+                <div className="btn-deleteAll" onClick={handleDeleteProductAll}>
+                  <button>
+                    <RiDeleteBin6Line /> <p>Xóa tất cả</p>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="header-table">
+              <div className="input-action">#</div>
+              <div className="image-product">Hình ảnh</div>
+              <div className="name-product">Tên sản phẩm</div>
+              <div className="quantity-product">Số lượng</div>
+              <div className="price-product">Đơn giá</div>
+              <div className="total-product">Tổng</div>
+              <div className="action">Xóa</div>
+            </div>
+
+            <div className="kkkkkkk">
+              {order?.orderItems?.length ? (
+                order?.orderItems?.map((iten) => {
+                  return (
+                    <div className="content-table" key={iten?.product}>
+                      <div className="input-action">
+                        <Checkbox
+                          onChange={onchangeCheckbox}
+                          value={iten?.product}
+                          checked={listChecked.includes(iten?.product)}
+                        />
+                      </div>
+                      <div className="image">
+                        <img src={iten?.image} alt="" />
+                      </div>
+                      <div className="name">{iten?.name}</div>
+                      <div className="quantity">
+                        <div className="abcd">
+                          <button
+                            className="btn-decrease"
+                            onClick={() => handleOnchangeCount("decrease", iten?.product)}
+                          >
+                            -
+                          </button>
+                          <input type="text" value={iten?.amount} />
+                          <button
+                            className="btn-increase"
+                            onClick={() => handleOnchangeCount("increase", iten?.product)}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                      <div className="price">{convertPrice(iten?.price)}</div>
+                      <div className="total">{convertPrice(iten?.price * iten?.amount)}</div>
+                      <Tippy content="Xóa">
+                        <div className="action">
+                          <RiDeleteBin6Line onClick={() => handleDeleteProduct(iten?.product)} />
+                        </div>
+                      </Tippy>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="card-empty">
+                  <span>Giỏ hàng của bạn chưa có sản phẩm nào...</span>
+                  <BsCartX />
+                  <button onClick={() => navigate("/")}>Về Trang Chủ</button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

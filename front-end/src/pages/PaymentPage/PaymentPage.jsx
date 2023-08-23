@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RiSecurePaymentLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Form, Input, Radio } from "antd";
 
 import { useMutationHooks } from "../../hooks/useMutationHook";
@@ -12,12 +12,14 @@ import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 import ModalComponent from "../../components/ModalComp/ModalComponent";
 import { convertPrice } from "../../until";
 import "./PaymentPage.scss";
+import { removeOrderProductAll } from "../../redux/slides/orderSlide";
 
 const PaymentPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payment, setPayment] = useState("later_money");
@@ -75,8 +77,23 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (isSuccessAddOrdered && dataAddOrdered?.status === "OK") {
+      // Khi đặt hàng thành công thì sẽ xóa giỏ hàng
+      const arrOrdered = [];
+      order?.orderItemsSelected?.forEach((element) => {
+        arrOrdered.push(element.product);
+      });
+      dispatch(removeOrderProductAll({ listChecked: arrOrdered }));
+
       message.success("Đặt hàng thành công...");
-      navigate("/");
+      // Truyền các state khi đặt hàng thành công vào location
+      navigate("/orderSuccess", {
+        state: {
+          delivery,
+          payment,
+          orders: order?.orderItemsSelected,
+          totalPriceMemo: totalPriceMemo,
+        },
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessAddOrdered]);

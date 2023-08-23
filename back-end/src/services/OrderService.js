@@ -3,8 +3,6 @@ const bcrypt = require("bcrypt");
 
 const createOrder = (newOrder) => {
   return new Promise(async (resolve, reject) => {
-    console.log("new-Order", newOrder);
-
     const { orderItems, paymentMethod, itemsPrice, shippingPrice, totalPrice, user, fullName, address, city, phone } =
       newOrder;
 
