@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-operators */
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FcShipped } from "react-icons/fc";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BsCartX } from "react-icons/bs";

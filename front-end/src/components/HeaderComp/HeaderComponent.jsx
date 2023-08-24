@@ -17,6 +17,7 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
   const dispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false); // scrolled add className 'sticky-header'
   const [userAvatar, setUserAvatar] = useState("");
+  // eslint-disable-next-line
   const [search, setSearch] = useState(""); // search product
 
   const user = useSelector((state) => state.user); // lấy user trong redux-store
@@ -72,9 +73,9 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
                 interactive
                 render={(attrs) => (
                   <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                    <span onClick={() => navigate("/profile")}>Thông tin cá nhân</span>
                     {user?.isAdmin === true && <span onClick={() => navigate("/system-admin")}>Quản lý hệ thống</span>}
-                    <span>Cách sử dụng</span>
+                    <span onClick={() => navigate("/my-order")}>Đơn hàng của tôi</span>
+                    <span onClick={() => navigate("/profile")}>Thông tin cá nhân</span>
                     <span onClick={handleLogoutUser}>Đăng Xuất</span>
                   </div>
                 )}

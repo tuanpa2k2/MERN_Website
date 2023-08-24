@@ -329,6 +329,7 @@ const AdminProductComponent = () => {
       message.success("Thêm sản phẩm thành công");
       handleCancel();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   useEffect(() => {
@@ -336,6 +337,7 @@ const AdminProductComponent = () => {
       message.success("Cập nhập sản phẩm thành công");
       handleCloseDrawer();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessUpdated]);
 
   useEffect(() => {
@@ -343,12 +345,14 @@ const AdminProductComponent = () => {
       message.success("Xóa sản phẩm thành công");
       handleCancelDelete();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDeleted]);
 
   useEffect(() => {
     if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
       message.success("Xóa sản phẩm thành công");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDeletedMany]);
 
   //----------------------------------------------------------------------------------------------
