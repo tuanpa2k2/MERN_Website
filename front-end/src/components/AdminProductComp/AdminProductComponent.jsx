@@ -28,7 +28,7 @@ const AdminProductComponent = () => {
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
 
-  const [stateProduct, setStateProduct] = useState({
+  const inittial = () => ({
     name: "",
     image: "",
     type: "",
@@ -40,17 +40,9 @@ const AdminProductComponent = () => {
     selled: "",
     newType: "",
   });
-  const [stateProductDetails, setStateProductDetails] = useState({
-    name: "",
-    image: "",
-    type: "",
-    price: "",
-    countInStock: "",
-    rating: "",
-    description: "",
-    discount: "",
-    selled: "",
-  });
+
+  const [stateProduct, setStateProduct] = useState(inittial());
+  const [stateProductDetails, setStateProductDetails] = useState(inittial());
 
   const [form] = Form.useForm();
 
@@ -120,8 +112,13 @@ const AdminProductComponent = () => {
   };
 
   useEffect(() => {
-    form.setFieldsValue(stateProductDetails);
-  }, [form, stateProductDetails]);
+    if (!isModalOpen) {
+      form.setFieldsValue(stateProductDetails);
+    } else {
+      form.setFieldsValue(inittial());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, stateProductDetails, isModalOpen]);
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {

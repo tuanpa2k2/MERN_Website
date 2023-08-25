@@ -1,5 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import * as OrderService from "../../services/OrderService";
 import { RiSecurePaymentLine } from "react-icons/ri";
 
@@ -7,22 +6,65 @@ import "./MyOrderPage.scss";
 import { useQuery } from "@tanstack/react-query";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 import { convertPrice } from "../../until";
+import { useLocation } from "react-router-dom";
 const MyOrderPage = () => {
-  const user = useSelector((state) => state.user);
+  const location = useLocation();
+  const { state } = location;
 
   const fetchMyOrderDetails = async () => {
-    // if (user?.id && user?.access_token) {
-    // }
-    const res = await OrderService.getOrderByUserId(user?.id, user?.access_token);
+    const res = await OrderService.getOrderByUserId(state?.id, state?.access_token);
     return res.data;
   };
 
-  const queryOrder = useQuery(["users"], fetchMyOrderDetails, {
-    retry: 3,
-    retryDelay: 1000,
-  });
-  const { data, isLoading: isLoadingMyOrdert } = queryOrder;
-  console.log("data", data);
+  const queryOrder = useQuery(
+    { queryKey: ["orders"], queryFn: fetchMyOrderDetails },
+    {
+      enabled: state?.id && state?.access_token,
+    }
+  );
+  const { data: dataOrder, isLoading: isLoadingMyOrdert } = queryOrder;
+
+  const renderProduct = (data, price, shipping) => {
+    if (data?.length > 1) {
+      return data?.map((items) => {
+        return (
+          <div className="prod-sonhieu" key={items?.product}>
+            <div className="image-prod">
+              <img src={items?.image} alt="imge" />
+            </div>
+            <div className="details-product">
+              <div className="name-product">{items?.name}</div>
+              <div className="quantity">Số lượng: {items?.amount}</div>
+              <div className="price">Giá bán: {convertPrice(items?.price)}</div>
+              <div className="price">Shiping: {convertPrice(shipping)}</div>
+              <div className="total-price">
+                Tổng tiền: <p>{convertPrice(price)}</p>
+              </div>
+            </div>
+          </div>
+        );
+      });
+    } else {
+      return data?.map((items) => {
+        return (
+          <div className="prod-soit" key={items?.product}>
+            <div className="image-prod">
+              <img src={items?.image} alt="imge" />
+            </div>
+            <div className="details-product">
+              <div className="name-product">{items?.name}</div>
+              <div className="quantity">Số lượng: {items?.amount}</div>
+              <div className="price">Giá bán: {convertPrice(items?.price)}</div>
+              <div className="price">Shiping: {convertPrice(shipping)}</div>
+              <div className="total-price">
+                Tổng tiền: <p>{convertPrice(price)}</p>
+              </div>
+            </div>
+          </div>
+        );
+      });
+    }
+  };
 
   return (
     <LoadingComponent isLoading={isLoadingMyOrdert}>
@@ -33,19 +75,12 @@ const MyOrderPage = () => {
         </div>
 
         <div className="details-myorder">
-          {data?.orderItems?.map((items) => {
+          {dataOrder?.map((items) => {
+            console.log("itemss", items);
             return (
               <div className="label-product" key={items?._id}>
-                <div className="image-prod">
-                  <img src={items?.image} alt="imge" />
-                </div>
-                <div className="details-product">
-                  <div className="name-product">{items?.name}</div>
-                  <div className="quantity">Số lượng: {items?.amount}</div>
-                  <div className="price">Giá bán: {convertPrice(items?.price)}</div>
-                  <div className="total-price">
-                    Tổng tiền: <p>{convertPrice(data?.totalPrice)}</p>
-                  </div>
+                <div className="product-render">
+                  {renderProduct(items?.orderItems, items?.totalPrice, items?.shippingPrice)}
                 </div>
                 <div className="actions">
                   <div className="text-status">

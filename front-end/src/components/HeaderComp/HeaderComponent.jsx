@@ -52,6 +52,21 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
     dispatch(searchProduct(e.target.value));
   };
 
+  const handleClickNavigate = (type) => {
+    if (type === "profile") {
+      navigate("/profile-page");
+    } else if (type === "admin") {
+      navigate("/system-admin");
+    } else if (type === "my-order") {
+      navigate("/my-order", {
+        state: {
+          id: user?.id,
+          token: user?.access_token,
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <header className={`wrapper-header ${scrolled ? "sticky-header" : ""}`}>
@@ -73,9 +88,11 @@ const HeaderComponent = ({ isHidenSearch = false, isHidenCart = false }) => {
                 interactive
                 render={(attrs) => (
                   <div className="tippy-popper" tabIndex="-1" {...attrs}>
-                    {user?.isAdmin === true && <span onClick={() => navigate("/system-admin")}>Quản lý hệ thống</span>}
-                    <span onClick={() => navigate("/my-order")}>Đơn hàng của tôi</span>
-                    <span onClick={() => navigate("/profile")}>Thông tin cá nhân</span>
+                    {user?.isAdmin === true && (
+                      <span onClick={() => handleClickNavigate("admin")}>Quản lý hệ thống</span>
+                    )}
+                    <span onClick={() => handleClickNavigate("my-order")}>Đơn hàng của tôi</span>
+                    <span onClick={() => handleClickNavigate("profile")}>Thông tin cá nhân</span>
                     <span onClick={handleLogoutUser}>Đăng Xuất</span>
                   </div>
                 )}
