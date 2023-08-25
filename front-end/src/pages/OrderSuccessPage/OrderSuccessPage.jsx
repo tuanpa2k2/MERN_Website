@@ -2,14 +2,12 @@ import React from "react";
 import { BsCardChecklist } from "react-icons/bs";
 
 import "./OrderSuccessPage.scss";
-import { Checkbox } from "antd";
 import { useLocation } from "react-router-dom";
 import { orderContant } from "../../contant";
 import { convertPrice } from "../../until";
 
 const OrderSuccessPage = () => {
   const location = useLocation();
-  console.log("location", location);
   const { state } = location;
 
   return (
@@ -33,8 +31,8 @@ const OrderSuccessPage = () => {
         <div className="space-hr"></div>
         <div className="card-product">
           <div className="text-title-product">
-            Tất cả sản phẩm đã đặt
-            <span>Đã thanh toán (gồm cả ship): {convertPrice(state?.totalPriceMemo)}</span>
+            Các sản phẩm vừa mới đặt hàng
+            <span>Tổng tiền (gồm cả ship): {convertPrice(state?.totalPriceMemo)}</span>
           </div>
           <div className="header-table">
             <div className="image-product">Hình ảnh</div>

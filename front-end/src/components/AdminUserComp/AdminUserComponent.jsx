@@ -117,6 +117,7 @@ const AdminUserComponent = () => {
       setIsLoadingUpdate(true);
       getDetailUser(rowSelected);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelected, isOpenDrawer]);
 
   // -----------------------------------------------------------------------------------------------------------------------
@@ -197,6 +198,7 @@ const AdminUserComponent = () => {
       message.success("Thêm nguời dùng thành công");
       handleCancel();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessCreate]);
 
   useEffect(() => {
@@ -204,6 +206,7 @@ const AdminUserComponent = () => {
       message.success("Cập nhập nguời dùng thành công");
       handleCloseDrawer();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessUpdated]);
 
   useEffect(() => {
@@ -211,12 +214,14 @@ const AdminUserComponent = () => {
       message.success("Xóa người dùng thành công");
       handleCancelDelete();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDeleted]);
 
   useEffect(() => {
     if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
       message.success("Xóa người dùng thành công");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDeletedMany]);
 
   // -----------------------------------------------------------------------------------------------------------------------
