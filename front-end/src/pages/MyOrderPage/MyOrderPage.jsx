@@ -24,6 +24,7 @@ const MyOrderPage = () => {
     }
   );
   const { data: dataOrder, isLoading: isLoadingMyOrdert } = queryOrder;
+  console.log("data", dataOrder);
 
   const renderProduct = (data, price, shipping) => {
     if (data?.length > 1) {
@@ -38,9 +39,6 @@ const MyOrderPage = () => {
               <div className="quantity">Số lượng: {items?.amount}</div>
               <div className="price">Giá bán: {convertPrice(items?.price)}</div>
               <div className="price">Shiping: {convertPrice(shipping)}</div>
-              <div className="total-price">
-                Tổng tiền: <p>{convertPrice(price)}</p>
-              </div>
             </div>
           </div>
         );
@@ -57,9 +55,6 @@ const MyOrderPage = () => {
               <div className="quantity">Số lượng: {items?.amount}</div>
               <div className="price">Giá bán: {convertPrice(items?.price)}</div>
               <div className="price">Shiping: {convertPrice(shipping)}</div>
-              <div className="total-price">
-                Tổng tiền: <p>{convertPrice(price)}</p>
-              </div>
             </div>
           </div>
         );
@@ -113,7 +108,7 @@ const MyOrderPage = () => {
             })
           ) : (
             <div className="empty-myOrder" style={{ color: "blue", textAlign: "center", fontSize: "2rem" }}>
-              Chưa có đơn hàng nào 🤨
+              Chưa có đơn hàng nào.
             </div>
           )}
         </div>

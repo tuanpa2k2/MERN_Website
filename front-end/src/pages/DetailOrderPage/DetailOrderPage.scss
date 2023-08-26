@@ -148,67 +148,133 @@
     }
 
     .product-details {
+      position: relative;
       display: flex;
-      height: 168px;
+      flex-direction: column;
+      height: fit-content;
       margin: 0 10px;
       font-size: 1.6rem;
       background-color: white;
 
-      .image {
-        width: 180px;
-        height: 100%;
-        color: red;
-        padding: 8px;
+      .sanphamsoit {
+        display: flex;
+        height: 188px;
 
-        img {
-          width: 100%;
+        .image {
+          width: 180px;
           height: 100%;
-          object-fit: cover;
-          transition: all ease 0.3s;
+          color: red;
+          padding: 8px;
 
-          &:hover {
-            cursor: pointer;
-            transform: scale(0.9);
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all ease 0.3s;
+
+            &:hover {
+              cursor: pointer;
+              transform: scale(0.9);
+            }
+          }
+        }
+
+        .info-product {
+          width: 720px;
+          padding: 8px 0;
+
+          .name {
+            word-wrap: break-word;
+            white-space: normal;
+            overflow: hidden;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            text-transform: capitalize;
+            background-color: #efefef;
+            font-weight: 500;
+            padding: 0 5px;
+            margin-bottom: 12px;
+          }
+
+          .quantity,
+          .price,
+          .discount {
+            display: flex;
+            margin-top: 5px;
+            padding: 0 5px;
+            line-height: 18px;
+
+            p {
+              width: 90px;
+            }
           }
         }
       }
 
-      .info-product {
-        width: 720px;
-        padding: 8px 0;
+      .sanphamsonhieu {
+        display: flex;
+        height: 188px;
 
-        .name {
-          word-wrap: break-word;
-          white-space: normal;
-          overflow: hidden;
-          display: -webkit-box;
-          text-overflow: ellipsis;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3;
-          text-transform: capitalize;
-          background-color: #efefef;
-          font-weight: 500;
-          padding: 0 5px;
-          margin-bottom: 16px;
+        .image {
+          width: 180px;
+          height: 100%;
+          color: red;
+          padding: 8px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all ease 0.3s;
+
+            &:hover {
+              cursor: pointer;
+              transform: scale(0.9);
+            }
+          }
         }
 
-        .quantity,
-        .price,
-        .discount {
-          display: flex;
-          margin-top: 5px;
-          padding: 0 5px;
-          line-height: 18px;
+        .info-product {
+          width: 720px;
+          padding: 8px 0;
 
-          p {
-            width: 80px;
+          .name {
+            word-wrap: break-word;
+            white-space: normal;
+            overflow: hidden;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            text-transform: capitalize;
+            background-color: #efefef;
             font-weight: 500;
+            padding: 0 5px;
+            margin-bottom: 12px;
+          }
+
+          .quantity,
+          .price,
+          .discount {
+            display: flex;
+            margin-top: 5px;
+            padding: 0 5px;
+            line-height: 18px;
+
+            p {
+              width: 90px;
+            }
           }
         }
       }
 
       .price-container {
-        flex: 1;
+        position: absolute;
+        right: 0;
+        height: calc(100% - 16px);
+        width: 28%;
         margin: 8px;
         border: 1px solid blue;
 
@@ -228,6 +294,33 @@
           height: calc(100% - 35px);
           width: 100%;
           padding: 2px 5px;
+
+          .name-product {
+            display: flex;
+
+            .ten {
+              width: 225px;
+              word-wrap: break-word;
+              white-space: normal;
+              overflow: hidden;
+              display: -webkit-box;
+              text-overflow: ellipsis;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              font-style: oblique;
+            }
+
+            .gia {
+              color: blue;
+              font-style: oblique;
+              flex: 1;
+              text-align: end;
+            }
+          }
+
+          .tam-tinh {
+            margin-top: 5px;
+          }
 
           .tam-tinh,
           .delivery,
@@ -249,7 +342,7 @@
             border: 1px solid black;
             right: 0;
             width: 35%;
-            bottom: 38px;
+            bottom: 32px;
           }
 
           .total-price {
@@ -258,10 +351,7 @@
             bottom: 0;
             left: 0;
             padding: 5px;
-
-            p {
-              color: red;
-            }
+            color: red;
           }
         }
       }

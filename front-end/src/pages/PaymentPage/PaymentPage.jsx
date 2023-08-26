@@ -120,12 +120,16 @@ const PaymentPage = () => {
   }, [order]);
 
   const diliveryPriceMemo = useMemo(() => {
-    if (priceMemo > 200000) {
-      return 10000;
-    } else if (priceMemo === 0) {
+    if ((priceMemo === 0 && order?.orderItems.length === 0) || priceMemo >= 1000000) {
       return 0;
+    } else if (500000 <= priceMemo && priceMemo < 1000000) {
+      return 10000;
+    } else if (200000 <= priceMemo && priceMemo < 500000) {
+      return 20000;
+    } else if (priceMemo < 200000) {
+      return 30000;
     }
-    return 20000;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceMemo]);
 
   const totalPriceMemo = useMemo(() => {
