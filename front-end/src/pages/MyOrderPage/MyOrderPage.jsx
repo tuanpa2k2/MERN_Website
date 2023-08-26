@@ -13,7 +13,7 @@ const MyOrderPage = () => {
   const { state } = location;
 
   const fetchMyOrderDetails = async () => {
-    const res = await OrderService.getOrderByUserId(state?.id, state?.access_token);
+    const res = await OrderService.getOrderByUserId(state?.id, state?.token);
     return res.data;
   };
 
@@ -68,7 +68,11 @@ const MyOrderPage = () => {
   };
 
   const handleDetailsOrder = (id) => {
-    navigate(`/detail-order/${id}`);
+    navigate(`/detail-order/${id}`, {
+      state: {
+        token: state.token, // truyền đi token khi đá sang page 'detail-order'
+      },
+    });
   };
 
   return (
@@ -80,33 +84,38 @@ const MyOrderPage = () => {
         </div>
 
         <div className="details-myorder">
-          {dataOrder?.map((items) => {
-            console.log("itemss", items);
-            return (
-              <div className="label-product" key={items?._id}>
-                <div className="product-render">
-                  {renderProduct(items?.orderItems, items?.totalPrice, items?.shippingPrice)}
-                </div>
-                <div className="actions">
-                  <div className="text-status">
-                    <div className="trangthai">Trạng thái đơn hàng</div>
-                    <div className="chitiet">
-                      <div className="giaohang">
-                        Giao hàng: <p>{`${items?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}`}</p>
-                      </div>
-                      <div className="thanhtoan">
-                        Thanh toán: <p>{`${items?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}`}</p>
+          {dataOrder?.length > 0 ? (
+            dataOrder?.map((items) => {
+              return (
+                <div className="label-product" key={items?._id}>
+                  <div className="product-render">
+                    {renderProduct(items?.orderItems, items?.totalPrice, items?.shippingPrice)}
+                  </div>
+                  <div className="actions">
+                    <div className="text-status">
+                      <div className="trangthai">Trạng thái đơn hàng</div>
+                      <div className="chitiet">
+                        <div className="giaohang">
+                          Giao hàng: <p>{`${items?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}`}</p>
+                        </div>
+                        <div className="thanhtoan">
+                          Thanh toán: <p>{`${items?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}`}</p>
+                        </div>
                       </div>
                     </div>
+                    <button className="xemchitiet" onClick={() => handleDetailsOrder(items?._id)}>
+                      Xem chi tiết
+                    </button>
+                    <button className="huydon">Hủy đơn hàng</button>
                   </div>
-                  <button className="xemchitiet" onClick={() => handleDetailsOrder(items?._id)}>
-                    Xem chi tiết
-                  </button>
-                  <button className="huydon">Hủy đơn hàng</button>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <div className="empty-myOrder" style={{ color: "blue", textAlign: "center", fontSize: "2rem" }}>
+              Chưa có đơn hàng nào 🤨
+            </div>
+          )}
         </div>
       </div>
     </LoadingComponent>

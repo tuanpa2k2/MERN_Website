@@ -78,7 +78,7 @@ const createOrder = (newOrder) => {
   });
 };
 
-const getOrderDetails = (id) => {
+const getAllOrderDetails = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const order = await Order.find({
@@ -103,7 +103,33 @@ const getOrderDetails = (id) => {
   });
 };
 
+const getDetailsOrder = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const order = await Order.findById({
+        _id: id, //tìm id order đã tồn tại trong db chưa?
+      });
+
+      if (order === null) {
+        resolve({
+          status: "ERR",
+          message: "Sản phẩm này không tồn tại!",
+        });
+      }
+
+      resolve({
+        status: "OK",
+        message: "Get detail Order Success kk...",
+        data: order,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createOrder,
-  getOrderDetails,
+  getAllOrderDetails,
+  getDetailsOrder,
 };
