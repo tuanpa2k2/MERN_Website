@@ -6,8 +6,9 @@ import "./MyOrderPage.scss";
 import { useQuery } from "@tanstack/react-query";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 import { convertPrice } from "../../until";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 const MyOrderPage = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
 
@@ -66,6 +67,10 @@ const MyOrderPage = () => {
     }
   };
 
+  const handleDetailsOrder = (id) => {
+    navigate(`/detail-order/${id}`);
+  };
+
   return (
     <LoadingComponent isLoading={isLoadingMyOrdert}>
       <div className="wrapper-myOrderPage">
@@ -94,7 +99,9 @@ const MyOrderPage = () => {
                       </div>
                     </div>
                   </div>
-                  <button className="xemchitiet">Xem chi tiết</button>
+                  <button className="xemchitiet" onClick={() => handleDetailsOrder(items?._id)}>
+                    Xem chi tiết
+                  </button>
                   <button className="huydon">Hủy đơn hàng</button>
                 </div>
               </div>
