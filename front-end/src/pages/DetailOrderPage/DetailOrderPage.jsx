@@ -7,6 +7,7 @@ import { useLocation, useParams } from "react-router-dom";
 import * as OrderService from "../../services/OrderService";
 import { convertPrice } from "../../until";
 import { orderContant } from "../../contant";
+import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 
 import "./DetailOrderPage.scss";
 
@@ -27,7 +28,7 @@ const DetailOrderPage = () => {
       enabled: state?.id && state?.access_token,
     }
   );
-  const { data } = queryOrderDetail;
+  const { data, isLoading } = queryOrderDetail;
 
   const priceMemo = useMemo(() => {
     const result = data?.orderItems?.reduce((total, cur) => {
@@ -58,129 +59,131 @@ const DetailOrderPage = () => {
           Chi tiết đơn hàng: <p>{id}</p>
         </span>
       </div>
-      <div className="content-details">
-        <div className="info-details">
-          <div className="diachi">
-            <div className="title-textt">
-              <LiaMapMarkedSolid />
-              Thông tin người nhận
+      <LoadingComponent isLoading={isLoading}>
+        <div className="content-details">
+          <div className="info-details">
+            <div className="diachi">
+              <div className="title-textt">
+                <LiaMapMarkedSolid />
+                Thông tin người nhận
+              </div>
+              <div className="info-text">
+                <div className="name">{data?.shippingAddress?.fullName}</div>
+                <div className="address">{`${data?.shippingAddress?.address} - ${data?.shippingAddress?.city}`}</div>
+                <div className="phone">
+                  (+84) <p>{data?.shippingAddress?.phone}</p>
+                </div>
+              </div>
             </div>
-            <div className="info-text">
-              <div className="name">{data?.shippingAddress?.fullName}</div>
-              <div className="address">{`${data?.shippingAddress?.address} - ${data?.shippingAddress?.city}`}</div>
-              <div className="phone">
-                (+84) <p>{data?.shippingAddress?.phone}</p>
+            <div className="giaohang">
+              <div className="title-textt">
+                <LiaShippingFastSolid /> Hình thức giao hàng
+              </div>
+              <div className="info-text">
+                <div className="fast">
+                  <p>FAST</p> Giao hàng tiết kiệm
+                </div>
+                <div className="delivery">
+                  Phí giao hàng: <p>{convertPrice(diliveryPriceMemo)}</p>
+                </div>
+              </div>
+            </div>
+            <div className="thanhtoan">
+              <div className="title-textt">
+                <FaAmazonPay />
+                Hình thức thanh toán
+              </div>
+              <div className="info-text">
+                <div className="name">{orderContant.payment[data?.paymentMethod]}</div>
+                <div className="status">
+                  Trạng thái: <p>{data?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}</p>
+                </div>
               </div>
             </div>
           </div>
-          <div className="giaohang">
-            <div className="title-textt">
-              <LiaShippingFastSolid /> Hình thức giao hàng
-            </div>
-            <div className="info-text">
-              <div className="fast">
-                <p>FAST</p> Giao hàng tiết kiệm
-              </div>
-              <div className="delivery">
-                Phí giao hàng: <p>{convertPrice(diliveryPriceMemo)}</p>
-              </div>
-            </div>
-          </div>
-          <div className="thanhtoan">
-            <div className="title-textt">
-              <FaAmazonPay />
-              Hình thức thanh toán
-            </div>
-            <div className="info-text">
-              <div className="name">{orderContant.payment[data?.paymentMethod]}</div>
-              <div className="status">
-                Trạng thái: <p>{data?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}</p>
+          <div className="product-details">
+            {data?.orderItems?.length === 1
+              ? data?.orderItems?.map((items) => {
+                  return (
+                    <div className="sanphamsoit" key={items?._id}>
+                      <div className="image">
+                        <img src={items?.image} alt="imagess" />
+                      </div>
+                      <div className="info-product">
+                        <div className="name">{items?.name}</div>
+                        <div className="quantity">
+                          <p>- Số lượng:</p> <span style={{ fontStyle: "oblique" }}>x{items?.amount}</span>
+                        </div>
+                        <div className="price">
+                          <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
+                        </div>
+                        <div className="discount">
+                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>0%</span>
+                        </div>
+                        <div className="discount">
+                          <p>- Tổng tiền:</p>
+                          <span style={{ color: "red" }}>{convertPrice(items?.price * items?.amount)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              : data?.orderItems?.map((items) => {
+                  return (
+                    <div className="sanphamsonhieu" key={items?._id}>
+                      <div className="image">
+                        <img src={items?.image} alt="imagess" />
+                      </div>
+                      <div className="info-product">
+                        <div className="name">{items?.name}</div>
+                        <div className="quantity">
+                          <p>- Số lượng:</p> <span style={{ fontStyle: "oblique" }}>x{items?.amount}</span>
+                        </div>
+                        <div className="price">
+                          <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
+                        </div>
+                        <div className="discount">
+                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>0%</span>
+                        </div>
+                        <div className="discount">
+                          <p>- Tổng tiền:</p>
+                          <span style={{ color: "red" }}>{convertPrice(items?.price * items?.amount)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+            <div className="price-container">
+              <div className="text-title">Chi tiết các khoản</div>
+              <div className="acbkkkk">
+                {data?.orderItems?.map((item) => {
+                  return (
+                    <div className="name-product" key={item._id}>
+                      <div className="ten">* {item?.name}</div>
+                      <div className="gia">{convertPrice(item?.price * item?.amount)}</div>
+                    </div>
+                  );
+                })}
+
+                <div className="tam-tinh">
+                  Tạm tính: <p>{convertPrice(priceMemo)}</p>
+                </div>
+                <div className="delivery">
+                  Phí vận chuyển: <p>{convertPrice(diliveryPriceMemo)}</p>
+                </div>
+                <div className="thue">
+                  Thuế: <p>0 vnd</p>
+                </div>
+                <div className="space"></div>
+                <div className="total-price">
+                  Tổng tiền thanh toán: <p>{convertPrice(data?.totalPrice)}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="product-details">
-          {data?.orderItems?.length === 1
-            ? data?.orderItems?.map((items) => {
-                return (
-                  <div className="sanphamsoit" key={items?._id}>
-                    <div className="image">
-                      <img src={items?.image} alt="imagess" />
-                    </div>
-                    <div className="info-product">
-                      <div className="name">{items?.name}</div>
-                      <div className="quantity">
-                        <p>- Số lượng:</p> <span style={{ fontStyle: "oblique" }}>x{items?.amount}</span>
-                      </div>
-                      <div className="price">
-                        <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
-                      </div>
-                      <div className="discount">
-                        <p>- Giảm giá:</p> <span style={{ color: "blue" }}>0%</span>
-                      </div>
-                      <div className="discount">
-                        <p>- Tổng tiền:</p>
-                        <span style={{ color: "red" }}>{convertPrice(items?.price * items?.amount)}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            : data?.orderItems?.map((items) => {
-                return (
-                  <div className="sanphamsonhieu" key={items?._id}>
-                    <div className="image">
-                      <img src={items?.image} alt="imagess" />
-                    </div>
-                    <div className="info-product">
-                      <div className="name">{items?.name}</div>
-                      <div className="quantity">
-                        <p>- Số lượng:</p> <span style={{ fontStyle: "oblique" }}>x{items?.amount}</span>
-                      </div>
-                      <div className="price">
-                        <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
-                      </div>
-                      <div className="discount">
-                        <p>- Giảm giá:</p> <span style={{ color: "blue" }}>0%</span>
-                      </div>
-                      <div className="discount">
-                        <p>- Tổng tiền:</p>
-                        <span style={{ color: "red" }}>{convertPrice(items?.price * items?.amount)}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-          <div className="price-container">
-            <div className="text-title">Chi tiết các khoản</div>
-            <div className="acbkkkk">
-              {data?.orderItems?.map((item) => {
-                return (
-                  <div className="name-product" key={item._id}>
-                    <div className="ten">* {item?.name}</div>
-                    <div className="gia">{convertPrice(item?.price * item?.amount)}</div>
-                  </div>
-                );
-              })}
-
-              <div className="tam-tinh">
-                Tạm tính: <p>{convertPrice(priceMemo)}</p>
-              </div>
-              <div className="delivery">
-                Phí vận chuyển: <p>{convertPrice(diliveryPriceMemo)}</p>
-              </div>
-              <div className="thue">
-                Thuế: <p>0 vnd</p>
-              </div>
-              <div className="space"></div>
-              <div className="total-price">
-                Tổng tiền thanh toán: <p>{convertPrice(data?.totalPrice)}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </LoadingComponent>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as OrderService from "../../services/OrderService";
 import { RiSecurePaymentLine } from "react-icons/ri";
 
@@ -7,10 +7,20 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
 import { convertPrice } from "../../until";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import * as message from "../../components/MessageComp/MessageComponent";
+
 const MyOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
+
+  const mutation = useMutationHooks((data) => {
+    const { id, token } = data;
+    const res = OrderService.cancelOrder(id, token);
+    return res;
+  });
+  const { data: dataCancelOrder, isSuccess: isSuccessCancelOrder, isLoading: isLoadingCancelOrder } = mutation;
 
   const fetchMyOrderDetails = async () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token);
@@ -23,8 +33,14 @@ const MyOrderPage = () => {
       enabled: state?.id && state?.access_token,
     }
   );
-  const { data: dataOrder, isLoading: isLoadingMyOrdert } = queryOrder;
-  console.log("data", dataOrder);
+  const { data: dataOrder } = queryOrder;
+
+  useEffect(() => {
+    if (isSuccessCancelOrder && dataCancelOrder?.status === "OK") {
+      message.success("Hủy đơn hàng thành công");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessCancelOrder]);
 
   const renderProduct = (data, price, shipping) => {
     if (data?.length > 1) {
@@ -70,14 +86,25 @@ const MyOrderPage = () => {
     });
   };
 
-  return (
-    <LoadingComponent isLoading={isLoadingMyOrdert}>
-      <div className="wrapper-myOrderPage">
-        <div className="header-title">
-          <RiSecurePaymentLine />
-          <span>Đơn hàng của tôi 🥰🥰🥰</span>
-        </div>
+  const handleCancelOrder = (id) => {
+    mutation.mutate(
+      { id, token: state?.token },
+      {
+        onSuccess: () => {
+          queryOrder.refetch();
+        },
+      }
+    );
+  };
 
+  return (
+    <div className="wrapper-myOrderPage">
+      <div className="header-title">
+        <RiSecurePaymentLine />
+        <span>Đơn hàng của tôi 🥰🥰🥰</span>
+      </div>
+
+      <LoadingComponent isLoading={isLoadingCancelOrder}>
         <div className="details-myorder">
           {dataOrder?.length > 0 ? (
             dataOrder?.map((items) => {
@@ -101,7 +128,9 @@ const MyOrderPage = () => {
                     <button className="xemchitiet" onClick={() => handleDetailsOrder(items?._id)}>
                       Xem chi tiết
                     </button>
-                    <button className="huydon">Hủy đơn hàng</button>
+                    <button className="huydon" onClick={() => handleCancelOrder(items?._id)}>
+                      Hủy đơn hàng
+                    </button>
                   </div>
                 </div>
               );
@@ -112,8 +141,8 @@ const MyOrderPage = () => {
             </div>
           )}
         </div>
-      </div>
-    </LoadingComponent>
+      </LoadingComponent>
+    </div>
   );
 };
 

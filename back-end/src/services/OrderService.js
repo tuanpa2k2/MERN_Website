@@ -128,8 +128,32 @@ const getDetailsOrder = (id) => {
   });
 };
 
+const cancelOrderDetails = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const order = await Order.findByIdAndDelete(id);
+
+      if (order === null) {
+        resolve({
+          status: "ERR",
+          message: "Sản phẩm này không tồn tại!",
+        });
+      }
+
+      resolve({
+        status: "OK",
+        message: "Hủy đơn hàng thành công...",
+        data: order,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createOrder,
   getAllOrderDetails,
   getDetailsOrder,
+  cancelOrderDetails
 };
