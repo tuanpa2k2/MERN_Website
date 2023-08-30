@@ -120,13 +120,13 @@ const PaymentPage = () => {
   }, [order]);
 
   const diliveryPriceMemo = useMemo(() => {
-    if ((priceMemo === 0 && order?.orderItems.length === 0) || priceMemo >= 1000000) {
+    if (priceMemo === 0 && priceMemo >= 1000000) {
       return 0;
-    } else if (500000 <= priceMemo && priceMemo < 1000000) {
+    } else if (500000 <= priceMemo) {
       return 10000;
-    } else if (200000 <= priceMemo && priceMemo < 500000) {
+    } else if (200000 <= priceMemo) {
       return 20000;
-    } else if (priceMemo < 200000) {
+    } else {
       return 30000;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,7 +214,7 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="wrapper-containerOrderPage">
+    <div className="wrapper-containerPaymentPage">
       <div className="header-title">
         <RiSecurePaymentLine />
         <span>
@@ -247,10 +247,10 @@ const PaymentPage = () => {
         </div>
 
         <div className="right">
-          <div className="title-order">Anhtuan shop</div>
-          <div className="details-order">
+          <div className="title-payment">Anhtuan shop</div>
+          <div className="details-payment">
             <div className="info-buyer">
-              <div className="label-order">Thông tin người mua hàng</div>
+              <div className="label-payment">Thông tin người mua hàng</div>
               <div className="details-infobuyer">
                 <div className="name">
                   <div className="name-label">Họ và tên:</div>
@@ -267,36 +267,50 @@ const PaymentPage = () => {
                   <div className="name-info">{`${user?.address} - ${user?.city}`}</div>
                 </div>
                 <div className="change-address" onClick={handleChangeAddress}>
-                  Đổi địa chỉ
+                  Thay đổi địa chỉ
                 </div>
               </div>
               <hr />
             </div>
 
-            <div className="info-order">
-              <div className="label-order">Chi tiết hóa đơn thanh toán</div>
-              <div className="details-price">
-                <div className="row-1">
-                  <div className="name-label">Tạm tính:</div>
-                  <div className="price-order">{convertPrice(priceMemo)}</div>
-                </div>
-                <div className="row-2">
-                  <div className="name-label">Giảm giá:</div>
-                  <div className="price-order">{discountPriceMemo} %</div>
-                </div>
-                <div className="row-4">
-                  <div className="name-label">Phí giao hàng:</div>
-                  <div className="price-order">{convertPrice(diliveryPriceMemo)}</div>
-                </div>
-                <hr />
-                <div className="row-5">
-                  <div className="name-label">Tổng tiền:</div>
-                  <div className="total-price">{convertPrice(totalPriceMemo)}</div>
-                </div>
+            <div className="info-product">
+              <div className="label-payment">Danh sách các sản phẩm</div>
+              <div className="details-infoproduct">
+                {order.orderItems.map((items) => {
+                  return (
+                    <div className="name" key={items?.product}>
+                      <div className="name-product">* {items?.name}</div>
+                      <div className="price-product">{convertPrice(items?.price)}</div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
-          <button onClick={() => handleAddOrderPayment()}>Thanh Toán</button>
+
+          <div className="info-payment">
+            <div className="label-payment">Chi tiết hóa đơn thanh toán</div>
+            <div className="details-prices">
+              <div className="row-1">
+                <div className="name-label">Tạm tính:</div>
+                <div className="price-order">{convertPrice(priceMemo)}</div>
+              </div>
+              <div className="row-2">
+                <div className="name-label">Giảm giá:</div>
+                <div className="price-order">{discountPriceMemo} %</div>
+              </div>
+              <div className="row-4">
+                <div className="name-label">Phí giao hàng:</div>
+                <div className="price-order">{convertPrice(diliveryPriceMemo)}</div>
+              </div>
+              <hr />
+              <div className="row-5">
+                <div className="name-label">Tổng tiền:</div>
+                <div className="total-price">{convertPrice(totalPriceMemo)}</div>
+              </div>
+            </div>
+            <button onClick={() => handleAddOrderPayment()}>Thanh Toán</button>
+          </div>
         </div>
       </div>
 

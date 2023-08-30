@@ -332,27 +332,6 @@ const OrderPage = () => {
         <div className="right">
           <div className="title-order">Anhtuan shop</div>
           <div className="details-order">
-            <div className="info-employee">
-              <div className="label-order">Thông tin người bán</div>
-              <div className="details-infoEmployee">
-                <div className="name">
-                  <div className="name-label">Họ và tên:</div>
-                  <div className="name-info">Phi anh tuan</div>
-                </div>
-                <div className="address">
-                  <div className="name-label">Địa chỉ:</div>
-                  <div className="name-info">Thôn thanh xuân, xã thuần thành, thái thụy - thái bình</div>
-                </div>
-                <div className="phone">
-                  <div className="name-label">Số điện thoại:</div>
-                  <div className="name-info" style={{ fontWeight: "500" }}>
-                    036 526 9311
-                  </div>
-                </div>
-              </div>
-              <hr />
-            </div>
-
             <div className="info-buyer">
               <div className="label-order">Thông tin người mua hàng</div>
               <div className="details-infobuyer">

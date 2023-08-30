@@ -31,6 +31,8 @@
   .details-myorder {
     padding: 15px 10px;
     border: 1px solid black;
+    height: fit-content;
+    min-height: 650px;
 
     .label-product {
       display: flex;

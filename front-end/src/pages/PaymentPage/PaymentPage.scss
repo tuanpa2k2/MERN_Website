@@ -1,4 +1,4 @@
-.wrapper-containerOrderPage {
+.wrapper-containerPaymentPage {
   width: 100%;
   height: 682px;
   padding: 0 120px;
@@ -75,8 +75,9 @@
       position: relative;
       width: 25%;
       border-top: 1px solid black;
+      border-right: 1px solid black;
 
-      .title-order {
+      .title-payment {
         padding: 5px 0;
         font-size: 1.7rem;
         text-align: center;
@@ -88,24 +89,22 @@
         border-bottom: 1px solid blue;
       }
 
-      .label-order {
+      .label-payment {
         font-weight: 500;
         padding: 5px 5px;
         background-color: #eaeaea;
       }
 
-      .details-order {
+      .details-payment {
         position: relative;
-        overflow: scroll;
         font-size: 1.6rem;
         height: calc(100% - 85px);
 
-        .info-employee,
-        .info-buyer {
+        .info-buyer,
+        .info-product {
           font-size: 1.6rem;
           color: var(--text-color);
 
-          .details-infoEmployee,
           .details-infobuyer {
             display: flex;
             flex-direction: column;
@@ -133,8 +132,9 @@
             .change-address {
               font-style: oblique;
               color: blue;
-              font-weight: 500;
               text-align: end;
+              margin: 5px 5px;
+              font-size: 1.5rem;
 
               &:hover {
                 cursor: pointer;
@@ -142,92 +142,108 @@
               }
             }
           }
-        }
 
-        .info-order {
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-
-          .label-order-total {
-            text-align: center;
-            font-weight: 500;
-            padding: 5px 5px;
-            background-color: #aeaeae;
-          }
-
-          .details-price {
-            background-color: rgb(236, 236, 236);
-            position: relative;
-            display: flex;
-            flex-direction: column;
+          .details-infoproduct {
             padding: 0 5px;
+            font-style: oblique;
 
-            .row-1,
-            .row-2,
-            .row-3,
-            .row-4 {
+            .name {
               display: flex;
-              justify-content: space-between;
+              align-items: start;
 
-              .name-label,
-              .price-order {
-                font-style: oblique;
-              }
-            }
-
-            hr {
-              margin: 35px 0;
-              position: absolute;
-              right: 0;
-              bottom: 0;
-              width: 180px;
-            }
-
-            .row-5 {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              padding: 5px 0;
-
-              .name-label {
-                text-transform: uppercase;
-                font-size: 1.7rem;
-                font-weight: 500;
-                color: red;
+              .name-product {
+                width: 64%;
+                word-wrap: break-word;
+                white-space: normal;
+                overflow: hidden;
+                display: -webkit-box;
+                text-overflow: ellipsis;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
               }
 
-              .total-price {
-                font-size: 2rem;
-                color: red;
+              .price-product {
+                text-align: end;
+                flex: 1;
               }
             }
           }
         }
       }
 
-      button {
+      .info-payment {
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: blue;
-        width: 95%;
-        text-align: center;
-        font-size: 1.7rem;
-        font-weight: 600;
-        padding: 8px 5px;
-        border: 1px solid blue;
-        border-radius: 8px;
-        color: white;
+        font-size: 1.6rem;
+        bottom: 0;
+        width: 100%;
 
-        &:hover {
-          cursor: pointer;
-          box-shadow: 0 0 5px blue;
-          background-color: red;
+        .details-prices {
+          background-color: rgb(255, 240, 240);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          padding: 0 5px;
+
+          .row-1,
+          .row-2,
+          .row-3,
+          .row-4 {
+            display: flex;
+            justify-content: space-between;
+
+            .name-label,
+            .price-order {
+              font-style: oblique;
+            }
+          }
+
+          hr {
+            margin: 35px 0;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 180px;
+          }
+
+          .row-5 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 0;
+
+            .name-label {
+              text-transform: uppercase;
+              font-size: 1.7rem;
+              font-weight: 500;
+              color: red;
+            }
+
+            .total-price {
+              font-size: 2rem;
+              color: red;
+            }
+          }
+        }
+
+        button {
+          text-align: center;
+          width: 100%;
+          font-size: 1.7rem;
+          font-weight: 600;
+          padding: 7px 5px;
           color: white;
+          background-color: blue;
+
+          &:hover {
+            cursor: pointer;
+            box-shadow: 0 0 5px blue;
+            background-color: red;
+            color: white;
+          }
         }
       }
     }
+
     :where(.css-dev-only-do-not-override-txh9fw).ant-radio-group {
       display: grid;
       gap: 10px;

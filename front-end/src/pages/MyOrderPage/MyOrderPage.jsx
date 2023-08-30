@@ -42,7 +42,7 @@ const MyOrderPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessCancelOrder]);
 
-  const renderProduct = (data, price, shipping) => {
+  const renderProduct = (data, shipping) => {
     if (data?.length > 1) {
       return data?.map((items) => {
         return (
