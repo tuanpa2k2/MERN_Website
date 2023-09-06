@@ -115,10 +115,33 @@
           align-items: center;
 
           p {
+            display: flex;
+            flex: 1;
+            justify-content: end;
             margin-left: 8px;
             font-size: 1.8rem;
             font-weight: 500;
             color: red;
+          }
+        }
+
+        .isDelivered {
+          font-size: 1.6rem;
+          display: flex;
+          align-items: center;
+
+          p {
+            display: flex;
+            justify-content: end;
+            flex: 1;
+            color: red;
+          }
+
+          span {
+            display: flex;
+            justify-content: end;
+            flex: 1;
+            color: blue;
           }
         }
       }
@@ -131,7 +154,6 @@
           font-style: oblique;
           color: blue;
           font-weight: 500;
-          text-decoration: underline;
         }
 
         .status {
@@ -139,9 +161,21 @@
           align-items: center;
 
           p {
+            flex: 1;
+            display: flex;
+            justify-content: end;
             margin-left: 8px;
             font-style: oblique;
             color: red;
+          }
+
+          span {
+            flex: 1;
+            display: flex;
+            justify-content: end;
+            margin-left: 8px;
+            font-style: oblique;
+            color: blue;
           }
         }
       }

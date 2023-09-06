@@ -86,6 +86,9 @@ const DetailOrderPage = () => {
                 <div className="delivery">
                   Phí giao hàng: <p>{convertPrice(diliveryPriceMemo)}</p>
                 </div>
+                <div className="isDelivered">
+                  Trạng thái: {data?.isDelivered ? <span>Đã nhận hàng</span> : <p>Chưa nhận hàng</p>}
+                </div>
               </div>
             </div>
             <div className="thanhtoan">
@@ -96,7 +99,7 @@ const DetailOrderPage = () => {
               <div className="info-text">
                 <div className="name">{orderContant.payment[data?.paymentMethod]}</div>
                 <div className="status">
-                  Trạng thái: <p>{data?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}</p>
+                  Trạng thái: {data?.isPaid ? <span>Đã thanh toán</span> : <p>Chưa thanh toán</p>}
                 </div>
               </div>
             </div>

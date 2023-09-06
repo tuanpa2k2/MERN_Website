@@ -2,43 +2,28 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Input, Radio } from "antd";
+import { Radio } from "antd";
 
 import { useMutationHooks } from "../../hooks/useMutationHook";
-import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
+import * as PaymentService from "../../services/PaymentService";
 import * as message from "../../components/MessageComp/MessageComponent";
-import LoadingComponent from "../../components/LoadingComp/LoadingComponent";
-import ModalComponent from "../../components/ModalComp/ModalComponent";
 import { convertPrice } from "../../until";
 import "./PaymentPage.scss";
 import { removeOrderProductAll } from "../../redux/slides/orderSlide";
+import { PayPalButton } from "react-paypal-button-v2";
 
 const PaymentPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
-  const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [payment, setPayment] = useState("later_money");
   const [delivery, setDelivery] = useState("fast");
-
-  const [stateUserDetail, setStateUserDetail] = useState({
-    name: "",
-    phone: "",
-    address: "",
-    city: "",
-  });
+  const [sdkReady, setSdkReady] = useState(false);
 
   // -----------------------------------------------------------------------------------------------------------------------------
-  const mutationUpdate = useMutationHooks((data) => {
-    const { id, token, ...rests } = data;
-    const res = UserService.updateUser(id, token, rests);
-
-    return res;
-  });
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
     const res = OrderService.createOrder(token, rests);
@@ -46,34 +31,29 @@ const PaymentPage = () => {
     return res;
   });
 
+  const addPaymentScript = async () => {
+    const { data } = await PaymentService.getConfig();
+    const script = document.createElement("script");
+
+    script.type = "text/javascript";
+    script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+    script.async = true;
+    script.onload = () => {
+      setSdkReady(true);
+    };
+    document.body.appendChild(script);
+  };
+
+  useEffect(() => {
+    if (!window.paypal) {
+      addPaymentScript();
+    } else {
+      setSdkReady(true);
+    }
+  }, []);
+
   // -----------------------------------------------------------------------------------------------------------------------------
-  const { data: dataUpdated, isSuccess: isSuccessUpdated, isLoading: isLoadingUpdated } = mutationUpdate;
   const { data: dataAddOrdered, isSuccess: isSuccessAddOrdered } = mutationAddOrder;
-
-  // -----------------------------------------------------------------------------------------------------------------------------
-  useEffect(() => {
-    form.setFieldsValue(stateUserDetail);
-  }, [form, stateUserDetail]);
-
-  useEffect(() => {
-    if (isModalOpen) {
-      setStateUserDetail({
-        name: user?.name,
-        phone: user?.phone,
-        address: user?.address,
-        city: user?.city,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen]);
-
-  useEffect(() => {
-    if (isSuccessUpdated && dataUpdated?.status === "OK") {
-      message.success("Cập nhập nguời dùng thành công");
-      handleCancel();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessUpdated]);
 
   useEffect(() => {
     if (isSuccessAddOrdered && dataAddOrdered?.status === "OK") {
@@ -140,28 +120,6 @@ const PaymentPage = () => {
   }, [priceMemo, discountPriceMemo, diliveryPriceMemo]);
 
   // Xử lý phần handle -----------------------------------------------------------------------------------------
-  const handleOnchangeDetails = (e) => {
-    setStateUserDetail({
-      ...stateUserDetail,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleChangeAddress = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setStateUserDetail({
-      name: "",
-      phone: "",
-      address: "",
-      city: "",
-    });
-    form.resetFields();
-  };
-
   const handlePayment = (e) => {
     setPayment(e.target.value);
   };
@@ -171,24 +129,6 @@ const PaymentPage = () => {
   };
 
   // Xử lý phần mutate -----------------------------------------------------------------------------------------
-  const handleUpdateInfoUser = () => {
-    const { name, phone, address, city } = stateUserDetail;
-
-    if (name && phone && address && city) {
-      mutationUpdate.mutate(
-        {
-          id: user?.id,
-          token: user?.access_token,
-          ...stateUserDetail,
-        },
-        {
-          onSuccess: () => {
-            setIsModalOpen(false);
-          },
-        }
-      );
-    }
-  };
   const handleAddOrderPayment = () => {
     if (
       user?.access_token &&
@@ -214,6 +154,24 @@ const PaymentPage = () => {
         user: user?.id,
       });
     }
+  };
+
+  const onSuccessPaypal = (details) => {
+    mutationAddOrder.mutate({
+      token: user?.access_token,
+      orderItems: order?.orderItemsSelected,
+      fullName: user?.name,
+      address: user?.address,
+      phone: user?.phone,
+      city: user?.city,
+      paymentMethod: payment,
+      itemsPrice: priceMemo,
+      shippingPrice: diliveryPriceMemo,
+      totalPrice: totalPriceMemo,
+      user: user?.id,
+      isPaid: true,
+      paidAt: details.update_time,
+    });
   };
 
   return (
@@ -244,6 +202,7 @@ const PaymentPage = () => {
             <div className="select-radio">
               <Radio.Group onChange={handlePayment} value={payment}>
                 <Radio value="later_money">Thanh toán khi nhận hàng</Radio>
+                <Radio value="paypal">Thanh toán bằng Paypal</Radio>
               </Radio.Group>
             </div>
           </div>
@@ -268,9 +227,6 @@ const PaymentPage = () => {
                 <div className="address">
                   <div className="name-label">Địa chỉ nhận:</div>
                   <div className="name-info">{`${user?.address} - ${user?.city}`}</div>
-                </div>
-                <div className="change-address" onClick={handleChangeAddress}>
-                  Thay đổi địa chỉ
                 </div>
               </div>
               <hr />
@@ -314,58 +270,23 @@ const PaymentPage = () => {
                 <div className="total-price">{convertPrice(totalPriceMemo)}</div>
               </div>
             </div>
-            <button onClick={() => handleAddOrderPayment()}>Thanh Toán</button>
+            {payment === "paypal" && sdkReady ? (
+              <div style={{ margin: "5px" }}>
+                <PayPalButton
+                  amount={Math.round(totalPriceMemo / 30000)}
+                  // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                  onSuccess={onSuccessPaypal}
+                  onError={() => {
+                    alert("Thanh toán thất bại");
+                  }}
+                />
+              </div>
+            ) : (
+              <button onClick={() => handleAddOrderPayment()}>Thanh Toán</button>
+            )}
           </div>
         </div>
       </div>
-
-      {/*-------------------------------------------------------------------------------- */}
-      <ModalComponent
-        title="Cập nhập thông tin giao hàng"
-        forceRender
-        open={isModalOpen}
-        onCancel={handleCancel}
-        // okButtonProps={{ style: { display: "none" } }} // Ẩn button OK trong ant design
-        onOk={handleUpdateInfoUser}
-      >
-        <LoadingComponent isLoading={isLoadingUpdated}>
-          <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} autoComplete="on" form={form}>
-            <Form.Item label="Họ và tên" name="name" rules={[{ required: true, message: "Please input your name!" }]}>
-              <Input name="name" value={stateUserDetail.name} onChange={handleOnchangeDetails} />
-            </Form.Item>
-
-            <Form.Item
-              label="Số điện thoại"
-              name="phone"
-              rules={[{ required: true, message: "Please input your phone!" }]}
-            >
-              <Input name="phone" value={stateUserDetail.phone} onChange={handleOnchangeDetails} />
-            </Form.Item>
-
-            <Form.Item
-              label="Tỉnh (thành phố)"
-              name="city"
-              rules={[{ required: true, message: "Please input your city!" }]}
-            >
-              <Input name="city" value={stateUserDetail.city} onChange={handleOnchangeDetails} />
-            </Form.Item>
-
-            <Form.Item
-              label="Chi tiết địa chỉ"
-              name="address"
-              rules={[{ required: true, message: "Please input your address!" }]}
-            >
-              <Input name="address" value={stateUserDetail.address} onChange={handleOnchangeDetails} />
-            </Form.Item>
-
-            {/* <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-                  Cập nhập
-                </Button>
-              </Form.Item> */}
-          </Form>
-        </LoadingComponent>
-      </ModalComponent>
     </div>
   );
 };

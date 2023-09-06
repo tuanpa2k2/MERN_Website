@@ -120,10 +120,10 @@ const MyOrderPage = () => {
                       <div className="trangthai">Trạng thái đơn hàng</div>
                       <div className="chitiet">
                         <div className="giaohang">
-                          Giao hàng: <p>{`${order?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}`}</p>
+                          Giao hàng: {order?.isDelivered ? <soan>Đã giao hàng</soan> : <p>Chưa giao hàng</p>}
                         </div>
                         <div className="thanhtoan">
-                          Thanh toán: <p>{`${order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}`}</p>
+                          Thanh toán: {order?.isPaid ? <span>Đã thanh toán</span> : <p>Chưa thanh toán</p>}
                         </div>
                       </div>
                     </div>

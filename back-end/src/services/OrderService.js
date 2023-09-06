@@ -4,8 +4,20 @@ const Product = require("../models/ProductModel");
 
 const createOrder = (newOrder) => {
   return new Promise(async (resolve, reject) => {
-    const { orderItems, paymentMethod, itemsPrice, shippingPrice, totalPrice, user, fullName, address, city, phone } =
-      newOrder;
+    const {
+      orderItems,
+      paymentMethod,
+      itemsPrice,
+      shippingPrice,
+      totalPrice,
+      user,
+      fullName,
+      address,
+      city,
+      phone,
+      isPaid,
+      paidAt,
+    } = newOrder;
 
     try {
       const promises = orderItems?.map(async (order) => {
@@ -40,6 +52,8 @@ const createOrder = (newOrder) => {
             shippingPrice,
             totalPrice,
             user,
+            isPaid,
+            paidAt,
           });
 
           if (createdOrder) {
