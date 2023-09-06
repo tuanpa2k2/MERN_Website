@@ -227,12 +227,26 @@
               text-align: start;
               padding: 0 5px;
 
-              word-wrap: break-word;
-              overflow: hidden;
-              display: -webkit-box;
-              text-overflow: ellipsis;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
+              .name-prod {
+                word-wrap: break-word;
+                overflow: hidden;
+                display: -webkit-box;
+                text-overflow: ellipsis;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+              }
+
+              .discount-prod {
+                display: flex;
+                align-items: center;
+                font-style: oblique;
+                color: blue;
+                font-size: 1.5rem;
+
+                p {
+                  margin-left: 8px;
+                }
+              }
             }
 
             .quantity {
@@ -246,7 +260,7 @@
                 border: 1px solid black;
                 border-radius: 6px;
                 position: relative;
-                width: 80px;
+                width: 92px;
                 height: 29px;
 
                 button {
@@ -263,9 +277,10 @@
                   position: absolute;
                   left: 0;
                   height: 100%;
-                  width: 32%;
+                  width: 30%;
                   border-top-left-radius: 6px;
                   border-bottom-left-radius: 6px;
+                  background-color: #d5d5d5;
                 }
 
                 .btn-increase {
@@ -275,6 +290,7 @@
                   width: 30%;
                   border-top-right-radius: 6px;
                   border-bottom-right-radius: 6px;
+                  background-color: #d5d5d5;
                 }
 
                 input {

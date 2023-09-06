@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { AiOutlineShoppingCart, AiOutlineMinusCircle } from "react-icons/ai";
-import { CiMoneyCheck1, CiLocationOn } from "react-icons/ci";
+import { CiLocationOn } from "react-icons/ci";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import { GoPlusCircle } from "react-icons/go";
 import * as ProductService from "../../services/ProductService";
@@ -60,7 +60,8 @@ const ProductDetailComponent = ({ idProduct }) => {
             amount: numQuantity,
             image: productsDetails?.image,
             price: productsDetails?.price,
-            // discount: productsDetails?.discount,
+            discount: productsDetails?.discount,
+            countInStock: productsDetails?.countInStock,
             product: productsDetails?._id,
           },
         })
@@ -97,13 +98,14 @@ const ProductDetailComponent = ({ idProduct }) => {
             <div className="name-label">Giá bán:</div>
             <div className="detail-label">
               <span className="price">{convertPrice(productsDetails?.price)}</span>
-              <span className="price-discount">{productsDetails?.discount}%</span>
+              <span className="space">---</span>
+              <span className="price-discount">Giam gia: {productsDetails?.discount}%</span>
             </div>
           </div>
 
           <div className="content-details">
-            <div className="name-label">Số lượng</div>
-            <div className="detail-label">
+            <div className="name-label">Số lượng:</div>
+            <div className="detail-label-quantity">
               <div className="action-quantity">
                 <button className="minus" onClick={() => handleChangeCount("decraese")}>
                   <AiOutlineMinusCircle />
@@ -114,12 +116,13 @@ const ProductDetailComponent = ({ idProduct }) => {
                   defaultValue={1}
                   value={numQuantity}
                   onChange={onchangeInput}
+                  min={1}
                 />
                 <button className="plus" onClick={() => handleChangeCount("incraese")}>
                   <GoPlusCircle />
                 </button>
               </div>
-              <span className="space">|</span>
+              <span className="space">---</span>
               <span className="countInStock"> Kho hàng: {productsDetails?.countInStock}</span>
             </div>
           </div>
@@ -134,8 +137,9 @@ const ProductDetailComponent = ({ idProduct }) => {
           <div className="content-details">
             <div className="name-label">Đánh giá:</div>
             <div className="detailRating-label">
+              <span>4</span>
               <Rate disabled defaultValue={productsDetails?.rating} value={productsDetails?.rating} />
-              <div className="space-rating">|</div>
+              <div className="space">---</div>
               <span className="selled">Đã bán: {productsDetails?.selled}</span>
             </div>
           </div>
@@ -173,10 +177,6 @@ const ProductDetailComponent = ({ idProduct }) => {
             <button className="add-to-card" onClick={handleAddOrderProduct}>
               <AiOutlineShoppingCart />
               Thêm vào giỏ hàng
-            </button>
-            <button className="buy-now">
-              <CiMoneyCheck1 />
-              Mua ngay
             </button>
           </div>
         </div>

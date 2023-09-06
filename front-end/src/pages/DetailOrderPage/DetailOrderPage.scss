@@ -286,7 +286,7 @@
           font-size: 1.9rem;
           font-weight: 500;
           background-color: #e9e9e9;
-          color: red;
+          color: blue;
         }
 
         .acbkkkk {
@@ -324,7 +324,7 @@
 
           .tam-tinh,
           .delivery,
-          .thue,
+          .discount,
           .total-price {
             display: flex;
             align-items: center;
@@ -333,20 +333,22 @@
 
             p {
               font-style: oblique;
-              font-size: 1.6rem;
             }
           }
 
           .space {
             position: absolute;
-            border: 1px solid black;
+            border: 1px solid blue;
+            margin-right: 5px;
             right: 0;
-            width: 35%;
+            width: 38%;
             bottom: 32px;
           }
 
           .total-price {
             position: absolute;
+            font-weight: 500;
+            font-size: 1.7rem;
             width: 100%;
             bottom: 0;
             left: 0;

@@ -128,21 +128,57 @@ const getDetailsOrder = (id) => {
   });
 };
 
-const cancelOrderDetails = (id) => {
+const cancelOrderDetails = (id, data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const order = await Order.findByIdAndDelete(id);
+      let order = [];
+      const promises = data?.map(async (order) => {
+        const productData = await Product.findOneAndUpdate(
+          {
+            _id: order?.product, // tìm kiếm và lấy cái 'id product' bằng với cái 'id product' trong orderItems
+            selled: { $gte: order?.amount }, // tìm 'id product' trên để check số lượng còn bao nhiêu để cho phép giảm khi mua
+          },
+          {
+            $inc: {
+              countInStock: +order?.amount,
+              selled: -order?.amount,
+            },
+          },
+          {
+            new: true, // Trả về số lượng mới nhất
+          }
+        );
 
-      if (order === null) {
+        if (productData) {
+          order = await Order.findByIdAndDelete(id);
+
+          if (order === null) {
+            resolve({
+              status: "ERR",
+              message: "Sản phẩm này không tồn tại!",
+            });
+          }
+        } else {
+          return {
+            status: "OK",
+            message: "ERR",
+            id: order?.product,
+          };
+        }
+      });
+
+      const results = await Promise.all(promises);
+      const newData = results && results.filter((item) => item);
+
+      if (newData.length) {
         resolve({
           status: "ERR",
-          message: "Sản phẩm này không tồn tại!",
+          message: `Sản phẩm với id: ${newData.join(",")} không ton tai`,
         });
       }
-
       resolve({
         status: "OK",
-        message: "Hủy đơn hàng thành công...",
+        message: "Xoa thanh cong.............",
         data: order,
       });
     } catch (e) {
@@ -155,5 +191,5 @@ module.exports = {
   createOrder,
   getAllOrderDetails,
   getDetailsOrder,
-  cancelOrderDetails
+  cancelOrderDetails,
 };

@@ -91,6 +91,7 @@ const PaymentPage = () => {
           delivery,
           payment,
           orders: order?.orderItemsSelected,
+          totalDiscount: discountPriceMemo,
           totalPriceMemo: totalPriceMemo,
         },
       });
@@ -109,7 +110,8 @@ const PaymentPage = () => {
 
   const discountPriceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      return total + cur.discount * cur.amount;
+      const totalDiscount = cur.discount ? cur.discount : 0;
+      return total + (priceMemo * (totalDiscount * cur.amount)) / 100;
     }, 0);
 
     if (Number(result)) {
@@ -117,6 +119,7 @@ const PaymentPage = () => {
     } else {
       return 0;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   const diliveryPriceMemo = useMemo(() => {
@@ -297,7 +300,9 @@ const PaymentPage = () => {
               </div>
               <div className="row-2">
                 <div className="name-label">Giảm giá:</div>
-                <div className="price-order">{discountPriceMemo} %</div>
+                <div className="price-order" style={{ color: "blue" }}>
+                  -{convertPrice(discountPriceMemo)}
+                </div>
               </div>
               <div className="row-4">
                 <div className="name-label">Phí giao hàng:</div>

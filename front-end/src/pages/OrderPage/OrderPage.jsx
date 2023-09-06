@@ -131,7 +131,8 @@ const OrderPage = () => {
 
   const discountPriceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      return total + cur.discount * cur.amount;
+      const totalDiscount = cur.discount ? cur.discount : 0;
+      return total + (priceMemo * (totalDiscount * cur.amount)) / 100;
     }, 0);
 
     if (Number(result)) {
@@ -139,6 +140,7 @@ const OrderPage = () => {
     } else {
       return 0;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   const diliveryPriceMemo = useMemo(() => {
@@ -166,11 +168,15 @@ const OrderPage = () => {
     });
   };
 
-  const handleOnchangeCount = (type, idProduct) => {
+  const handleOnchangeCount = (type, idProduct, limited) => {
     if (type === "increase") {
-      dispatch(increaseAmount({ idProduct }));
+      if (!limited) {
+        dispatch(increaseAmount({ idProduct }));
+      }
     } else {
-      dispatch(decreaseAmount({ idProduct }));
+      if (!limited) {
+        dispatch(decreaseAmount({ idProduct }));
+      }
     }
   };
 
@@ -290,22 +296,42 @@ const OrderPage = () => {
                       <div className="image">
                         <img src={iten?.image} alt="" />
                       </div>
-                      <div className="name">{iten?.name}</div>
+                      <div className="name">
+                        <div className="name-prod">{iten?.name}</div>
+                        <div className="discount-prod">
+                          Giảm giá: <p>{iten?.discount}%</p>
+                        </div>
+                      </div>
                       <div className="quantity">
                         <div className="abcd">
-                          <button
-                            className="btn-decrease"
-                            onClick={() => handleOnchangeCount("decrease", iten?.product)}
-                          >
-                            -
-                          </button>
-                          <input type="text" value={iten?.amount} />
-                          <button
-                            className="btn-increase"
-                            onClick={() => handleOnchangeCount("increase", iten?.product)}
-                          >
-                            +
-                          </button>
+                          {iten?.amount === 1 ? (
+                            <button className="btn-decrease" style={{ background: "#ececec", color: "#bfbfbf" }}>
+                              -
+                            </button>
+                          ) : (
+                            <button
+                              className="btn-decrease"
+                              onClick={() => handleOnchangeCount("decrease", iten?.product, iten?.amount === 1)}
+                            >
+                              -
+                            </button>
+                          )}
+
+                          <input type="text" value={iten?.amount} min={1} max={iten?.countInStock} />
+                          {iten?.amount === iten?.countInStock ? (
+                            <button className="btn-increase" style={{ background: "#ececec", color: "#bfbfbf" }}>
+                              +
+                            </button>
+                          ) : (
+                            <button
+                              className="btn-increase"
+                              onClick={() =>
+                                handleOnchangeCount("increase", iten?.product, iten?.amount === iten?.countInStock)
+                              }
+                            >
+                              +
+                            </button>
+                          )}
                         </div>
                       </div>
                       <div className="price">{convertPrice(iten?.price)}</div>
@@ -365,7 +391,9 @@ const OrderPage = () => {
                 </div>
                 <div className="row-2">
                   <div className="name-label">Giảm giá:</div>
-                  <div className="price-order">{discountPriceMemo} %</div>
+                  <div className="price-order" style={{ color: "blue" }}>
+                    -{convertPrice(discountPriceMemo)}
+                  </div>
                 </div>
                 <div className="row-4">
                   <div className="name-label">Phí giao hàng:</div>

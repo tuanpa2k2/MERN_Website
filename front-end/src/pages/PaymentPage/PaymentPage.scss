@@ -149,7 +149,7 @@
 
             .name {
               display: flex;
-              align-items: start;
+              align-items: flex-start;
 
               .name-product {
                 width: 64%;
@@ -176,6 +176,7 @@
         font-size: 1.6rem;
         bottom: 0;
         width: 100%;
+        border-bottom: 1px solid black;
 
         .details-prices {
           background-color: rgb(255, 240, 240);

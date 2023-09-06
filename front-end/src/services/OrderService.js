@@ -28,11 +28,15 @@ export const getOrderDetailId = async (id, access_token) => {
   return res.data;
 };
 
-export const cancelOrder = async (id, access_token) => {
-  const res = await axios.delete(`${process.env.REACT_APP_API_URL}/order/cancel-order/${id}`, {
-    headers: {
-      token: `Bearer ${access_token}`,
-    },
-  });
+export const cancelOrder = async (id, access_token, orderItems) => {
+  const res = await axios.delete(
+    `${process.env.REACT_APP_API_URL}/order/cancel-order/${id}`,
+    { data: orderItems },
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
   return res.data;
 };

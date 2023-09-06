@@ -13,14 +13,8 @@ import * as message from "../../components/MessageComp/MessageComponent";
 const MyOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  console.log("location", location);
   const { state } = location;
-
-  const mutation = useMutationHooks((data) => {
-    const { id, token } = data;
-    const res = OrderService.cancelOrder(id, token);
-    return res;
-  });
-  const { data: dataCancelOrder, isSuccess: isSuccessCancelOrder, isLoading: isLoadingCancelOrder } = mutation;
 
   const fetchMyOrderDetails = async () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token);
@@ -30,17 +24,10 @@ const MyOrderPage = () => {
   const queryOrder = useQuery(
     { queryKey: ["orders"], queryFn: fetchMyOrderDetails },
     {
-      enabled: state?.id && state?.access_token,
+      enabled: state?.id && state?.token,
     }
   );
   const { data: dataOrder } = queryOrder;
-
-  useEffect(() => {
-    if (isSuccessCancelOrder && dataCancelOrder?.status === "OK") {
-      message.success("Hủy đơn hàng thành công");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessCancelOrder]);
 
   const renderProduct = (data, shipping) => {
     if (data?.length > 1) {
@@ -86,16 +73,31 @@ const MyOrderPage = () => {
     });
   };
 
-  const handleCancelOrder = (id) => {
-    mutation.mutate(
-      { id, token: state?.token },
+  const mutationCancel = useMutationHooks((data) => {
+    const { id, token, orderItems } = data;
+    const res = OrderService.cancelOrder(id, token, orderItems);
+    return res;
+  });
+
+  const handleCancelOrder = (order) => {
+    mutationCancel.mutate(
+      { id: order._id, token: state?.token, orderItems: order?.orderItems },
       {
-        onSuccess: () => {
-          queryOrder.refetch();
+        onSettled: () => {
+          queryOrder.refetch(); // Tự động load data khi Delete 1 sản phẩm
         },
       }
     );
   };
+
+  const { data: dataCancelOrder, isSuccess: isSuccessCancelOrder, isLoading: isLoadingCancelOrder } = mutationCancel;
+
+  useEffect(() => {
+    if (isSuccessCancelOrder && dataCancelOrder?.status === "OK") {
+      message.success("Hủy đơn hàng thành công");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessCancelOrder]);
 
   return (
     <div className="wrapper-myOrderPage">
@@ -107,28 +109,28 @@ const MyOrderPage = () => {
       <LoadingComponent isLoading={isLoadingCancelOrder}>
         <div className="details-myorder">
           {dataOrder?.length > 0 ? (
-            dataOrder?.map((items) => {
+            dataOrder?.map((order) => {
               return (
-                <div className="label-product" key={items?._id}>
+                <div className="label-product" key={order?._id}>
                   <div className="product-render">
-                    {renderProduct(items?.orderItems, items?.totalPrice, items?.shippingPrice)}
+                    {renderProduct(order?.orderItems, order?.totalPrice, order?.shippingPrice)}
                   </div>
                   <div className="actions">
                     <div className="text-status">
                       <div className="trangthai">Trạng thái đơn hàng</div>
                       <div className="chitiet">
                         <div className="giaohang">
-                          Giao hàng: <p>{`${items?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}`}</p>
+                          Giao hàng: <p>{`${order?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}`}</p>
                         </div>
                         <div className="thanhtoan">
-                          Thanh toán: <p>{`${items?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}`}</p>
+                          Thanh toán: <p>{`${order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}`}</p>
                         </div>
                       </div>
                     </div>
-                    <button className="xemchitiet" onClick={() => handleDetailsOrder(items?._id)}>
+                    <button className="xemchitiet" onClick={() => handleDetailsOrder(order?._id)}>
                       Xem chi tiết
                     </button>
-                    <button className="huydon" onClick={() => handleCancelOrder(items?._id)}>
+                    <button className="huydon" onClick={() => handleCancelOrder(order)}>
                       Hủy đơn hàng
                     </button>
                   </div>

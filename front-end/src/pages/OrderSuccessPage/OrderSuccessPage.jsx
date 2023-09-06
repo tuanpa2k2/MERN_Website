@@ -39,6 +39,7 @@ const OrderSuccessPage = () => {
             <div className="name-product">Tên sản phẩm</div>
             <div className="quantity-product">Số lượng</div>
             <div className="price-product">Đơn giá</div>
+            <div className="discountPrice-product">Giảm giá</div>
             <div className="total-product">Tổng</div>
           </div>
           {state?.orders?.map((order) => {
@@ -50,7 +51,8 @@ const OrderSuccessPage = () => {
                 <div className="name">{order?.name}</div>
                 <div className="quantity">{order?.amount}</div>
                 <div className="price">{convertPrice(order?.price)}</div>
-                <div className="total">{convertPrice(order?.amount * order?.price)}</div>
+                <div className="discount">{convertPrice(state?.totalDiscount)}</div>
+                <div className="total">{convertPrice(state?.totalPriceMemo)}</div>
               </div>
             );
           })}

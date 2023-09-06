@@ -85,7 +85,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 45px;
+        padding: 5px 0;
         width: 100%;
         font-size: 1.65rem;
         font-weight: 500;
@@ -95,22 +95,27 @@
 
         .image-product {
           border-right: 1px solid black;
-          width: 15%;
+          width: 12%;
         }
 
         .name-product {
           border-right: 1px solid black;
-          width: 45%;
+          width: 40%;
         }
 
         .quantity-product {
-          border-right: 1px solid black;
-          width: 10%;
+          width: 8%;
         }
 
         .price-product {
           border-right: 1px solid black;
+          border-left: 1px solid black;
           width: 15%;
+        }
+
+        .discountPrice-product {
+          border-right: 1px solid black;
+          width: 10%;
         }
 
         .total-product {
@@ -130,7 +135,7 @@
         border-bottom: 1px solid blue;
 
         .image {
-          width: 15%;
+          width: 12%;
           height: 90px;
           padding: 8px 0px;
 
@@ -150,7 +155,7 @@
         .name {
           border-left: 1px solid black;
           border-right: 1px solid black;
-          width: 45%;
+          width: 40%;
           text-align: start;
           padding: 0 5px;
 
@@ -164,16 +169,24 @@
 
         .quantity {
           border-right: 1px solid black;
-          width: 10%;
+          width: 8%;
           display: flex;
           justify-content: center;
           align-items: center;
         }
+
         .price {
           border-right: 1px solid black;
           width: 15%;
           font-size: 1.8rem;
         }
+
+        .discount {
+          border-right: 1px solid black;
+          width: 10%;
+          font-size: 1.8rem;
+        }
+
         .total {
           font-size: 1.8rem;
           width: 15%;

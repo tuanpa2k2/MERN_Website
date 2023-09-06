@@ -662,12 +662,16 @@ const AdminProductComponent = () => {
               <Input name="type" value={stateProductDetails.type} onChange={handleOnchangeDetails} />
             </Form.Item>
 
-            <Form.Item label="Giá bán ($)" name="price" rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}>
+            <Form.Item
+              label="Giá bán (vnd)"
+              name="price"
+              rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
+            >
               <Input name="price" value={stateProductDetails.price} onChange={handleOnchangeDetails} />
             </Form.Item>
 
             <Form.Item
-              label="Giảm giá ($)"
+              label="Giảm giá (%)"
               name="discount"
               rules={[{ required: true, message: "Vui lòng nhập dữ liệu!" }]}
             >

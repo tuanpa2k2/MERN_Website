@@ -1,12 +1,13 @@
 .wrapper-proDetailPage {
   width: 100%;
   padding: 0 120px;
+  height: 682px;
 
   .breadcrumb ul {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    height: 35px;
+    height: 36px;
     background-color: #e9e9e9;
     padding-left: 10px;
 
@@ -29,5 +30,9 @@
       color: black;
       content: ">";
     }
+  }
+
+  .wrapper-productDetailComp {
+    height: 100%;
   }
 }

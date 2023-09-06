@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BsCardChecklist } from "react-icons/bs";
 import { LiaShippingFastSolid, LiaMapMarkedSolid } from "react-icons/lia";
@@ -118,7 +118,7 @@ const DetailOrderPage = () => {
                           <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
                         </div>
                         <div className="discount">
-                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>0%</span>
+                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>{items?.discount || 0}%</span>
                         </div>
                         <div className="discount">
                           <p>- Tổng tiền:</p>
@@ -143,7 +143,7 @@ const DetailOrderPage = () => {
                           <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
                         </div>
                         <div className="discount">
-                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>0%</span>
+                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>{items?.discount || 0}%</span>
                         </div>
                         <div className="discount">
                           <p>- Tổng tiền:</p>
@@ -159,26 +159,30 @@ const DetailOrderPage = () => {
               <div className="acbkkkk">
                 {data?.orderItems?.map((item) => {
                   return (
-                    <div className="name-product" key={item._id}>
-                      <div className="ten">* {item?.name}</div>
-                      <div className="gia">{convertPrice(item?.price * item?.amount)}</div>
-                    </div>
+                    <Fragment>
+                      <div className="name-product" key={item._id}>
+                        <div className="ten">* {item?.name}</div>
+                        <div className="gia" style={{ color: "red" }}>
+                          {convertPrice(item?.price * item?.amount)}
+                        </div>
+                      </div>
+                      <div className="tam-tinh">
+                        Tạm tính: <p>{convertPrice(priceMemo)}</p>
+                      </div>
+                      <div className="delivery">
+                        Phí vận chuyển: <p>{convertPrice(diliveryPriceMemo)}</p>
+                      </div>
+                      <div className="discount">
+                        Giảm giá: <p style={{ color: "blue" }}>-{convertPrice((priceMemo * item?.discount) / 100)}</p>
+                      </div>
+                      <div className="space"></div>
+                      <div className="total-price">
+                        Tổng tiền thanh toán:
+                        <p>{convertPrice(priceMemo + diliveryPriceMemo - (priceMemo * item?.discount) / 100)}</p>
+                      </div>
+                    </Fragment>
                   );
                 })}
-
-                <div className="tam-tinh">
-                  Tạm tính: <p>{convertPrice(priceMemo)}</p>
-                </div>
-                <div className="delivery">
-                  Phí vận chuyển: <p>{convertPrice(diliveryPriceMemo)}</p>
-                </div>
-                <div className="thue">
-                  Thuế: <p>0 vnd</p>
-                </div>
-                <div className="space"></div>
-                <div className="total-price">
-                  Tổng tiền thanh toán: <p>{convertPrice(data?.totalPrice)}</p>
-                </div>
               </div>
             </div>
           </div>
