@@ -77,9 +77,16 @@ const DetailOrderPage = () => {
               </div>
             </div>
             <div className="giaohang">
-              <div className="title-textt">
-                <LiaShippingFastSolid /> Hình thức giao hàng
-              </div>
+              {data?.isPaid === false ? (
+                <div className="title-textt text-false">
+                  <LiaShippingFastSolid /> Hình thức giao hàng
+                </div>
+              ) : (
+                <div className="title-textt text-true">
+                  <LiaShippingFastSolid /> Hình thức giao hàng
+                </div>
+              )}
+
               <div className="info-text">
                 <div className="fast">
                   <p>FAST</p> Giao hàng tiết kiệm
@@ -93,10 +100,18 @@ const DetailOrderPage = () => {
               </div>
             </div>
             <div className="thanhtoan">
-              <div className="title-textt">
-                <CiMoneyCheck1 />
-                Hình thức thanh toán
-              </div>
+              {data?.isPaid === false ? (
+                <div className="title-textt text-false">
+                  <CiMoneyCheck1 />
+                  Hình thức thanh toán
+                </div>
+              ) : (
+                <div className="title-textt text-true">
+                  <CiMoneyCheck1 />
+                  Hình thức thanh toán
+                </div>
+              )}
+
               <div className="info-text">
                 <div className="name">
                   <FaAmazonPay />
@@ -174,13 +189,13 @@ const DetailOrderPage = () => {
                         </div>
                       </div>
                       <div className="tam-tinh">
-                        Tạm tính: <p>{convertPrice(priceMemo)}</p>
+                        - Tạm tính: <p>{convertPrice(priceMemo)}</p>
                       </div>
                       <div className="delivery">
-                        Phí vận chuyển: <p>{convertPrice(diliveryPriceMemo)}</p>
+                        - Phí vận chuyển: <p>{convertPrice(diliveryPriceMemo)}</p>
                       </div>
                       <div className="discount">
-                        Giảm giá: <p style={{ color: "blue" }}>-{convertPrice((priceMemo * item?.discount) / 100)}</p>
+                        - Giảm giá: <p style={{ color: "blue" }}>-{convertPrice((priceMemo * item?.discount) / 100)}</p>
                       </div>
                       <div className="space"></div>
                       <div className="total-price">

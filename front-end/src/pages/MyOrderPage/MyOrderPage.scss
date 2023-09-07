@@ -194,12 +194,25 @@
           box-shadow: 0 0 2px blue;
           border-top-right-radius: 8px;
 
-          .trangthai {
+          .trangthai-true {
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: rgb(37, 37, 255);
             color: white;
+            border-top-right-radius: 8px;
+            padding: 5px 5px;
+            font-weight: 500;
+            height: 45px;
+            font-size: 1.7rem;
+          }
+
+          .trangthai-false {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(255, 255, 18);
+            color: red;
             border-top-right-radius: 8px;
             padding: 5px 5px;
             font-weight: 500;

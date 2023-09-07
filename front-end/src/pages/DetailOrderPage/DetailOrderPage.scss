@@ -99,6 +99,16 @@
       .giaohang {
         width: 288px;
 
+        .text-false {
+          background-color: yellow;
+          color: red;
+        }
+
+        .text-true {
+          background-color: blue;
+          color: white;
+        }
+
         .fast {
           display: flex;
           align-items: center;
@@ -149,6 +159,16 @@
       .thanhtoan {
         flex: 1;
         text-transform: initial;
+
+        .text-false {
+          background-color: yellow;
+          color: red;
+        }
+
+        .text-true {
+          background-color: blue;
+          color: white;
+        }
 
         .name {
           font-style: oblique;

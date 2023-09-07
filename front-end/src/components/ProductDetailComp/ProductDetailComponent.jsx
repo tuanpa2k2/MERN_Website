@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { AiOutlineShoppingCart, AiOutlineMinusCircle } from "react-icons/ai";
+import { AiOutlineShoppingCart, AiTwotoneMedicineBox } from "react-icons/ai";
 import { CiLocationOn } from "react-icons/ci";
 import { LiaShippingFastSolid } from "react-icons/lia";
-import { GoPlusCircle } from "react-icons/go";
 import * as ProductService from "../../services/ProductService";
 import * as message from "../MessageComp/MessageComponent";
 
@@ -23,9 +22,24 @@ const ProductDetailComponent = ({ idProduct }) => {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  // eslint-disable-next-line no-unused-vars
   const [numQuantity, setNumQuantity] = useState(1);
-  const onchangeInput = (value) => {
-    setNumQuantity(Number(value));
+
+  useEffect(() => {
+    handleClickButton();
+  }, []);
+
+  const handleClickButton = () => {
+    const cartButtons = document.querySelectorAll(".cart-button"); // tìm đến classname
+
+    cartButtons.forEach((button) => {
+      button.addEventListener("click", cartClick);
+    });
+
+    function cartClick() {
+      let button = this;
+      button.classList.add("clicked");
+    }
   };
 
   const fetchGetDetailProduct = async (context) => {
@@ -38,14 +52,6 @@ const ProductDetailComponent = ({ idProduct }) => {
   const { data: productsDetails, isLoading } = useQuery(["products-detils", idProduct], fetchGetDetailProduct, {
     enabled: !!idProduct,
   });
-
-  const handleChangeCount = (type) => {
-    if (type === "incraese") {
-      setNumQuantity(numQuantity + 1);
-    } else {
-      setNumQuantity(numQuantity - 1);
-    }
-  };
 
   const handleAddOrderProduct = () => {
     if (!user?.id) {
@@ -99,7 +105,7 @@ const ProductDetailComponent = ({ idProduct }) => {
             <div className="detail-label">
               <span className="price">{convertPrice(productsDetails?.price)}</span>
               <span className="space">---</span>
-              <span className="price-discount">Giam gia: {productsDetails?.discount}%</span>
+              <span className="price-discount">Giảm giá: {productsDetails?.discount}%</span>
             </div>
           </div>
 
@@ -156,9 +162,15 @@ const ProductDetailComponent = ({ idProduct }) => {
           </div>
 
           <div className="btn-action">
-            <button className="add-to-card" onClick={handleAddOrderProduct}>
-              <AiOutlineShoppingCart />
-              Thêm vào giỏ hàng
+            <button className="cart-button" onClick={handleAddOrderProduct}>
+              <span className="add-to-cart">Thêm vào giỏ hàng</span>
+              <span className="added">Đã thêm vào giỏ hàng</span>
+              <i className="fa-shopping-cart">
+                <AiOutlineShoppingCart />
+              </i>
+              <i className="fa-box">
+                <AiTwotoneMedicineBox />
+              </i>
             </button>
           </div>
         </div>

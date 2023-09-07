@@ -90,8 +90,8 @@ const PaymentPage = () => {
 
   const discountPriceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      const totalDiscount = cur.discount ? cur.discount : 0;
-      return total + (priceMemo * (totalDiscount * cur.amount)) / 100;
+      const totalDiscount = cur.discount ? (cur.discount * priceMemo) / 100 : 0;
+      return total + totalDiscount;
     }, 0);
 
     if (Number(result)) {
@@ -240,7 +240,9 @@ const PaymentPage = () => {
                   return (
                     <div className="name" key={items?.product}>
                       <div className="name-product">* {items?.name}</div>
-                      <div className="price-product">{convertPrice(items?.price)}</div>
+                      <div className="price-product">
+                        {items?.amount} x {convertPrice(items?.price)}
+                      </div>
                     </div>
                   );
                 })}

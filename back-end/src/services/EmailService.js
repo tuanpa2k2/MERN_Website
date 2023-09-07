@@ -25,7 +25,7 @@ const sendEmailCreateOrder = async (email, orderItems) => {
             Số lượng: <b>${order.amount}</b></b>
         </div>
         <div>
-            Giá sản phẩm: <b>${order.price} VND</b>
+            Giá sản phẩm: <b>${order.price * order.amount} VND</b>
         </div>
         <div>Bên dưới là hình ảnh của sản phẩm</div>
     </div>`;

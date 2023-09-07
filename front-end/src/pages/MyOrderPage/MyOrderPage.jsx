@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import * as OrderService from "../../services/OrderService";
 import { RiSecurePaymentLine } from "react-icons/ri";
 
@@ -28,7 +28,7 @@ const MyOrderPage = () => {
   );
   const { data: dataOrder } = queryOrder;
 
-  const renderProduct = (data, shipping) => {
+  const renderProduct = (data) => {
     if (data?.length > 1) {
       return data?.map((items) => {
         return (
@@ -40,7 +40,6 @@ const MyOrderPage = () => {
               <div className="name-product">{items?.name}</div>
               <div className="quantity">Số lượng: x{items?.amount}</div>
               <div className="price">Giá bán: {convertPrice(items?.price)}</div>
-              <div className="price">Shiping: {convertPrice(shipping)}</div>
             </div>
           </div>
         );
@@ -56,7 +55,6 @@ const MyOrderPage = () => {
               <div className="name-product">{items?.name}</div>
               <div className="quantity">Số lượng: x{items?.amount}</div>
               <div className="price">Giá bán: {convertPrice(items?.price)}</div>
-              <div className="price">Shiping: {convertPrice(shipping)}</div>
             </div>
           </div>
         );
@@ -89,6 +87,10 @@ const MyOrderPage = () => {
     );
   };
 
+  const handleDeleteOrder = () => {
+    alert("Chức năng này chưa hoàn thành, quay lại sau nhé 😎");
+  };
+
   const { data: dataCancelOrder, isSuccess: isSuccessCancelOrder, isLoading: isLoadingCancelOrder } = mutationCancel;
 
   useEffect(() => {
@@ -111,12 +113,14 @@ const MyOrderPage = () => {
             dataOrder?.map((order) => {
               return (
                 <div className="label-product" key={order?._id}>
-                  <div className="product-render">
-                    {renderProduct(order?.orderItems, order?.totalPrice, order?.shippingPrice)}
-                  </div>
+                  <div className="product-render">{renderProduct(order?.orderItems)}</div>
                   <div className="actions">
                     <div className="text-status">
-                      <div className="trangthai">Trạng thái đơn hàng</div>
+                      {order?.isPaid === false ? (
+                        <div className="trangthai-false">Trạng thái đơn hàng</div>
+                      ) : (
+                        <div className="trangthai-true">Trạng thái đơn hàng</div>
+                      )}
                       <div className="chitiet">
                         <div className="giaohang">
                           Giao hàng: {order?.isDelivered ? <soan>Đã giao hàng</soan> : <p>Chưa giao hàng</p>}
@@ -135,7 +139,9 @@ const MyOrderPage = () => {
                           Hủy đơn hàng
                         </button>
                       ) : (
-                        Fragment
+                        <button className="huydon" onClick={() => handleDeleteOrder()}>
+                          Xóa
+                        </button>
                       )}
                     </div>
                   </div>
