@@ -14,7 +14,8 @@ import { Rate } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slides/orderSlide";
-import { convertPrice } from "../../until";
+import { convertPrice, initFacebookSDK } from "../../until";
+import CommentComponent from "../CommentComp/CommentComponent";
 
 const ProductDetailComponent = ({ idProduct }) => {
   const user = useSelector((state) => state?.user);
@@ -41,6 +42,10 @@ const ProductDetailComponent = ({ idProduct }) => {
       button.classList.add("clicked");
     }
   };
+
+  useEffect(() => {
+    initFacebookSDK();
+  }, []);
 
   const fetchGetDetailProduct = async (context) => {
     const idPro = context?.queryKey && context?.queryKey[1];
@@ -175,6 +180,7 @@ const ProductDetailComponent = ({ idProduct }) => {
           </div>
         </div>
       </div>
+      <CommentComponent dataHref={"https://developers.facebook.com/docs/plugins/comments#configurator"} width="100%" />
     </LoadingComponent>
   );
 };
