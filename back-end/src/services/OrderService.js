@@ -1,6 +1,6 @@
 const Order = require("../models/OrderProduct");
-const bcrypt = require("bcrypt");
 const Product = require("../models/ProductModel");
+const EmailService = require("../services/EmailService");
 
 const createOrder = (newOrder) => {
   return new Promise(async (resolve, reject) => {
@@ -11,6 +11,7 @@ const createOrder = (newOrder) => {
       shippingPrice,
       totalPrice,
       user,
+      email,
       fullName,
       address,
       city,
@@ -57,6 +58,8 @@ const createOrder = (newOrder) => {
           });
 
           if (createdOrder) {
+            await EmailService.sendEmailCreateOrder(email, orderItems); // gửi email đặt hàng thành công
+
             return {
               status: "OK",
               message: "Success Order",
@@ -80,12 +83,12 @@ const createOrder = (newOrder) => {
           status: "ERR",
           message: `Sản phẩm với id: ${newData.join(",")} không đủ hàng để mua`,
         });
-      } else {
-        resolve({
-          status: "OK",
-          message: "Mua sản phẩm thành công .............",
-        });
       }
+
+      resolve({
+        status: "OK",
+        message: "Mua sản phẩm thành công .............",
+      });
     } catch (e) {
       reject(e);
     }
