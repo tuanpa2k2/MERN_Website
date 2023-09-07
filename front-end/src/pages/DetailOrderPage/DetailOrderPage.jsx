@@ -2,6 +2,7 @@ import React, { Fragment, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BsCardChecklist } from "react-icons/bs";
 import { LiaShippingFastSolid, LiaMapMarkedSolid } from "react-icons/lia";
+import { CiMoneyCheck1 } from "react-icons/ci";
 import { FaAmazonPay } from "react-icons/fa";
 import { useLocation, useParams } from "react-router-dom";
 import * as OrderService from "../../services/OrderService";
@@ -93,11 +94,14 @@ const DetailOrderPage = () => {
             </div>
             <div className="thanhtoan">
               <div className="title-textt">
-                <FaAmazonPay />
+                <CiMoneyCheck1 />
                 Hình thức thanh toán
               </div>
               <div className="info-text">
-                <div className="name">{orderContant.payment[data?.paymentMethod]}</div>
+                <div className="name">
+                  <FaAmazonPay />
+                  {orderContant.payment[data?.paymentMethod]}
+                </div>
                 <div className="status">
                   Trạng thái: {data?.isPaid ? <span>Đã thanh toán</span> : <p>Chưa thanh toán</p>}
                 </div>

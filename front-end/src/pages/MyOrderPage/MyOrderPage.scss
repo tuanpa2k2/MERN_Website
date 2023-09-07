@@ -193,7 +193,6 @@
         .text-status {
           box-shadow: 0 0 2px blue;
           border-top-right-radius: 8px;
-          height: calc(100% - 50px);
 
           .trangthai {
             display: flex;
@@ -232,39 +231,39 @@
           }
         }
 
-        .xemchitiet,
-        .huydon {
-          padding: 8px 0;
-          border-radius: 8px;
-          font-size: 1.5rem;
-        }
-
-        .xemchitiet {
+        .btn-actions {
           position: absolute;
-          width: 48%;
-          left: 0;
           bottom: 0;
-          color: blue;
-          border: 1px solid blue;
+          width: 100%;
+          display: grid;
+          gap: 5px;
 
-          &:hover {
-            cursor: pointer;
-            box-shadow: 0 0 5px blue;
-            color: blue;
+          .xemchitiet,
+          .huydon {
+            padding: 6px 0;
+            border-radius: 8px;
+            font-size: 1.5rem;
           }
-        }
-        .huydon {
-          position: absolute;
-          width: 48%;
-          right: 0;
-          bottom: 0;
-          color: red;
-          border: 1px solid red;
 
-          &:hover {
-            cursor: pointer;
-            box-shadow: 0 0 5px red;
+          .xemchitiet {
+            color: blue;
+            border: 1px solid blue;
+
+            &:hover {
+              cursor: pointer;
+              box-shadow: 0 0 5px blue;
+              color: blue;
+            }
+          }
+          .huydon {
             color: red;
+            border: 1px solid red;
+
+            &:hover {
+              cursor: pointer;
+              box-shadow: 0 0 5px red;
+              color: red;
+            }
           }
         }
       }

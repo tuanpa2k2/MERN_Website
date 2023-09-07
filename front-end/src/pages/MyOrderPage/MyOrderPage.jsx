@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import * as OrderService from "../../services/OrderService";
 import { RiSecurePaymentLine } from "react-icons/ri";
 
@@ -13,7 +13,6 @@ import * as message from "../../components/MessageComp/MessageComponent";
 const MyOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("location", location);
   const { state } = location;
 
   const fetchMyOrderDetails = async () => {
@@ -127,12 +126,18 @@ const MyOrderPage = () => {
                         </div>
                       </div>
                     </div>
-                    <button className="xemchitiet" onClick={() => handleDetailsOrder(order?._id)}>
-                      Xem chi tiết
-                    </button>
-                    <button className="huydon" onClick={() => handleCancelOrder(order)}>
-                      Hủy đơn hàng
-                    </button>
+                    <div className="btn-actions">
+                      <button className="xemchitiet" onClick={() => handleDetailsOrder(order?._id)}>
+                        Xem chi tiết
+                      </button>
+                      {order?.isPaid === false ? (
+                        <button className="huydon" onClick={() => handleCancelOrder(order)}>
+                          Hủy đơn hàng
+                        </button>
+                      ) : (
+                        Fragment
+                      )}
+                    </div>
                   </div>
                 </div>
               );

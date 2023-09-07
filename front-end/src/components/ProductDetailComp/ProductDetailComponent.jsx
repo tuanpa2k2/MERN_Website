@@ -104,26 +104,18 @@ const ProductDetailComponent = ({ idProduct }) => {
           </div>
 
           <div className="content-details">
-            <div className="name-label">Số lượng:</div>
+            <div className="name-label">Kho hàng:</div>
             <div className="detail-label-quantity">
-              <div className="action-quantity">
-                <button className="minus" onClick={() => handleChangeCount("decraese")}>
-                  <AiOutlineMinusCircle />
-                </button>
-                <input
-                  className="input-text"
-                  type="text"
-                  defaultValue={1}
-                  value={numQuantity}
-                  onChange={onchangeInput}
-                  min={1}
-                />
-                <button className="plus" onClick={() => handleChangeCount("incraese")}>
-                  <GoPlusCircle />
-                </button>
-              </div>
-              <span className="space">---</span>
-              <span className="countInStock"> Kho hàng: {productsDetails?.countInStock}</span>
+              <span className="countInStock">{productsDetails?.countInStock}</span>
+            </div>
+          </div>
+
+          <div className="content-details">
+            <div className="name-label">Đánh giá:</div>
+            <div className="detailRating-label">
+              <Rate disabled defaultValue={productsDetails?.rating} value={productsDetails?.rating} />
+              <div className="space">---</div>
+              <span className="selled">Đã bán: {productsDetails?.selled}</span>
             </div>
           </div>
 
@@ -131,16 +123,6 @@ const ProductDetailComponent = ({ idProduct }) => {
             <div className="name-label">Thể loại:</div>
             <div className="detail-label">
               <span className="type">{productsDetails?.type}</span>
-            </div>
-          </div>
-
-          <div className="content-details">
-            <div className="name-label">Đánh giá:</div>
-            <div className="detailRating-label">
-              <span>4</span>
-              <Rate disabled defaultValue={productsDetails?.rating} value={productsDetails?.rating} />
-              <div className="space">---</div>
-              <span className="selled">Đã bán: {productsDetails?.selled}</span>
             </div>
           </div>
 
