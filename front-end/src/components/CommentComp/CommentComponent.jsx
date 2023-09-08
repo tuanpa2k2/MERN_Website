@@ -6,7 +6,7 @@ const CommentComponent = (props) => {
 
   return (
     <div className="wrapper-commentComp">
-      <div class="fb-comments" data-href={dataHref} data-width={width} data-numposts="5"></div>
+      <div className="fb-comments" data-href={dataHref} data-width={width} data-numposts="5"></div>
     </div>
   );
 };
