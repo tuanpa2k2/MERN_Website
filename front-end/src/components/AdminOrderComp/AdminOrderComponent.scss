@@ -1,0 +1,48 @@
+.wapper-adminOrderComp {
+  padding: 3px 5px;
+
+  .right-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    background-color: var(--background-header-inner);
+    margin-bottom: 5px;
+
+    h3 {
+      display: flex;
+      font-size: 2rem;
+      color: var(--text-color);
+
+      svg {
+        margin-right: 8px;
+        font-size: 30px;
+      }
+    }
+
+    button {
+      display: flex;
+      background-color: white;
+      border: 1px solid blue;
+      border-radius: 8px;
+      padding: 8px 20px;
+      margin-right: 5px;
+      font-size: 1.6rem;
+
+      svg {
+        font-size: 18px;
+        margin-right: 5px;
+      }
+
+      &:hover {
+        cursor: pointer;
+        color: blue;
+        box-shadow: 0 0 10px blue;
+      }
+    }
+  }
+
+  .right-content-table {
+    height: fit-content;
+  }
+}

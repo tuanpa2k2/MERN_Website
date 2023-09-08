@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu } from "antd";
 
-import { AiOutlineUsergroupAdd, AiOutlineShoppingCart } from "react-icons/ai";
+import { AiOutlineUsergroupAdd, AiOutlineShoppingCart, AiOutlineUnorderedList } from "react-icons/ai";
 import { getItem } from "../../until";
 import HeaderComponent from "../../components/HeaderComp/HeaderComponent";
 import AdminUserComponent from "../../components/AdminUserComp/AdminUserComponent";
@@ -9,11 +9,13 @@ import AdminProductComponent from "../../components/AdminProductComp/AdminProduc
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
 
 import "./AdminPage.scss";
+import AdminOrderComponent from "../../components/AdminOrderComp/AdminOrderComponent";
 
 const AdminPage = () => {
   const items = [
     getItem("Quản lý người dùng", "user", <AiOutlineUsergroupAdd />),
-    getItem("Quản lý sản phẩm", "product", <AiOutlineShoppingCart />),
+    getItem("Quản lý sản phẩm", "product", <AiOutlineUnorderedList />),
+    getItem("Quản lý đơn hàng", "order", <AiOutlineShoppingCart />),
   ];
   const [keySelected, setKeySelected] = useState("");
 
@@ -24,6 +26,9 @@ const AdminPage = () => {
 
       case "product":
         return <AdminProductComponent />;
+
+      case "order":
+        return <AdminOrderComponent />;
 
       default:
         return <NotFoundPage />;
