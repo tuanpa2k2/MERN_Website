@@ -48,6 +48,7 @@ const ProfilePage = () => {
       handleUpdateGetDetailsUser(user?.id, user?.access_token);
       message.success("Cập nhập thành công!");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   const handleUpdateGetDetailsUser = async (id, token) => {

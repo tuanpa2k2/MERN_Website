@@ -31,8 +31,11 @@ const OrderSuccessPage = () => {
         <div className="space-hr"></div>
         <div className="card-product">
           <div className="text-title-product">
-            Các sản phẩm vừa mới đặt hàng
-            <span>Tổng tiền (gồm cả ship): {convertPrice(state?.totalPriceMemo)}</span>
+            <div className="abcd">Các sản phẩm vừa mới đặt hàng</div>
+            <div className="all-details">
+              Tổng tiền tất cả sản phẩm <p>( phí giao hàng: {convertPrice(state.totalDilivery)} )</p>:
+              <span>{convertPrice(state?.totalPriceMemo)}</span>
+            </div>
           </div>
           <div className="header-table">
             <div className="image-product">Hình ảnh</div>
@@ -48,11 +51,16 @@ const OrderSuccessPage = () => {
                 <div className="image">
                   <img src={order?.image} alt="alt" />
                 </div>
-                <div className="name">{order?.name}</div>
+                <div className="name-prod">
+                  <div className="name">{order?.name}</div>
+                  <div className="discount-prod">- Giảm giá: {order?.discount}% (cho mỗi sản phẩm)</div>
+                </div>
                 <div className="quantity">{order?.amount}</div>
                 <div className="price">{convertPrice(order?.price)}</div>
-                <div className="discount">{convertPrice(state?.totalDiscount)}</div>
-                <div className="total">{convertPrice(state?.totalPriceMemo)}</div>
+                <div className="discount">{convertPrice(((order.price * order.discount) / 100) * order.amount)}</div>
+                <div className="total">
+                  {convertPrice(order.price * order.amount - ((order.discount * order.price) / 100) * order.amount)}
+                </div>
               </div>
             );
           })}

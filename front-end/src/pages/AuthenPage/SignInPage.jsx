@@ -46,6 +46,7 @@ const SignInPage = () => {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   const handleGetDetailsUser = async (id, token) => {

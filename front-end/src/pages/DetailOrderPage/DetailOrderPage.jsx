@@ -31,6 +31,7 @@ const DetailOrderPage = () => {
   );
   const { data, isLoading } = queryOrderDetail;
 
+  // Xử lý phần order thanh toán -----------------------------------------------------------------------------------------
   const priceMemo = useMemo(() => {
     const result = data?.orderItems?.reduce((total, cur) => {
       return total + cur.price * cur.amount;
@@ -40,13 +41,13 @@ const DetailOrderPage = () => {
   }, [data]);
 
   const diliveryPriceMemo = useMemo(() => {
-    if ((priceMemo === 0 && data?.orderItems.length === 0) || priceMemo >= 1000000) {
+    if (priceMemo === 0 && priceMemo >= 1000000) {
       return 0;
-    } else if (500000 <= priceMemo && priceMemo < 1000000) {
+    } else if (500000 <= priceMemo) {
       return 10000;
-    } else if (200000 <= priceMemo && priceMemo < 500000) {
+    } else if (200000 <= priceMemo) {
       return 20000;
-    } else if (priceMemo < 200000) {
+    } else {
       return 30000;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,11 +141,8 @@ const DetailOrderPage = () => {
                           <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
                         </div>
                         <div className="discount">
-                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>{items?.discount || 0}%</span>
-                        </div>
-                        <div className="discount">
-                          <p>- Tổng tiền:</p>
-                          <span style={{ color: "red" }}>{convertPrice(items?.price * items?.amount)}</span>
+                          <p>- Giảm giá:</p>{" "}
+                          <span style={{ color: "blue" }}>{items?.discount || 0}% (cho mỗi sản phẩm)</span>
                         </div>
                       </div>
                     </div>
@@ -165,11 +163,8 @@ const DetailOrderPage = () => {
                           <p>- Giá:</p> <span style={{ color: "blue" }}>{convertPrice(items?.price)}</span>
                         </div>
                         <div className="discount">
-                          <p>- Giảm giá:</p> <span style={{ color: "blue" }}>{items?.discount || 0}%</span>
-                        </div>
-                        <div className="discount">
-                          <p>- Tổng tiền:</p>
-                          <span style={{ color: "red" }}>{convertPrice(items?.price * items?.amount)}</span>
+                          <p>- Giảm giá:</p>{" "}
+                          <span style={{ color: "blue" }}>{items?.discount || 0}% (cho mỗi sản phẩm)</span>
                         </div>
                       </div>
                     </div>
@@ -188,19 +183,22 @@ const DetailOrderPage = () => {
                           {convertPrice(item?.price * item?.amount)}
                         </div>
                       </div>
-                      <div className="tam-tinh">
-                        - Tạm tính: <p>{convertPrice(priceMemo)}</p>
-                      </div>
-                      <div className="delivery">
-                        - Phí vận chuyển: <p>{convertPrice(diliveryPriceMemo)}</p>
-                      </div>
                       <div className="discount">
-                        - Giảm giá: <p style={{ color: "blue" }}>-{convertPrice((priceMemo * item?.discount) / 100)}</p>
+                        - Giảm giá: <p>-{convertPrice(((item.price * item.discount) / 100) * item.amount)}</p>
                       </div>
-                      <div className="space"></div>
-                      <div className="total-price">
-                        Tổng tiền thanh toán:
-                        <p>{convertPrice(priceMemo + diliveryPriceMemo - (priceMemo * item?.discount) / 100)}</p>
+                      <div className="tinh-tong">
+                        <div className="delivery">
+                          <p>- Thuế:</p> <span>{convertPrice(0)}</span>
+                        </div>
+                        <div className="delivery">
+                          <p>- Phí vận chuyển:</p> <span>{convertPrice(diliveryPriceMemo)}</span>
+                        </div>
+                        <div className="total-price">
+                          <p>Tổng tiền thanh toán:</p>
+                          <span>
+                            {convertPrice(priceMemo + diliveryPriceMemo - (priceMemo * item?.discount) / 100)}
+                          </span>
+                        </div>
                       </div>
                     </Fragment>
                   );

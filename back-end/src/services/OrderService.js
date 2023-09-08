@@ -40,31 +40,10 @@ const createOrder = (newOrder) => {
 
         if (productData) {
           // nếu id product đó có đủ số lượng đặt hàng thì
-          const createdOrder = await Order.create({
-            orderItems,
-            shippingAddress: {
-              fullName,
-              address,
-              city,
-              phone,
-            },
-            paymentMethod,
-            itemsPrice,
-            shippingPrice,
-            totalPrice,
-            user,
-            isPaid,
-            paidAt,
-          });
-
-          if (createdOrder) {
-            await EmailService.sendEmailCreateOrder(email, orderItems); // gửi email đặt hàng thành công
-
-            return {
-              status: "OK",
-              message: "Success Order",
-            };
-          }
+          return {
+            status: "OK",
+            message: "SUCCESS ORDER",
+          };
         } else {
           // nếu ko đủ số lượng đặt hàng thì
           return {
@@ -79,16 +58,41 @@ const createOrder = (newOrder) => {
       const newData = results && results.filter((item) => item.id);
 
       if (newData.length) {
+        const arrId = [];
+        newData.forEach((item) => {
+          arrId.push(item.id);
+        });
         resolve({
           status: "ERR",
-          message: `Sản phẩm với id: ${newData.join(",")} không đủ hàng để mua`,
+          message: `Sản phẩm với id: ${arrId.join(",")} không đủ hàng để mua`,
         });
-      }
+      } else {
+        const createdOrder = await Order.create({
+          orderItems,
+          shippingAddress: {
+            fullName,
+            address,
+            city,
+            phone,
+          },
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          totalPrice,
+          user,
+          isPaid,
+          paidAt,
+        });
 
-      resolve({
-        status: "OK",
-        message: "Mua sản phẩm thành công .............",
-      });
+        if (createdOrder) {
+          await EmailService.sendEmailCreateOrder(email, orderItems); // gửi email đặt hàng thành công
+
+          resolve({
+            status: "OK",
+            message: "Mua sản phẩm thành công .............",
+          });
+        }
+      }
     } catch (e) {
       reject(e);
     }

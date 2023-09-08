@@ -130,16 +130,23 @@ const OrderPage = () => {
   }, [order]);
 
   const discountPriceMemo = useMemo(() => {
-    const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      const totalDiscount = cur.discount ? (cur.discount * priceMemo) / 100 : 0;
-      return total + totalDiscount;
-    }, 0);
+    // forEach các cái giá giảm của từng sản phầm vào 1 mảng
+    const arrOrdered = [];
+    order?.orderItemsSelected?.forEach((element) => {
+      const dis = ((element.price * element.discount) / 100) * element.amount;
+      arrOrdered.push(dis);
+    });
 
-    if (Number(result)) {
-      return result;
-    } else {
-      return 0;
+    // Tính tổng giảm giá
+    let sum = 0;
+    for (let i = 0; i < arrOrdered.length; i++) {
+      sum += arrOrdered[i];
     }
+
+    if (Number(sum)) {
+      return sum;
+    }
+    return 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 

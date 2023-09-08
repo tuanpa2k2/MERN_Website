@@ -22,6 +22,7 @@ function App() {
       handleGetDetailsUser(decoded?.id, storageData);
     }
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDecoded = () => {

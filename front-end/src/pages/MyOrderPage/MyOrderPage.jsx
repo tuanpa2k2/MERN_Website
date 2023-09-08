@@ -87,9 +87,9 @@ const MyOrderPage = () => {
     );
   };
 
-  const handleDeleteOrder = () => {
-    alert("Chức năng này chưa hoàn thành, quay lại sau nhé 😎");
-  };
+  // const handleDeleteOrder = () => {
+  //   alert("Chức năng này chưa hoàn thành, quay lại sau nhé 😎");
+  // };
 
   const { data: dataCancelOrder, isSuccess: isSuccessCancelOrder, isLoading: isLoadingCancelOrder } = mutationCancel;
 
@@ -139,7 +139,7 @@ const MyOrderPage = () => {
                           Hủy đơn hàng
                         </button>
                       ) : (
-                        <button className="huydon" onClick={() => handleDeleteOrder()}>
+                        <button className="huydon" onClick={() => handleCancelOrder(order)}>
                           Xóa
                         </button>
                       )}

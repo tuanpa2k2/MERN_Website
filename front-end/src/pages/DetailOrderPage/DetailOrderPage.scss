@@ -378,42 +378,42 @@
             }
           }
 
-          .tam-tinh {
-            margin-top: 5px;
-          }
-
-          .tam-tinh,
-          .delivery,
-          .discount,
-          .total-price {
+          .discount {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            width: 100%;
-
-            p {
-              font-style: oblique;
-            }
+            border-bottom: 1px solid black;
+            padding-bottom: 4px;
+            margin-bottom: 7px;
+            color: blue;
           }
 
-          .space {
+          .tinh-tong {
             position: absolute;
-            border: 1px solid blue;
-            margin-right: 5px;
-            right: 0;
-            width: 38%;
-            bottom: 32px;
-          }
-
-          .total-price {
-            position: absolute;
-            font-weight: 500;
-            font-size: 1.7rem;
             width: 100%;
+            height: fit-content;
+            padding: 0px 5px 5px 5px;
             bottom: 0;
             left: 0;
-            padding: 5px;
-            color: red;
+            background-color: rgb(220, 220, 220);
+
+            .delivery,
+            .total-price {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              width: 100%;
+            }
+
+            .delivery {
+              font-style: oblique;
+              color: blue;
+            }
+
+            .total-price {
+              font-size: 1.7rem;
+              color: red;
+              font-weight: 500;
+            }
           }
         }
       }
