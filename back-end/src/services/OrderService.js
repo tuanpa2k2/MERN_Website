@@ -85,7 +85,7 @@ const createOrder = (newOrder) => {
         });
 
         if (createdOrder) {
-          await EmailService.sendEmailCreateOrder(email, orderItems); // gửi email đặt hàng thành công
+          // await EmailService.sendEmailCreateOrder(email, orderItems); // gửi email đặt hàng thành công
 
           resolve({
             status: "OK",
@@ -218,7 +218,6 @@ const getAllOrder = () => {
         message: "All order success",
         data: allOrder,
       });
-      console.log("allOrder", allOrder);
     } catch (e) {
       reject(e);
     }

@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import * as OrderService from "../../services/OrderService";
 import { convertPrice } from "../../until";
 import { orderContant } from "../../contant";
+import ChartOrderPaymentComponent from "./ChartOrderPaymentComponent";
+import ChartOrderStatusComponent from "./ChartOrderStatusComponent";
 
 const AdminOrderComponent = () => {
   const user = useSelector((state) => state.user);
@@ -88,6 +90,10 @@ const AdminOrderComponent = () => {
           <AiOutlineSetting />
           Quản lý thông tin đơn hàng
         </h3>
+      </div>
+      <div className="constainer-chart">
+        <ChartOrderPaymentComponent data={orders?.data} />
+        <ChartOrderStatusComponent data={orders?.data} />
       </div>
       <div className="right-content-table">
         <TableComponent columns={columns} data={dataTable} isLoading={isLoadingOrder} />

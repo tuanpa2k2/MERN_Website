@@ -42,6 +42,36 @@
     }
   }
 
+  .constainer-chart {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 5px 0;
+    margin-bottom: 5px;
+
+    .wrapper-chart {
+      position: relative;
+      margin-left: 10px;
+      box-shadow: 0 0 5px blue;
+      border-radius: 8px;
+      width: 250px;
+      height: 240px;
+
+      .title {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        background-color: #000fff;
+        padding: 8px;
+        font-size: 1.6rem;
+        color: white;
+        text-align: center;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+      }
+    }
+  }
+
   .right-content-table {
     height: fit-content;
   }

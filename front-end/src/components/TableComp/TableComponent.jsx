@@ -39,10 +39,12 @@ const TableComponent = (props) => {
             Xóa tất cả
           </div>
         )}
-        <div className="btn-exportExcel" onClick={handleExportExcelFile}>
-          <AiOutlineExport />
-          Export to excel
-        </div>
+        {rowSelectedKeys.length > 0 && (
+          <div className="btn-exportExcel" onClick={handleExportExcelFile}>
+            <AiOutlineExport />
+            Export to excel
+          </div>
+        )}
       </div>
       <Table
         className="wrapper-table"
