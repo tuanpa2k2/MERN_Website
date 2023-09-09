@@ -104,7 +104,7 @@ const getAllOrderDetails = (id) => {
     try {
       const order = await Order.find({
         user: id, //tìm id product đã tồn tại trong db chưa?
-      });
+      }).sort({ createdAt: -1, updatedAt: -1 }); // sắp xếp lên đầu khi tạo mới 1 order
 
       if (order === null) {
         resolve({
@@ -189,9 +189,9 @@ const cancelOrderDetails = (id, data) => {
       });
 
       const results = await Promise.all(promises);
-      const newData = results && results.filter((item) => item);
+      const newData = results && results[0] && results[0].id;
 
-      if (newData.length) {
+      if (newData) {
         resolve({
           status: "ERR",
           message: `Sản phẩm với id: ${newData.join(",")} không ton tai`,

@@ -8,6 +8,7 @@ const initialState = {
   city: "",
   avatar: "",
   access_token: "",
+  refreshToken: "",
   id: "",
   isAdmin: false,
 };
@@ -25,6 +26,7 @@ export const userSlide = createSlice({
         city = "",
         avatar = "",
         access_token = "",
+        refreshToken = "",
         _id = "",
         isAdmin,
       } = action.payload;
@@ -36,6 +38,7 @@ export const userSlide = createSlice({
       state.city = city;
       state.avatar = avatar;
       state.access_token = access_token;
+      state.refreshToken = refreshToken;
       state.id = _id;
       state.isAdmin = isAdmin;
     },
@@ -47,6 +50,7 @@ export const userSlide = createSlice({
       state.city = "";
       state.avatar = "";
       state.access_token = "";
+      state.refreshToken = "";
       state.id = "";
       state.isAdmin = false;
     },

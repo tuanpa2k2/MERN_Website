@@ -9,11 +9,13 @@ import { convertPrice } from "../../until";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as message from "../../components/MessageComp/MessageComponent";
+import { useSelector } from "react-redux";
 
 const MyOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
+  const user = useSelector((state) => state.user);
 
   const fetchMyOrderDetails = async () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token);
@@ -71,14 +73,14 @@ const MyOrderPage = () => {
   };
 
   const mutationCancel = useMutationHooks((data) => {
-    const { id, token, orderItems } = data;
-    const res = OrderService.cancelOrder(id, token, orderItems);
+    const { id, token, orderItems, userId } = data;
+    const res = OrderService.cancelOrder(id, token, orderItems, userId);
     return res;
   });
 
   const handleCancelOrder = (order) => {
     mutationCancel.mutate(
-      { id: order._id, token: state?.token, orderItems: order?.orderItems },
+      { id: order._id, token: state?.token, orderItems: order?.orderItems, userId: user?.id },
       {
         onSettled: () => {
           queryOrder.refetch(); // Tự động load data khi Delete 1 sản phẩm

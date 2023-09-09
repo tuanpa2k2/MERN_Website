@@ -73,8 +73,8 @@ const getDetailsOrder = async (req, res) => {
 
 const cancelOrderDetails = async (req, res) => {
   try {
-    const data = req.body;
-    const orderId = req.params.id;
+    const data = req.body.orderItems;
+    const orderId = req.body.orderId;
 
     if (!orderId) {
       return res.status(200).json({
