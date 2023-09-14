@@ -8,7 +8,7 @@ const genneralAccessToken = (payload) => {
       ...payload,
     },
     process.env.ACCESS_TOKEN,
-    { expiresIn: "30m" } //tgian 30'
+    { expiresIn: "1d" } //tgian 30'
   );
 
   return accessToken;
