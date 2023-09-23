@@ -64,11 +64,11 @@
     }
 
     .mdDelete {
-      color: red;
-      border: 1px solid red;
+      padding: 3px 15px;
       border-radius: 5px;
       margin-left: 5px;
-      padding: 3px 15px;
+      color: red;
+      border: 1px solid red;
 
       &:hover {
         cursor: pointer;
