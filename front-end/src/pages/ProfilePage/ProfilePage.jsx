@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { BsPencilSquare, BsPhone } from "react-icons/bs";
-import { AiOutlineMail, AiOutlineCloudUpload } from "react-icons/ai";
-import { SlLocationPin } from "react-icons/sl";
-
 import * as message from "../../components/MessageComp/MessageComponent";
 import * as UserService from "../../services/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
@@ -14,12 +10,11 @@ import "./ProfilePage.scss";
 import { updateUser } from "../../redux/slides/userSlide";
 import { Button, Upload } from "antd";
 import { getBase64 } from "../../until";
-import { useNavigate } from "react-router-dom";
+import noImage from "../../assets/images/bgr-image/no-image.png";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user); // lấy user trong redux-store
-  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -50,6 +45,7 @@ const ProfilePage = () => {
     if (isSuccess) {
       handleUpdateGetDetailsUser(user?.id, user?.access_token);
       message.success("Cập nhập thông tin thành công!");
+      window.location.reload();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
@@ -90,7 +86,16 @@ const ProfilePage = () => {
   };
 
   const handleUpdateUser = () => {
-    mutation.mutate({ id: user?.id, name, email, phone, address, city, avatar, access_token: user?.access_token });
+    mutation.mutate({
+      id: user?.id,
+      name,
+      email,
+      phone,
+      address,
+      city,
+      avatar,
+      access_token: user?.access_token,
+    });
   };
 
   return (
@@ -99,56 +104,36 @@ const ProfilePage = () => {
       <LoadingComponent isLoading={isLoading}>
         <div className="content-profile">
           <div className="left">
-            <div className="img">{avatar && <img src={avatar} alt="avatar" />}</div>
+            <div className="img">
+              {avatar ? <img src={avatar} alt="avatar" /> : <img src={noImage} alt="noimage" />}
+            </div>
             <Upload onChange={handleOnchangeAvatar} maxCount={1} className="upload-file">
-              <Button className="btn-chooseFile" icon={<AiOutlineCloudUpload />}>
-                Chọn file ảnh của bạn
-              </Button>
+              <Button className="btn-chooseFile">Chọn file ảnh của bạn...</Button>
             </Upload>
           </div>
           <div className="right">
             <div className="imput-form">
-              <div className="label">Họ và tên</div>
-              <span className="icon">
-                <BsPencilSquare />
-              </span>
-              <input type="text" placeholder={name} onChange={handleOnchangeName} />
+              <div className="label">Họ và tên:</div>
+              <input type="text" value={name} onChange={handleOnchangeName} />
             </div>
             <div className="imput-form">
-              <div className="label">Email</div>
-              <span className="icon">
-                <AiOutlineMail />
-              </span>
-              <input type="email" placeholder={email} onChange={handleOnchangeEmail} />
+              <div className="label">Email:</div>
+              <input type="email" value={email} onChange={handleOnchangeEmail} />
             </div>
             <div className="imput-form">
-              <div className="label">Số điện thoại</div>
-              <span className="icon">
-                <BsPhone />
-              </span>
-              <input type="text" placeholder={phone} onChange={handleOnchangePhone} />
+              <div className="label">Số điện thoại (+84):</div>
+              <input type="text" value={phone} onChange={handleOnchangePhone} />
             </div>
             <div className="imput-form">
-              <div className="label">Thành phố</div>
-              <span className="icon">
-                <SlLocationPin />
-              </span>
-              <input type="text" placeholder={city} onChange={handleOnchangeCity} />
+              <div className="label">Thành phố:</div>
+              <input type="text" value={city} onChange={handleOnchangeCity} />
             </div>
             <div className="imput-form">
-              <div className="label">Địa chỉ cụ thể</div>
-              <span className="icon">
-                <SlLocationPin />
-              </span>
-              <input type="text" placeholder={address} onChange={handleOnchangeAddress} />
+              <div className="label">Địa chỉ cụ thể:</div>
+              <input type="text" value={address} onChange={handleOnchangeAddress} />
             </div>
             <div className="btn-updateInfo">
-              <button className="btn-updated" onClick={handleUpdateUser}>
-                Cập nhập thông tin
-              </button>
-              <button className="btn-backhome" onClick={() => navigate("/")}>
-                Về trang chủ
-              </button>
+              <button onClick={handleUpdateUser}>Cập nhập thông tin</button>
             </div>
           </div>
         </div>

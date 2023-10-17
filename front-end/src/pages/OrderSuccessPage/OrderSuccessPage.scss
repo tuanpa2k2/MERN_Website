@@ -4,9 +4,10 @@
   height: fit-content;
   padding: 0 120px;
   box-shadow: 0 0 10px blue;
+  background-image: linear-gradient(to right, #b1f1ff, #e2ed71, #4ff68a);
 
   .header-text {
-    background-image: linear-gradient(to right, #b1f1ff, #e2ed71, #4ff68a);
+    background-color: white;
     font-weight: 500;
     font-size: 1.8rem;
     padding: 10px 10px;
@@ -22,15 +23,12 @@
   }
 
   .content-OrderSuccess {
-    background-color: #eaeaea;
-    padding: 5px 8px;
     font-size: 1.6rem;
 
     .shipping {
       background-color: #ffffff;
       margin-bottom: 10px;
       padding: 8px 5px;
-      border-radius: 8px;
       display: flex;
       align-items: center;
 
@@ -74,6 +72,7 @@
         font-weight: 500;
         padding: 8px 10px;
         color: blue;
+        border: 1px solid darkgray;
 
         .all-details {
           display: flex;
